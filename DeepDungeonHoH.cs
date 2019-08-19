@@ -142,6 +142,7 @@ namespace DeepHoh
 
             _tasks = new TaskManagerProvider();
 
+            DeepTracker.InitializeTracker(Core.Me.ClassLevel);
 
             _tasks.Add(new LoadingHandler());
             _tasks.Add(new DeathWindowHandler());

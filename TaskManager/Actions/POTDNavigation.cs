@@ -34,7 +34,7 @@ namespace DeepHoh.TaskManager.Actions
         private int PortalPercent => (int) Math.Ceiling(DeepDungeonManager.PortalStatus / 11d * 100f);
 
         private Poi Target => Poi.Current;
-        public string Name => "PotdNavigator";
+        public string Name => "HoHNavigator";
 
         public async Task<bool> Run()
         {
@@ -65,7 +65,7 @@ namespace DeepHoh.TaskManager.Actions
             }
 
             var res = await CommonTasks.MoveAndStop(
-                new MoveToParameters(Target.Location, "Moving toward POTD Objective"), 1.5f);
+                new MoveToParameters(Target.Location, $"Moving toward HoH Objective: {Target.Name}"), 1.5f);
 
 //            if (Target.Unit != null)
 //                Logger.Verbose(

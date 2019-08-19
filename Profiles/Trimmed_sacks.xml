@@ -7,7 +7,7 @@
     <CodeChunks>
         <CodeChunk Name="Interact">
             <![CDATA[
-			ff14bot.Managers.GameObjectManager.GetObjectByNPCId(1017659).Interact();
+			ff14bot.Managers.GameObjectManager.GetObjectByNPCId(1025847).Interact();
 			await Buddy.Coroutines.Coroutine.Sleep(1000);
 			Talk.Next();
             await Coroutine.Wait(10000, () => ff14bot.RemoteWindows.SelectString.IsOpen);
@@ -68,6 +68,19 @@
             }
 			]]>
     </CodeChunk>
+	<CodeChunk Name="SilverHaloed">
+      <![CDATA[
+            uint sackid = 23223;
+
+            while (ff14bot.NeoProfiles.ConditionParser.ItemCount(sackid) > 0 && ff14bot.NeoProfiles.ConditionParser.FreeItemSlots() > 0)
+            {
+                RaptureAtkUnitManager.GetWindowByName("ItemAppraisal").SendAction(2, 0, 0, 1, sackid);
+                await Coroutine.Wait(2000, () => ff14bot.RemoteWindows.SelectYesno.IsOpen);
+                ff14bot.RemoteWindows.SelectYesno.ClickYes();
+                await Buddy.Coroutines.Coroutine.Sleep(7000);
+            }
+			]]>
+    </CodeChunk>
     <CodeChunk Name="CloseWindow">
       <![CDATA[
             // Close Window
@@ -77,32 +90,14 @@
     </CodeChunks>
     <Order>
         <While Condition="FreeItemSlots() &gt; 0">
-            <If Condition="not IsOnMap(153)">
-              <GetTo XYZ="181.2618, 8.928072, -39.13947" ZoneId="153" />
+            <If Condition="not IsOnMap(613)">
+              <GetTo XYZ="-6.912354, 2.945007, -612.1157" ZoneId="613" />
             </If>            
-            <MoveTo Name="Expedition Bishop" XYZ="181.2618, 8.928072, -39.13947" />
-            <If Condition="HasAtLeast(16170,1) and FreeItemSlots() &gt; 0">
+            <MoveTo Name="Confederate Appraiser" XYZ="-7.761304, 2.928307, -610.1073" />
+			<If Condition="HasAtLeast(23223,1) and FreeItemSlots() &gt; 0">
                 <RunCode name="Interact" />
                 <WaitTimer WaitTime="3" />
-                <RunCode name="BronzeSack" />
-                <WaitTimer WaitTime="3" />
-            </If>
-            <If Condition="HasAtLeast(16171,1) and FreeItemSlots() &gt; 0">
-                <RunCode name="Interact" />
-                <WaitTimer WaitTime="3" />
-                <RunCode name="IronSack" />
-                <WaitTimer WaitTime="3" />
-            </If>
-            <If Condition="HasAtLeast(16172,1) and FreeItemSlots() &gt; 0">
-                <RunCode name="Interact" />
-                <WaitTimer WaitTime="3" />
-                <RunCode name="SilverSack" />
-                <WaitTimer WaitTime="3" />
-            </If>
-            <If Condition="HasAtLeast(16173,1) and FreeItemSlots() &gt; 0">
-                <RunCode name="Interact" />
-                <WaitTimer WaitTime="3" />
-                <RunCode name="GoldSack" />
+                <RunCode name="SilverHaloed" />
                 <WaitTimer WaitTime="3" />
             </If>
         </While>

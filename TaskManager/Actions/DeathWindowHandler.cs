@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DeepHoh.Helpers;
 using DeepHoh.Logging;
 
 namespace DeepHoh.TaskManager.Actions
@@ -30,6 +31,10 @@ namespace DeepHoh.TaskManager.Actions
             if (RaptureAtkUnitManager.GetWindowByName("DeepDungeonResult") != null)
             {
                 Logger.Warn($"We have died...");
+                Logger.Debug("Died");
+                DeepTracker.Died();
+                DeepTracker.EndRun(true);
+
                 RaptureAtkUnitManager.GetWindowByName("DeepDungeonResult").SendAction(1, 3, uint.MaxValue);
                 await Coroutine.Sleep(250);
                 return true;

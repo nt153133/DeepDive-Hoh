@@ -197,7 +197,7 @@ namespace DeepHoh.Providers
                 } 
             }
 
-            Logger.Info($"[walls] {string.Join(", ", _hit.Keys)}");
+            //Logger.Info($"[walls] {string.Join(", ", _hit.Keys)}");
 
             return updated;
 
@@ -351,6 +351,19 @@ namespace DeepHoh.Providers
                     _traps.Add(i.ObjectId);
                     _trapPos.Add(i.Location);
                 }
+            }
+
+            var units = GameObjectManager.GameObjects.Where(j => j.Location != Vector3.Zero);
+            foreach (var unit in units)
+            {
+                if (unit == null)
+                    Logger.Debug("TRAP NULL unit: {0}", unit.NpcId);
+
+                if (unit.Name == "" && !_traps.Contains(unit.ObjectId) && unit.NpcId != 2002872)
+                    Logger.Debug("TRAP empty string name unit: {0}", unit.NpcId);
+
+                if (unit.Name == "" && !Constants.TrapIds.Contains(unit.NpcId) && unit.NpcId != 2002872)
+                    Logger.Debug("TRAP? {0}-{1}-{2}-{3} NOT IN LIST", unit, unit.NpcId, unit.ObjectId, unit.IsVisible);
             }
         }
     }

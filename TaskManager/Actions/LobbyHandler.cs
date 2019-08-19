@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DeepHoh.Helpers;
 using DeepHoh.Logging;
 
 namespace DeepHoh.TaskManager.Actions
@@ -52,6 +53,7 @@ namespace DeepHoh.TaskManager.Actions
             _target.Interact();
             await Coroutine.Wait(250, () => SelectYesno.IsOpen);
             SelectYesno.ClickYes();
+            DeepTracker.EndRun(false);
             return true;
         }
 

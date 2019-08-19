@@ -60,14 +60,13 @@ namespace DeepHoh.TaskManager.Actions
             }
 
             //if we are a frog / lust we can't open a chest
-            if (Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) || Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust))
+            if (Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) || Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust) || Core.Me.HasAura(Auras.Odder))
             {
                 Logger.Warn("Unable to open chest. Waiting for aura to end...");
                 await CommonTasks.StopMoving("Waiting on aura to end");
 
                 await Coroutine.Wait(TimeSpan.FromSeconds(30),
-                    () => !(Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) || Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust)) ||
-                          Core.Me.InCombat || DeepDungeonHoH.StopPlz);
+                    () => !(Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) || Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust) ||  Core.Me.HasAura(Auras.Odder)) || Core.Me.InCombat || DeepDungeonHoH.StopPlz);
 
                 //incase we entered combat
                 return true;

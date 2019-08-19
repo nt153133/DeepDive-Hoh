@@ -36,6 +36,7 @@ namespace DeepHoh
     {
         internal static uint PalaceHornet = 4981;
         internal static uint PalaceSlime = 4990;
+        internal static uint HeavenlyShark = 7272;
     }
 
     /// <summary>
@@ -44,8 +45,11 @@ namespace DeepHoh
     internal static class EntityNames
     {
         internal static uint TrapCoffer = 2005808;
+        
         internal static uint GoldCoffer = 2007358;
         internal static uint SilverCoffer = 2007357;
+
+        //internal static uint BandedCoffer = 2007543;
 
         internal static uint[] MimicCoffer = {2006020, 2006022};
 
@@ -93,6 +97,7 @@ namespace DeepHoh
         internal static uint Toad2 = 441;
         internal static uint Chicken = 1102;
         internal static uint Imp = 1103;
+        internal static uint Odder = 1546;
 
         internal static uint Lust = 565;
         internal static uint Rage = 565;
@@ -205,8 +210,7 @@ namespace DeepHoh
                 {776, 0},
                 {777, 0},
                 {778, 0},
-                {779, 0},
-                {780, 0} //,
+                {779, 0} //,
                 
                 //{599, 8},
                 //{600, 8},

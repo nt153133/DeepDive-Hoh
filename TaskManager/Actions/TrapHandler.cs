@@ -26,7 +26,7 @@ namespace DeepHoh.TaskManager.Actions
     /// <returns></returns>
     class TrapHandler : ITask
     {
-        private bool HasTrapAura => Core.Me.HasAnyAura(Auras.Pacification, Auras.Silence, Auras.Toad, Auras.Frog, Auras.Toad2);
+        private bool HasTrapAura => Core.Me.HasAnyAura(Auras.Pacification, Auras.Silence, Auras.Toad, Auras.Frog, Auras.Toad2, Auras.Odder);
 
 
         public string Name => "TrapHandler";

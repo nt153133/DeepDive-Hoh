@@ -280,6 +280,7 @@ namespace DeepHoh.TaskManager.Actions
                 !GameObjectManager.Attackers.Any(i =>
                     i.HasAura(Auras.Frog) ||
                     i.HasAura(Auras.Imp) ||
+                    i.HasAura(Auras.Odder) ||
                     i.HasAura(Auras.Chicken)) //Toad
                 &&
                 (!PartyManager.IsInParty || PartyManager.IsPartyLeader)
@@ -292,6 +293,7 @@ namespace DeepHoh.TaskManager.Actions
                     !GameObjectManager.Attackers.Any(i =>
                         i.HasAura(Auras.Frog) ||
                         i.HasAura(Auras.Imp) ||
+                        i.HasAura(Auras.Odder) ||
                         i.HasAura(Auras.Chicken)),
                     (!PartyManager.IsInParty || PartyManager.IsPartyLeader)
                         );

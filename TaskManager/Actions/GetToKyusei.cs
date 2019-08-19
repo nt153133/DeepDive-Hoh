@@ -7,22 +7,19 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
+using System.Threading.Tasks;
 using Buddy.Coroutines;
+using DeepHoh.Logging;
 using ff14bot;
 using ff14bot.Behavior;
+using ff14bot.Enums;
 using ff14bot.Managers;
 using ff14bot.Pathing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DeepHoh.Logging;
-using ff14bot.Enums;
 
 namespace DeepHoh.TaskManager.Actions
 {
-    class GetToKyusei : ITask
+    internal class GetToKyusei : ITask
     {
         public string Name => "GetToRyusei";
 
@@ -32,8 +29,8 @@ namespace DeepHoh.TaskManager.Actions
             if (Constants.InDeepDungeon || Constants.InExitLevel) return false;
 
             if (WorldManager.ZoneId != Constants.RubySeaZoneID ||
-               GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId) == null ||
-               GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Distance2D(Core.Me.Location) > 300)
+                GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId) == null ||
+                GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Distance2D(Core.Me.Location) > 35)
             {
                 if (Core.Me.IsCasting)
                 {
@@ -47,33 +44,34 @@ namespace DeepHoh.TaskManager.Actions
                     TreeRoot.Stop();
                     return false;
                 }
+
                 await Coroutine.Sleep(1000);
                 return true;
-
             }
-            if (GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId) == null || GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Distance2D(Core.Me.Location) > 5f)
+
+            if (GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId) == null || GameObjectManager
+                    .GetObjectByNPCId(Constants.KyuseiNpcId).Distance2D(Core.Me.Location) > 4f)
             {
-                var moving = MoveResult.GeneratingPath;
-                while (!(moving == MoveResult.Done ||
-                         moving == MoveResult.ReachedDestination ||
-                         moving == MoveResult.Failed ||
-                         moving == MoveResult.Failure ||
-                         moving == MoveResult.PathGenerationFailed))
-                {
-                    moving = Flightor.MoveTo(new FlyToParameters(Constants.KyuseiNpcPosition));
-
-                    await Coroutine.Yield();
-                }
-
-
+//                var moving = MoveResult.GeneratingPath;
+//                while (!(moving == MoveResult.Done ||
+//                         moving == MoveResult.ReachedDestination ||
+//                         moving == MoveResult.Failed ||
+//                         moving == MoveResult.Failure ||
+//                         moving == MoveResult.PathGenerationFailed))
+//                {
+//                    moving = Flightor.MoveTo(new FlyToParameters(GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Location));
+//
+//                    await Coroutine.Yield();
+//                }
+                return await CommonTasks.MoveAndStop(new MoveToParameters(GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Location, "Moving toward NPC"), 4f, true);
                 //return await CommonTasks.MoveAndStop(new MoveToParameters(Constants.KyuseiNpcPosition, "Moving toward NPC"), 5f, true);
             }
+
             return false;
         }
 
         public void Tick()
         {
-            
         }
     }
 }
