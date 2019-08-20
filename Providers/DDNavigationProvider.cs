@@ -105,8 +105,8 @@ namespace DeepHoh.Providers
                 Logger.Debug("WallHash: {0,-25}", unit);
             }
 
-            foreach (var pom in Enum.GetValues(typeof(Pomander)))
-                Logger.Info("[Fraility] Item {1} Count: {0}", DeepDungeonManager.GetInventoryItem(Pomander.Rage), pom);
+//            foreach (var pom in Enum.GetValues(typeof(Pomander)))
+//                Logger.Info("[Fraility] Item {1} Count: {0}", DeepDungeonManager.GetInventoryItem(Pomander.Rage), pom);
 
         }
 

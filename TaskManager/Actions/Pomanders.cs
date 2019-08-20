@@ -128,7 +128,7 @@ namespace DeepHoh.TaskManager.Actions
         private static async Task<bool> BuffMe()
         {
             if (Settings.Instance.UsePomRage && CombatTargeting.Instance.LastEntities.Count() > 5 && !Core.Me.HasAura(Auras.Rage))
-            {
+            {//
                 return await UsePomander(Pomander.Rage, Auras.Lust);
             }
 

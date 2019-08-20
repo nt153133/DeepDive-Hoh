@@ -7,30 +7,30 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Buddy.Coroutines;
 using Clio.Utilities.Helpers;
-using DeepHoh.Memory;
-using DeepHoh.Providers;
 using DeepHoh.Enums;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
 using ff14bot;
-using ff14bot.Behavior;
 using ff14bot.Directors;
 using ff14bot.Managers;
-using ff14bot.Navigation;
-using ff14bot.Objects;
 
 namespace DeepHoh.Tasks.Coroutines
 {
     internal class Common
     {
+        internal static ItemState PomanderState = ItemState.None;
+
+        private static List<uint> PotIDs => Constants.Pots.Select(i => i.Id).ToList();
+
         /// <summary>
-        /// Cancel player aura
+        ///     Cancel player aura
         /// </summary>
         /// <param name="aura">Aura id to cancel</param>
         /// <returns></returns>
@@ -43,10 +43,9 @@ namespace DeepHoh.Tasks.Coroutines
                 ChatManager.SendChat("/statusoff " + auraname);
                 await Coroutine.Yield();
             }
+
             return true;
         }
-
-        internal static ItemState PomanderState = ItemState.None;
 
         internal static async Task<bool> UsePomander(Pomander number, uint auraId = 0)
         {
@@ -61,7 +60,7 @@ namespace DeepHoh.Tasks.Coroutines
             if (data.HasAura) return false;
 
             if (Core.Me.HasAura(auraId) &&
-                    Core.Me.GetAuraById(auraId).TimespanLeft > TimeSpan.FromMinutes(1)) return false;
+                Core.Me.GetAuraById(auraId).TimespanLeft > TimeSpan.FromMinutes(1)) return false;
 
             await Coroutine.Wait(5000, () => !DeepDungeonManager.IsCasting);
 
@@ -98,10 +97,8 @@ namespace DeepHoh.Tasks.Coroutines
             return true;
         }
 
-        private static List<uint> PotIDs => Constants.Pots.Select(i => i.Id).ToList();
-
         /// <summary>
-        /// can we use a potion
+        ///     can we use a potion
         /// </summary>
         /// <returns></returns>
         internal static bool CanUsePot()
@@ -127,7 +124,7 @@ namespace DeepHoh.Tasks.Coroutines
         }
 
         /// <summary>
-        /// Recover hp.
+        ///     Recover hp.
         /// </summary>
         /// <param name="force"></param>
         /// <returns></returns>
@@ -136,38 +133,34 @@ namespace DeepHoh.Tasks.Coroutines
             if (Core.Me.CurrentHealthPercent > 99) return false;
 
             var tenpcnt = Core.Me.MaxHealth;
-            foreach (var pots in Constants.Pots.Select( i=> new
+            foreach (var pots in Constants.Pots.Select(i => new
                 {
                     pot = InventoryManager.FilledSlots.FirstOrDefault(r => r.RawItemId == i.Id),
                     data = i,
                     sort = i.Recovery / tenpcnt
-            } ).Where(i => i.pot != null)
+                }).Where(i => i.pot != null)
                 .Where(i => i.data.Recovery <= Core.Me.MissingHealth())
                 .OrderByDescending(i => i.sort)
-                )
+            )
             {
                 var pot = pots.pot;
                 if (pot.CanUse())
                 {
                     Logger.Info($"Attempting to recover: {pots.data.Recovery} hp");
 
-                    if (await UseItem(pot))
-                    {
-                        return true;
-                    }
+                    if (await UseItem(pot)) return true;
                 }
+
                 await Coroutine.Yield();
             }
+
             return false;
         }
 
         internal static async Task<bool> UseItemById(int id)
         {
             var pot = InventoryManager.FilledSlots.FirstOrDefault(r => r.RawItemId == id);
-            if (pot != null && pot.CanUse() && await UseItem(pot))
-            {
-                return true;
-            }
+            if (pot != null && pot.CanUse() && await UseItem(pot)) return true;
             return false;
         }
 
@@ -178,7 +171,5 @@ namespace DeepHoh.Tasks.Coroutines
             await Coroutine.Yield();
             return true;
         }
-
-
     }
 }
