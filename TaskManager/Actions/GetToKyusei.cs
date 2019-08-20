@@ -50,7 +50,7 @@ namespace DeepHoh.TaskManager.Actions
 
 
             if (GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId) == null || GameObjectManager
-                    .GetObjectByNPCId(Constants.KyuseiNpcId).Distance2D(Core.Me.Location) > 4f)
+                    .GetObjectByNPCId(Constants.KyuseiNpcId).Distance2D(Core.Me.Location) > 5f)
             {
 //                var moving = MoveResult.GeneratingPath;
 //                while (!(moving == MoveResult.Done ||
@@ -64,7 +64,7 @@ namespace DeepHoh.TaskManager.Actions
 //                    await Coroutine.Yield();
 //                }
                 Logger.Verbose("at Move");
-                return await CommonTasks.MoveAndStop(new MoveToParameters(GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Location, "Moving toward NPC"), 4f, true);
+                return await CommonTasks.MoveAndStop(new MoveToParameters(GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Location, "Moving toward NPC"), 5f, true);
                 //return await CommonTasks.MoveAndStop(new MoveToParameters(Constants.KyuseiNpcPosition, "Moving toward NPC"), 5f, true);
             }
 

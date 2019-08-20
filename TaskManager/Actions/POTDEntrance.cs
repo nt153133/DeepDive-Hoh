@@ -71,7 +71,7 @@ namespace DeepHoh.TaskManager.Actions
                 TreeRoot.Stop("Stop Requested");
                 return true;
             }
-
+            
             if (ContentsFinderConfirm.IsOpen)
             {
                 Logger.Warn($"Entering HoH - Currently a Level {Core.Me.ClassLevel} {Core.Me.CurrentJob}");

@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Clio.Utilities;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
+using DeepHoh.Providers;
 using ff14bot.Enums;
 
 namespace DeepHoh.TaskManager.Actions
@@ -37,6 +38,10 @@ namespace DeepHoh.TaskManager.Actions
         {
             if (!Constants.InExitLevel) return false;
 
+            await Coroutine.Sleep(5000);
+
+            DDTargetingProvider.Instance.Pulse();
+
             TreeRoot.StatusText = "Lobby Room";
 
             if (_target == null || !_target.IsValid)
@@ -48,18 +53,18 @@ namespace DeepHoh.TaskManager.Actions
 
             Vector3 exit = GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit).Location;
             Navigator.PlayerMover.MoveTowards(exit);
-            await Buddy.Coroutines.Coroutine.Sleep(2000); // (again, probably better to just wait until distance to destination is < 2.0f or something)
+            await Buddy.Coroutines.Coroutine.Sleep(1500); // (again, probably better to just wait until distance to destination is < 2.0f or something)
             Navigator.PlayerMover.MoveStop();
 
             //GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit).Location
-            if (!Navigator.InPosition(_target.Location, Core.Me.Location, 5))
-            {
-                if (!await CommonTasks.MoveAndStop(new MoveToParameters(_target.Location, "Moving to Lobby Exit"), 3))
-                {
-                    Logger.Warn("Failed to move toward the exit?");
-                }
-                return true;
-            }
+//            if (!Navigator.InPosition(_target.Location, Core.Me.Location, 10))
+//            {
+//                if (!await CommonTasks.MoveAndStop(new MoveToParameters(_target.Location, "Moving to Lobby Exit"), 3))
+//                {
+//                    Logger.Warn("Failed to move toward the exit?");
+//                }
+//                return true;
+//            }
             _target.Interact();
             await Coroutine.Wait(250, () => SelectYesno.IsOpen);
             SelectYesno.ClickYes();

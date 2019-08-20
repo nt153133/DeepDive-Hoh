@@ -103,6 +103,10 @@ namespace DeepHoh.Providers
                 if (_lastPulse + TimeSpan.FromSeconds(5) < DateTime.Now)
                 {
                     Logger.Verbose($"Found {LastEntities.Count} Targets");
+
+                    if (LastEntities.Count == 0)
+                        Reset();
+
                     foreach (GameObject unit in LastEntities)
                     {
                         Logger.Verbose("Name:{0}, Type:{3}, ID:{1}, Obj:{2}",unit,unit.NpcId,unit.ObjectId,unit.GetType());
@@ -160,7 +164,7 @@ namespace DeepHoh.Providers
 
         internal void AddToBlackList(GameObject obj, string reason)
         {
-            AddToBlackList(obj, TimeSpan.FromMinutes(3), reason);
+            AddToBlackList(obj, TimeSpan.FromMinutes(1), reason);
         }
 
         internal void AddToBlackList(GameObject obj, TimeSpan time, string reason)
@@ -200,6 +204,9 @@ namespace DeepHoh.Providers
         private bool Filter(GameObject obj)
         {
             if (obj.NpcId == 5042) //script object
+                return false;
+
+            if (obj.NpcId == 7396) //script object
                 return false;
 
             if (obj.Location == Vector3.Zero)

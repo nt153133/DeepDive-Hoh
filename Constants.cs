@@ -239,7 +239,7 @@ namespace DeepHoh
             get
             {
                 if (!PartyManager.IsInParty)
-                    return 17;
+                    return 20;
                 return Math.Max(8, RoutineManager.Current.PullRange + Settings.Instance.PullRange);
             }
         }

@@ -101,6 +101,12 @@ namespace DeepHoh.TaskManager.Actions
                     await Tasks.Coroutines.Common.CancelAura(Auras.Lust);
                 }
                 Logger.Verbose("Attempting to interact with: {0} ({1} / 3)", Target.Name, tries + 1);
+
+                if (Target.Name == "Exit")
+                {
+                    ff14bot.Managers.DutyManager.LeaveActiveDuty();
+                    await Coroutine.Sleep(10000);
+                }
                 Target.Unit.Target();
                 Target.Unit.Interact();
                 await Coroutine.Sleep(500);
@@ -123,7 +129,7 @@ namespace DeepHoh.TaskManager.Actions
                     () => DeepDungeonHoH.StopPlz || QuestLogManager.InCutscene || NowLoading.IsVisible);
                 return true;
             }
-            Blacklist.Add(Target.Unit.ObjectId, TimeSpan.FromMinutes(5), $"Tried to Interact with the Target {tries} times");
+            Blacklist.Add(Target.Unit.ObjectId, TimeSpan.FromMinutes(1), $"Tried to Interact with the Target {tries} times");
             Poi.Clear($"Tried to Interact with the Target {tries} times");
 
             return false;
