@@ -44,13 +44,12 @@ namespace DeepHoh.TaskManager.Actions
                 }
                 Logger.Verbose("Still Teleporting");
 
-                await Coroutine.Sleep(1000);
+                await Coroutine.Sleep(3000);
                 return true;
             }
 
 
-            if (GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId) == null || GameObjectManager
-                    .GetObjectByNPCId(Constants.KyuseiNpcId).Distance2D(Core.Me.Location) > 5f)
+            if (GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId) == null || Constants.KyuseiNpcPosition.Distance2D(Core.Me.Location) > 5f)
             {
 //                var moving = MoveResult.GeneratingPath;
 //                while (!(moving == MoveResult.Done ||
@@ -64,7 +63,12 @@ namespace DeepHoh.TaskManager.Actions
 //                    await Coroutine.Yield();
 //                }
                 Logger.Verbose("at Move");
-                return await CommonTasks.MoveAndStop(new MoveToParameters(GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Location, "Moving toward NPC"), 5f, true);
+
+                if (GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId) != null)
+                    return await CommonTasks.MoveAndStop(new MoveToParameters(GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Location, "Moving toward NPC"), 5f, true);
+                    
+
+                return await CommonTasks.MoveAndStop(new MoveToParameters(Constants.KyuseiNpcPosition, "Moving toward NPC"), 5f, true);
                 //return await CommonTasks.MoveAndStop(new MoveToParameters(Constants.KyuseiNpcPosition, "Moving toward NPC"), 5f, true);
             }
 

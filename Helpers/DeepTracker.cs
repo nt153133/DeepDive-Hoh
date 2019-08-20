@@ -1,5 +1,6 @@
 ﻿using System;
 using DeepHoh.Logging;
+using ff14bot.Managers;
 using ff14bot.RemoteWindows;
 
 namespace DeepHoh.Helpers
@@ -69,6 +70,8 @@ namespace DeepHoh.Helpers
                 _startingLevel = currentLevel;
 
             _currentLevel = currentLevel;
+
+             ChatManager.SendChat($"/echo Run Started: Current level - {currentLevel}");
         }
 
         public static void EndRun(bool failed)
@@ -85,6 +88,10 @@ namespace DeepHoh.Helpers
 
             _lastRunTime = _currentRunEndTime.Subtract(_currentRunStarTime);
             _runEndXP = Experience.CurrentExperience;
+
+            string status = (failed ? "Failed" : "Complete");
+
+            ChatManager.SendChat($"/echo Run Ended - {status}");
 
             RunReport();
         }
