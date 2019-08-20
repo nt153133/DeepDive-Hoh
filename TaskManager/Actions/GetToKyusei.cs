@@ -28,9 +28,7 @@ namespace DeepHoh.TaskManager.Actions
             //we are inside POTD
             if (Constants.InDeepDungeon || Constants.InExitLevel) return false;
 
-            if (WorldManager.ZoneId != Constants.RubySeaZoneID ||
-                GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId) == null ||
-                GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Distance2D(Core.Me.Location) > 35)
+            if (WorldManager.ZoneId != Constants.RubySeaZoneID || Core.Me.Distance2D(Constants.KyuseiNpcPosition) > 110)
             {
                 if (Core.Me.IsCasting)
                 {
@@ -44,10 +42,12 @@ namespace DeepHoh.TaskManager.Actions
                     TreeRoot.Stop();
                     return false;
                 }
+                Logger.Verbose("Still Teleporting");
 
                 await Coroutine.Sleep(1000);
                 return true;
             }
+
 
             if (GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId) == null || GameObjectManager
                     .GetObjectByNPCId(Constants.KyuseiNpcId).Distance2D(Core.Me.Location) > 4f)
@@ -63,6 +63,7 @@ namespace DeepHoh.TaskManager.Actions
 //
 //                    await Coroutine.Yield();
 //                }
+                Logger.Verbose("at Move");
                 return await CommonTasks.MoveAndStop(new MoveToParameters(GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Location, "Moving toward NPC"), 4f, true);
                 //return await CommonTasks.MoveAndStop(new MoveToParameters(Constants.KyuseiNpcPosition, "Moving toward NPC"), 5f, true);
             }
