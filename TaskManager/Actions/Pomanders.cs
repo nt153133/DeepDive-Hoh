@@ -175,8 +175,8 @@ namespace DeepHoh.TaskManager.Actions
                 return true;
             if (await UsePomander(Pomander.Fortune))
                 return true;
-            if (await UsePomander(Pomander.Rage))
-                return true;
+//            if (await UsePomander(Pomander.Rage))
+//                return true;
             if (await UsePomander(Pomander.Intuition))
                 return true;
 

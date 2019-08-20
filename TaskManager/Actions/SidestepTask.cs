@@ -50,16 +50,16 @@ namespace DeepHoh.TaskManager.Actions
             // taken from HB
             // Special case: Bot will do a lot of fast stop n go when avoiding a mob that moves slowly and trying to
             // do something near the mob. To fix, a delay is added to slow down the 'Stop n go' behavior
-            if (poiType == PoiType.Collect || poiType == PoiType.Gather || poiType == PoiType.Hotspot)
-                if (Core.Me.InCombat && AvoidanceManager.Avoids.Any(o => o.IsPointInAvoid(Poi.Current.Location)))
-                {
-                    TreeRoot.StatusText = "Waiting for 'avoid' to move before attempting to interact " +
-                                          Poi.Current.Name;
-                    var randomWaitTime = new Random().Next(1000, 3000);
-                    await Coroutine.Wait(randomWaitTime,
-                        () => Core.Me.InCombat ||
-                              !AvoidanceManager.Avoids.Any(o => o.IsPointInAvoid(Poi.Current.Location)));
-                }
+//            if (poiType == PoiType.Collect || poiType == PoiType.Gather || poiType == PoiType.Hotspot)
+//                if (Core.Me.InCombat && AvoidanceManager.Avoids.Any(o => o.IsPointInAvoid(Poi.Current.Location)))
+//                {
+//                    TreeRoot.StatusText = "Waiting for 'avoid' to move before attempting to interact " +
+//                                          Poi.Current.Name;
+//                    var randomWaitTime = new Random().Next(200, 1000);
+//                    await Coroutine.Wait(randomWaitTime,
+//                        () => Core.Me.InCombat ||
+//                              !AvoidanceManager.Avoids.Any(o => o.IsPointInAvoid(Poi.Current.Location)));
+//                }
 
             return false;
         }
