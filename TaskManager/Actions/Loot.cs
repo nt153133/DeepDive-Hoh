@@ -102,11 +102,11 @@ namespace DeepHoh.TaskManager.Actions
                 }
                 Logger.Verbose("Attempting to interact with: {0} ({1} / 3)", Target.Name, tries + 1);
 
-                if (Target.Name == "Exit")
-                {
-                    ff14bot.Managers.DutyManager.LeaveActiveDuty();
-                    await Coroutine.Sleep(10000);
-                }
+//                if (Target.Name == "Exit")
+//                {
+//                    ff14bot.Managers.DutyManager.LeaveActiveDuty();
+//                    await Coroutine.Sleep(10000);
+//                }
                 Target.Unit.Target();
                 Target.Unit.Interact();
                 await Coroutine.Sleep(500);
