@@ -33,6 +33,7 @@ using DeepHoh.Helpers;
 using DeepHoh.Logging;
 using DeepHoh.Memory;
 using DeepHoh.Properties;
+using ff14bot.Directors;
 
 namespace DeepHoh.Providers
 {
@@ -103,6 +104,9 @@ namespace DeepHoh.Providers
                 //{0,-10} - {1,-10}, {2, 10} - {3,5}
                 Logger.Debug("WallHash: {0,-25}", unit);
             }
+
+            foreach (var pom in Enum.GetValues(typeof(Pomander)))
+                Logger.Info("[Fraility] Item {1} Count: {0}", DeepDungeonManager.GetInventoryItem(Pomander.Rage), pom);
 
         }
 

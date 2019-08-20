@@ -77,7 +77,7 @@ namespace DeepHoh.TaskManager.Actions
                     var itm = DeepDungeonManager.GetInventoryItem(Pomander.Lust);
                     Logger.Info("[LUST] Item Count: {0}", itm.Count);
 
-                    //we are inside the dungeon, should be ok to use InParty here.
+/*                    //we are inside the dungeon, should be ok to use InParty here.
                     if (PartyManager.IsInParty)
                     {
                         Logger.Info("In A Party. Doing Lust Logic...");
@@ -108,7 +108,7 @@ namespace DeepHoh.TaskManager.Actions
                     {
                         Logger.Info("Use Pomander Debug: [HasAura: {0}]", itm.HasAura);
                         await UsePomander(Pomander.Lust, Auras.Lust);
-                    }
+                    }*/
                 }
             }
             else
@@ -174,6 +174,8 @@ namespace DeepHoh.TaskManager.Actions
             if (await Traps())
                 return true;
             if (await UsePomander(Pomander.Fortune))
+                return true;
+            if (await UsePomander(Pomander.Rage))
                 return true;
             if (await UsePomander(Pomander.Intuition))
                 return true;

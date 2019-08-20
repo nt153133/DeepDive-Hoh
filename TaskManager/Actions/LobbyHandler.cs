@@ -20,8 +20,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Clio.Utilities;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
+using ff14bot.Enums;
 
 namespace DeepHoh.TaskManager.Actions
 {
@@ -42,7 +44,15 @@ namespace DeepHoh.TaskManager.Actions
                 Logger.Warn($"Unable to find Lobby Target");
                 return false;
             }
-            if(!Navigator.InPosition(_target.Location, Core.Me.Location, 3))
+            //GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit)).Location
+
+            Vector3 exit = GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit).Location;
+            Navigator.PlayerMover.MoveTowards(exit);
+            await Buddy.Coroutines.Coroutine.Sleep(2000); // (again, probably better to just wait until distance to destination is < 2.0f or something)
+            Navigator.PlayerMover.MoveStop();
+
+            //GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit).Location
+            if (!Navigator.InPosition(_target.Location, Core.Me.Location, 5))
             {
                 if (!await CommonTasks.MoveAndStop(new MoveToParameters(_target.Location, "Moving to Lobby Exit"), 3))
                 {
