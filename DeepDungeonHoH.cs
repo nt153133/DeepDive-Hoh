@@ -8,12 +8,9 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Buddy.Coroutines;
-using DeepHoh.Helpers;
 using DeepHoh.Forms;
+using DeepHoh.Helpers;
 using DeepHoh.Logging;
 using DeepHoh.Providers;
 using DeepHoh.TaskManager;
@@ -28,6 +25,9 @@ using ff14bot.Navigation;
 using ff14bot.NeoProfiles;
 using ff14bot.Overlay3D;
 using ff14bot.Pathing.Service_Navigation;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using TreeSharp;
 
 namespace DeepHoh
@@ -51,7 +51,9 @@ namespace DeepHoh
             //Captain = new GetToCaptain();
 
             if (Settings.Instance.FloorSettings == null || !Settings.Instance.FloorSettings.Any())
+            {
                 Logger.Warn("Settings are empty?");
+            }
 
             Task.Factory.StartNew(() =>
             {
@@ -123,12 +125,17 @@ namespace DeepHoh
             {
                 //force a pulse on the director if we are hitting "start" inside of the dungeon
                 if (DirectorManager.ActiveDirector == null)
+                {
                     DirectorManager.Update();
+                }
+
                 DDTargetingProvider.Instance.Pulse();
             }
 
             if (_tasks != null)
+            {
                 _tasks.Tick();
+            }
         }
 
         public override void Start()
@@ -187,6 +194,7 @@ namespace DeepHoh
 
 
             if (Constants.Lang == Language.Chn)
+            {
                 //回避 - sidestep
                 //Zekken 
                 if (PluginManager.Plugins.Any(i =>
@@ -196,6 +204,7 @@ namespace DeepHoh
                     _root = new ActionAlwaysFail();
                     return;
                 }
+            }
 
             if (PluginManager.Plugins.Any(i => i.Plugin.Name == "Zekken" && i.Enabled))
             {
@@ -224,7 +233,10 @@ namespace DeepHoh
                 new ActionRunCoroutine(async x =>
                 {
                     if (StopPlz)
+                    {
                         return false;
+                    }
+
                     if (!_init)
                     {
                         ff14bot.Helpers.Logging.Write("DeepDive is waiting on Initialization to finish");
@@ -253,13 +265,17 @@ namespace DeepHoh
             {
                 //if we have mimics remove them from our ignore list
                 if (Constants.IgnoreEntity.Contains(EntityNames.MimicCoffer[0]))
+                {
                     Constants.IgnoreEntity = Constants.IgnoreEntity.Except(EntityNames.MimicCoffer).ToArray();
+                }
             }
             else
             {
                 //if we don't have mimics add them to our ignore list
                 if (!Constants.IgnoreEntity.Contains(EntityNames.MimicCoffer[0]))
+                {
                     Constants.IgnoreEntity = Constants.IgnoreEntity.Concat(EntityNames.MimicCoffer).ToArray();
+                }
             }
 
             //Exploding Coffers
@@ -267,24 +283,32 @@ namespace DeepHoh
             {
                 //if we have traps remove them
                 if (Constants.IgnoreEntity.Contains(EntityNames.TrapCoffer))
-                    Constants.IgnoreEntity = Constants.IgnoreEntity.Except(new[] {EntityNames.TrapCoffer}).ToArray();
+                {
+                    Constants.IgnoreEntity = Constants.IgnoreEntity.Except(new[] { EntityNames.TrapCoffer }).ToArray();
+                }
             }
             else
             {
                 if (!Constants.IgnoreEntity.Contains(EntityNames.TrapCoffer))
-                    Constants.IgnoreEntity = Constants.IgnoreEntity.Concat(new[] {EntityNames.TrapCoffer}).ToArray();
+                {
+                    Constants.IgnoreEntity = Constants.IgnoreEntity.Concat(new[] { EntityNames.TrapCoffer }).ToArray();
+                }
             }
 
             if (Settings.Instance.OpenSilver)
             {
                 //if we have traps remove them
                 if (Constants.IgnoreEntity.Contains(EntityNames.SilverCoffer))
-                    Constants.IgnoreEntity = Constants.IgnoreEntity.Except(new[] {EntityNames.SilverCoffer}).ToArray();
+                {
+                    Constants.IgnoreEntity = Constants.IgnoreEntity.Except(new[] { EntityNames.SilverCoffer }).ToArray();
+                }
             }
             else
             {
                 if (!Constants.IgnoreEntity.Contains(EntityNames.SilverCoffer))
-                    Constants.IgnoreEntity = Constants.IgnoreEntity.Concat(new[] {EntityNames.SilverCoffer}).ToArray();
+                {
+                    Constants.IgnoreEntity = Constants.IgnoreEntity.Concat(new[] { EntityNames.SilverCoffer }).ToArray();
+                }
             }
 
             Settings.Instance.Dump();

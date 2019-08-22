@@ -7,14 +7,7 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-using System;
-using System.Runtime.InteropServices;
-using System.Windows.Controls;
 using DeepHoh.Memory.Attributes;
-using ff14bot;
-using ff14bot.Behavior;
-using ff14bot.Enums;
-using ff14bot.Managers;
 
 namespace DeepHoh.Memory
 {
@@ -34,7 +27,7 @@ namespace DeepHoh.Memory
         [OffsetCN("Search 4C 69 C0 ? ? ? ? 48 8D 91 ? ? ? ? Add 3 Read32")]//0x338
         internal static int Map5xSize;
 
-        [Offset("Search 0F B7 82 ? ? ? ? 2B C8 48 8D 0C 89 Add 3 Read32" )] // 0x332
+        [Offset("Search 0F B7 82 ? ? ? ? 2B C8 48 8D 0C 89 Add 3 Read32")] // 0x332
         internal static int WallStartingPoint;
 
         [Offset("Search 49 8D BE ? ? ? ? 0F 1F 44 00 ? 8B 17 Add 3 Read32")] //0x140

@@ -8,8 +8,6 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using System;
-using System.Threading.Tasks;
 using Clio.Utilities;
 using Clio.Utilities.Helpers;
 using DeepHoh.Logging;
@@ -18,6 +16,8 @@ using ff14bot;
 using ff14bot.Behavior;
 using ff14bot.Helpers;
 using ff14bot.Navigation;
+using System;
+using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
@@ -33,17 +33,25 @@ namespace DeepHoh.TaskManager.Actions
         {
             if (_moveTimer.IsFinished && Poi.Current != null && Poi.Current.Type != PoiType.None)
             {
-                var path = StraightPathHelper.RealStraightPath();
+                System.Collections.Generic.List<Vector3> path = StraightPathHelper.RealStraightPath();
                 Logger.Info("Dump path:");
-                foreach (var x in path) Logger.Info(x.ToString());
+                foreach (Vector3 x in path)
+                {
+                    Logger.Info(x.ToString());
+                }
 
                 Logger.Warn("No activity was detected for {0} seconds. Adding target to the blacklist and trying again",
                     _moveTimer.WaitTime.TotalSeconds);
                 if (Poi.Current.Unit != null)
+                {
                     DDTargetingProvider.Instance.AddToBlackList(Poi.Current.Unit, TimeSpan.FromSeconds(3),
                         "Navigation Error");
+                }
+
                 if (Poi.Current.Type != PoiType.None)
+                {
                     Poi.Clear("No activity detected");
+                }
 
                 _moveTimer.Reset();
                 return true;
@@ -64,7 +72,7 @@ namespace DeepHoh.TaskManager.Actions
 
         public void Tick()
         {
-            var location = Core.Me.Location;
+            Vector3 location = Core.Me.Location;
             if (location.DistanceSqr(_location) > Distance)
             {
                 _location = location;

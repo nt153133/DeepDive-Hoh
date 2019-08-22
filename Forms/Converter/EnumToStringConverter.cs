@@ -7,11 +7,11 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+using DeepHoh.Properties;
 using System;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Data;
-using DeepHoh.Properties;
 
 namespace DeepHoh.Forms.Converter
 {

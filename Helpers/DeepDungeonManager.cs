@@ -12,11 +12,6 @@ using ff14bot.Directors;
 using ff14bot.Managers;
 using ff14bot.Navigation;
 using ff14bot.RemoteAgents;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DeepHoh.Helpers
 {
@@ -47,6 +42,6 @@ namespace DeepHoh.Helpers
         public static bool PortalActive => Director.DeepDungeonPortalStatus == 11;
         public static bool ReturnActive => Director.DeepDungeonReturnStatus == 11;
 
-        
+
     }
 }

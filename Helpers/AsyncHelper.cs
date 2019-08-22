@@ -15,10 +15,10 @@ namespace DeepHoh.Helpers
 {
     internal static class AsyncHelper
     {
-        private static readonly TaskFactory _myTaskFactory = new 
-            TaskFactory(CancellationToken.None, 
-                TaskCreationOptions.None, 
-                TaskContinuationOptions.None, 
+        private static readonly TaskFactory _myTaskFactory = new
+            TaskFactory(CancellationToken.None,
+                TaskCreationOptions.None,
+                TaskContinuationOptions.None,
                 TaskScheduler.Default);
 
         public static TResult RunSync<TResult>(Func<Task<TResult>> func)

@@ -8,28 +8,23 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using ff14bot;
-using ff14bot.Behavior;
-using ff14bot.Managers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ff14bot.Pathing;
-using TreeSharp;
-using DeepHoh.Memory;
-using ff14bot.Navigation;
 using Buddy.Coroutines;
-using ff14bot.Objects;
-using DeepHoh.Tasks.Coroutines;
 using DeepHoh.Enums;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
 using DeepHoh.Providers;
-using ff14bot.Helpers;
-using ff14bot.Enums;
+using ff14bot;
+using ff14bot.Behavior;
 using ff14bot.Directors;
+using ff14bot.Enums;
+using ff14bot.Helpers;
+using ff14bot.Managers;
+using ff14bot.Objects;
+using ff14bot.Pathing;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using TreeSharp;
 
 namespace DeepHoh.TaskManager.Actions
 {
@@ -63,10 +58,14 @@ namespace DeepHoh.TaskManager.Actions
         {
             //dont try and do combat outside of the dungeon plz
             if (!Constants.InDeepDungeon)
+            {
                 return false;
+            }
 
             if (AvoidanceManager.IsRunningOutOfAvoid)
+            {
                 return true;
+            }
 
             if (!Core.Me.InRealCombat())
             {
@@ -77,7 +76,10 @@ namespace DeepHoh.TaskManager.Actions
                     return true;
                 }
                 if (await PreCombatBuff())
+                {
                     return true;
+                }
+
 
 
                 // For floors with auto heal penalty or item penalty we will engage normally until we hit
@@ -103,15 +105,18 @@ namespace DeepHoh.TaskManager.Actions
 
             }
             if (Poi.Current == null || Poi.Current.Type != PoiType.Kill || Poi.Current.BattleCharacter == null)
+            {
                 return false;
-            if(Poi.Current.BattleCharacter == null || !Poi.Current.BattleCharacter.IsValid || Poi.Current.BattleCharacter.IsDead)
+            }
+
+            if (Poi.Current.BattleCharacter == null || !Poi.Current.BattleCharacter.IsValid || Poi.Current.BattleCharacter.IsDead)
             {
                 Poi.Clear("Target is dead");
                 return true;
             }
 
-            var target = Poi.Current;
-            
+            Poi target = Poi.Current;
+
             TreeRoot.StatusText = $"Combat: {target.BattleCharacter.Name}";
 
             //target if we are in range
@@ -125,29 +130,39 @@ namespace DeepHoh.TaskManager.Actions
 
             //Logger.Info("======= PRE COMBAT");
             if (await PreCombatBuff())
+            {
                 return true;
+            }
 
             //Logger.Info("======= OUT OF RANGE2");
             //we are outside of targeting range, walk to the mob
             if (Core.Me.PrimaryTargetPtr == IntPtr.Zero || target.Location.Distance2D(Core.Me.Location) > 30)
             {
-                var dist = Core.Player.CombatReach + RoutineManager.Current.PullRange + (target.Unit != null ? target.Unit.CombatReach : 0);
+                float dist = Core.Player.CombatReach + RoutineManager.Current.PullRange + (target.Unit != null ? target.Unit.CombatReach : 0);
                 if (dist > 30)
+                {
                     dist = 29;
+                }
 
                 await CommonTasks.MoveAndStop(new MoveToParameters(target.Location, target.Name), dist, true);
                 return true;
             }
 
             if (await UseWitching())
+            {
                 return true;
+            }
 
             //used if we are transformed
             if (await UsePomanderSpell())
+            {
                 return true;
+            }
 
             if (await PreCombatLogic())
+            {
                 return true;
+            }
 
             //Logger.Info("======= PULL");
             //pull not in combat
@@ -162,7 +177,7 @@ namespace DeepHoh.TaskManager.Actions
                 await Pull();
                 return true;
             }
-           
+
             //6334 - Final Sting
             if (
                 GameObjectManager.Attackers.Any(
@@ -173,33 +188,45 @@ namespace DeepHoh.TaskManager.Actions
                 Core.Me.CurrentHealthPercent < 90)
             {
                 if (await Tasks.Coroutines.Common.UsePots(true))
+                {
                     return true;
+                }
             }
 
             if (Core.Me.InRealCombat())
             {
                 if (await Tasks.Coroutines.Common.UseSustain())
+                {
                     return true;
+                }
 
                 if (Settings.Instance.UseAntidote)
                 {
                     if (Core.Me.HasAnyAura(Auras.Poisons) && await Tasks.Coroutines.Common.UseItemById(Items.Antidote))
+                    {
                         return true;
+                    }
                 }
 
                 if (await Heal())
+                {
                     return true;
-                    
-                if (await CombatBuff())
-                    return true;
+                }
 
-                if(await Combat())
+                if (await CombatBuff())
+                {
                     return true;
+                }
+
+                if (await Combat())
+                {
+                    return true;
+                }
             }
 
             //Logger.Warn($"don't let anything else execute if we are running the kill poi");
             //don't let anything else execute if we are running the kill poi
-            return true ; //we expected to do combat
+            return true; //we expected to do combat
         }
 
         /// <summary>
@@ -227,14 +254,14 @@ namespace DeepHoh.TaskManager.Actions
                 if (Tasks.Coroutines.Common.PomanderState == ItemState.Lust)
                 {
                     await CastPomanderAbility(LustSpell);
-  
+
                     return true;
                 }
                 else if (Tasks.Coroutines.Common.PomanderState == ItemState.Rage)
                 {
 
                     await CastPomanderAbility(PummelSpell);
-                
+
                     return true;
                 }
                 Logger.Warn("I am under the effects of Lust or Rage and Don't know either spell. Please send help!");
@@ -298,7 +325,7 @@ namespace DeepHoh.TaskManager.Actions
                     (!PartyManager.IsInParty || PartyManager.IsPartyLeader)
                         );
                 await CommonTasks.StopMoving("Use Pomander");
-                var res = await Tasks.Coroutines.Common.UsePomander(Pomander.Witching);
+                bool res = await Tasks.Coroutines.Common.UsePomander(Pomander.Witching);
 
                 await Coroutine.Yield();
                 return res;
@@ -312,7 +339,7 @@ namespace DeepHoh.TaskManager.Actions
         object context = new object();
         internal async Task<bool> Rest()
         {
-                return await _rest.ExecuteCoroutine(context);
+            return await _rest.ExecuteCoroutine(context);
         }
 
         internal async Task<bool> Pull()
@@ -323,23 +350,27 @@ namespace DeepHoh.TaskManager.Actions
         internal async Task<bool> Heal()
         {
             if (await Tasks.Coroutines.Common.UsePots())
+            {
                 return true;
+            }
 
-
-                return await _heal.ExecuteCoroutine(context);
+            return await _heal.ExecuteCoroutine(context);
         }
 
         internal async Task<bool> PreCombatBuff()
         {
             if (!Core.Me.InCombat)
+            {
                 return await _preCombatBuff.ExecuteCoroutine(context);
+            }
+
             return false;
         }
 
         private async Task<bool> PreCombatLogic()
         {
             //if(!Core.Me.InCombat)
-                return await _preCombatLogic.ExecuteCoroutine(context);
+            return await _preCombatLogic.ExecuteCoroutine(context);
             //return false;
         }
 
@@ -356,14 +387,18 @@ namespace DeepHoh.TaskManager.Actions
         public void Tick()
         {
             if (!Constants.InDeepDungeon || CommonBehaviors.IsLoading || QuestLogManager.InCutscene)
+            {
                 return;
+            }
 
             CombatTargeting.Instance.Pulse();
             if (CombatTargeting.Instance.FirstUnit == null)
             {
-                var t = DDTargetingProvider.Instance.FirstEntity;
+                GameObject t = DDTargetingProvider.Instance.FirstEntity;
                 if (t == null)
+                {
                     return;
+                }
 
                 if (t.Type == GameObjectType.BattleNpc && Poi.Current.Type != PoiType.Kill)
                 {
@@ -377,15 +412,16 @@ namespace DeepHoh.TaskManager.Actions
             if (Poi.Current.Unit != null && Poi.Current.Type != PoiType.Kill)
             {
                 if (!Core.Me.InRealCombat() && Poi.Current.Unit.Distance2D() < CombatTargeting.Instance.FirstUnit.Distance2D())
+                {
                     return;
-
+                }
             }
             if (Poi.Current.Unit == null || Poi.Current.Unit.Pointer != CombatTargeting.Instance.FirstUnit.Pointer)
             {
                 Poi.Current = new Poi(CombatTargeting.Instance.FirstUnit, PoiType.Kill);
                 return;
             }
-            
+
         }
     }
 }

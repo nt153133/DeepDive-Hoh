@@ -7,6 +7,7 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+using DeepHoh.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +16,6 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
-using DeepHoh.Properties;
 
 namespace DeepHoh.Forms.Converter
 {
@@ -102,26 +102,26 @@ namespace DeepHoh.Forms.Converter
         [ConstructorArgument("type")]
         public Type Type
         {
-            get { return type; }
-            set { type = value; }
+            get => type;
+            set => type = value;
         }
 
         public IValueConverter Converter
         {
-            get { return converter; }
-            set { converter = value; }
+            get => converter;
+            set => converter = value;
         }
 
         public CultureInfo ConverterCulture
         {
-            get { return converterCulture; }
-            set { converterCulture = value; }
+            get => converterCulture;
+            set => converterCulture = value;
         }
 
         public object ConverterParameter
         {
-            get { return converterParameter; }
-            set { converterParameter = value; }
+            get => converterParameter;
+            set => converterParameter = value;
         }
 
         #endregion

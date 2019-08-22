@@ -8,9 +8,6 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Buddy.Coroutines;
 using Clio.Utilities.Helpers;
 using DeepHoh.Helpers;
@@ -22,6 +19,9 @@ using ff14bot.Enums;
 using ff14bot.Managers;
 using ff14bot.RemoteAgents;
 using ff14bot.RemoteWindows;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
@@ -29,7 +29,7 @@ namespace DeepHoh.TaskManager.Actions
     {
         internal static bool _error;
         private readonly object _errorLock = new object();
-        private byte[] _aetherialLevels = {0, 0};
+        private byte[] _aetherialLevels = { 0, 0 };
 
 
         private DeepDungeonSaveState[] _saveStates;
@@ -37,7 +37,7 @@ namespace DeepHoh.TaskManager.Actions
         private FloorSetting _targetFloor;
         private readonly WaitTimer DungeonQueue = new WaitTimer(TimeSpan.FromMinutes(5));
 
-        private static uint UseSaveSlot => (uint) Settings.Instance.SaveSlot;
+        private static uint UseSaveSlot => (uint)Settings.Instance.SaveSlot;
 
         private AgentDeepDungeonSaveData Sd => Constants.GetSaveInterface();
 
@@ -58,20 +58,28 @@ namespace DeepHoh.TaskManager.Actions
             }
 
             if (!DungeonQueue.IsFinished)
-                foreach (var x in GamelogManager.CurrentBuffer.Where(i => i.MessageType == (MessageType) 2876))
+            {
+                foreach (ChatLogEntry x in GamelogManager.CurrentBuffer.Where(i => i.MessageType == (MessageType)2876))
+                {
                     HandleErrorMessages(x);
+                }
+            }
         }
 
         public async Task<bool> Run()
         {
-            if (WorldManager.ZoneId != Constants.RubySeaZoneID) return false;
+            if (WorldManager.ZoneId != Constants.RubySeaZoneID)
+            {
+                return false;
+            }
+
             if (Settings.Instance.Stop)
             {
                 DeepTracker.EndRun(true);
                 TreeRoot.Stop("Stop Requested");
                 return true;
             }
-            
+
             if (ContentsFinderConfirm.IsOpen)
             {
                 Logger.Warn($"Entering HoH - Currently a Level {Core.Me.ClassLevel} {Core.Me.CurrentJob}");
@@ -112,8 +120,12 @@ namespace DeepHoh.TaskManager.Actions
         private void HandleErrorMessages(ChatLogEntry e)
         {
             _error = true;
-            var str = e.Contents;
-            foreach (var c in PartyManager.AllMembers) str = str.Replace(c.Name, "PARTY_MEMBER_NAME");
+            string str = e.Contents;
+            foreach (PartyMember c in PartyManager.AllMembers)
+            {
+                str = str.Replace(c.Name, "PARTY_MEMBER_NAME");
+            }
+
             str = str.Replace(Core.Me.Name, "MY_CHARACTER_NAME");
 
             Logger.Verbose("We detected an error while trying to join the queue. {0}", str);
@@ -123,7 +135,7 @@ namespace DeepHoh.TaskManager.Actions
         private async Task OpenMenu()
         {
             Logger.Verbose("Attempting to interact with: {0}",
-                DataManager.GetLocalizedNPCName((int) Constants.KyuseiNpcId));
+                DataManager.GetLocalizedNPCName((int)Constants.KyuseiNpcId));
 
             GameObjectManager.GetObjectByNPCId(Constants.KyuseiNpcId).Interact();
             await Coroutine.Yield();
@@ -135,7 +147,10 @@ namespace DeepHoh.TaskManager.Actions
                 await Coroutine.Yield();
             }
 
-            if (!HasWindowOpen) Logger.Verbose("Failed to open window. trying again...");
+            if (!HasWindowOpen)
+            {
+                Logger.Verbose("Failed to open window. trying again...");
+            }
         }
 
         /// <summary>
@@ -148,7 +163,7 @@ namespace DeepHoh.TaskManager.Actions
         /// <returns></returns>
         public bool GetFloorStatus(byte[] apLevels, DeepDungeonSaveState[] sdSaveStates)
         {
-            var stop = Settings.Instance.SelectedLevel;
+            FloorSetting stop = Settings.Instance.SelectedLevel;
 
             try
             {
@@ -165,19 +180,19 @@ namespace DeepHoh.TaskManager.Actions
             catch (Exception)
             {
                 Logger.Verbose("Exception with setting floor data. setting target floor to 10");
-                _targetFloor = new FloorSetting {LevelMax = 10};
+                _targetFloor = new FloorSetting { LevelMax = 10 };
             }
 
             Logger.Verbose("Starting Level {0}", _targetFloor.LevelMax - 9);
 
-            var lm = _targetFloor.LevelMax < sdSaveStates[UseSaveSlot].Floor;
-            var notfixed = !sdSaveStates[UseSaveSlot].FixedParty;
-            var cjChanged = sdSaveStates[UseSaveSlot].Class != Core.Me.CurrentJob;
-            var partyData = sdSaveStates[UseSaveSlot].PartyMembers.ToList();
-            var saved = sdSaveStates[UseSaveSlot].Saved;
+            bool lm = _targetFloor.LevelMax < sdSaveStates[UseSaveSlot].Floor;
+            bool notfixed = !sdSaveStates[UseSaveSlot].FixedParty;
+            bool cjChanged = sdSaveStates[UseSaveSlot].Class != Core.Me.CurrentJob;
+            System.Collections.Generic.List<DeepDungeonSaveState.DeepDungeonPartyMember> partyData = sdSaveStates[UseSaveSlot].PartyMembers.ToList();
+            bool saved = sdSaveStates[UseSaveSlot].Saved;
 
             bool partySize;
-            var partyClass = false;
+            bool partyClass = false;
 
             //if (saved && partyData.Count == PartyManager.NumMembers)
             //{
@@ -200,22 +215,36 @@ namespace DeepHoh.TaskManager.Actions
             //}
 
             if (PartyManager.IsInParty)
+            {
                 partySize = PartyManager.NumMembers != partyData.Count;
+            }
             else
+            {
                 partySize = partyData.Count != 1;
-
+            }
 
             if (saved && lm)
+            {
                 Logger.Verbose("Resetting save data: Level Max ({0}) is Less than floor value: {1}",
                     _targetFloor.LevelMax, sdSaveStates[UseSaveSlot].Floor);
+            }
+
             if (saved && notfixed)
+            {
                 Logger.Verbose("Resetting save data: Our class/job has changed from: {0} to {1}",
                     sdSaveStates[UseSaveSlot].Class, Core.Me.CurrentJob);
+            }
+
             if (saved && partySize)
+            {
                 Logger.Verbose("Resetting save data: Our Party has changed. {0} != {1}", PartyManager.NumMembers,
                     partyData.Count);
+            }
+
             if (saved && _error)
+            {
                 Logger.Verbose("Resetting save data: there was a warning waiting for the duty finder.");
+            }
 
             return saved && (lm || notfixed || cjChanged || partySize || partyClass || _error);
         }
@@ -238,7 +267,10 @@ Aetherpool Armor: +{1}
                 _aetherialLevels[1]);
             _saveStates = Sd.SaveStates;
 
-            for (var i = 0; i < 2; i++) Logger.Verbose("[{0}] {1}", i + 1, _saveStates[i]);
+            for (int i = 0; i < 2; i++)
+            {
+                Logger.Verbose("[{0}] {1}", i + 1, _saveStates[i]);
+            }
 
             Logger.Warn("Using the {0} Save Slot", Settings.Instance.SaveSlot);
         }
@@ -259,15 +291,19 @@ Aetherpool Armor: +{1}
                 }
 
                 if (DeepDungeonHoH.StopPlz)
+                {
                     return;
+                }
 
                 Logger.Warn("Everyone is now in the zone");
-                for (var i = 0; i < 6; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     Logger.Warn("Giving them {0} seconds to do what they need to at the NPC", 60 - i * 10);
                     await Coroutine.Sleep(TimeSpan.FromSeconds(10));
                     if (DeepDungeonHoH.StopPlz)
+                    {
                         return;
+                    }
                 }
             }
 
@@ -285,11 +321,12 @@ Aetherpool Armor: +{1}
             }
 
             if (_error)
+            {
                 lock (_errorLock)
                 {
                     _error = false;
                 }
-
+            }
 
             if (!PartyManager.IsInParty || PartyManager.IsPartyLeader)
             {
@@ -354,12 +391,19 @@ Aetherpool Armor: +{1}
                         await Coroutine.Sleep(1000);
 
                         if (Settings.Instance.StartAt51)
+                        {
                             Logger.Verbose("Start at 51: {0}", _targetFloor.LevelMax > 50);
+                        }
 
                         if (Settings.Instance.StartAt51 && _targetFloor.LevelMax > 50)
+                        {
                             SelectString.ClickSlot(1);
+                        }
                         else
+                        {
                             SelectString.ClickSlot(0);
+                        }
+
                         await Coroutine.Sleep(1000);
                     }
 

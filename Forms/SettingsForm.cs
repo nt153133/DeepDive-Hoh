@@ -8,11 +8,10 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using DeepHoh.Providers;
-using System;
-using System.Windows.Forms;
 using DeepHoh.Logging;
 using DeepHoh.Structure;
+using System;
+using System.Windows.Forms;
 
 namespace DeepHoh.Forms
 {
@@ -20,7 +19,7 @@ namespace DeepHoh.Forms
     {
         public SettingsForm()
         {
-            
+
             InitializeComponent();
         }
 

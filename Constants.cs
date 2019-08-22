@@ -8,10 +8,6 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Clio.Utilities;
 using DeepHoh.Memory;
 using DeepHoh.Properties;
@@ -20,6 +16,10 @@ using ff14bot.Enums;
 using ff14bot.Managers;
 using ff14bot.RemoteAgents;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace DeepHoh
 {
@@ -37,6 +37,7 @@ namespace DeepHoh
         internal static uint PalaceHornet = 4981;
         internal static uint PalaceSlime = 4990;
         internal static uint HeavenlyShark = 7272;
+        internal static uint CatThing = 7398;
     }
 
     /// <summary>
@@ -45,13 +46,13 @@ namespace DeepHoh
     internal static class EntityNames
     {
         internal static uint TrapCoffer = 2005808;
-        
+
         internal static uint GoldCoffer = 2007358;
         internal static uint SilverCoffer = 2007357;
 
         //internal static uint BandedCoffer = 2007543;
 
-        internal static uint[] MimicCoffer = {2006020, 2006022};
+        internal static uint[] MimicCoffer = { 2006020, 2006022 };
 
         internal static uint Hidden = 2007542;
         internal static uint BandedCoffer = 2007543;
@@ -63,6 +64,7 @@ namespace DeepHoh
         internal static uint LobbyEntrance = 2009524;
 
         internal static uint BeaconofReturn = 2009506;
+
 
         #region Pets
 
@@ -160,7 +162,7 @@ namespace DeepHoh
         [JsonProperty("Rate")] public float[] Rate;
 
         public float RecoverMax => Core.Me.MaxHealth * Rate[1];
-        public uint Recovery => (uint) Math.Min(RecoverMax, Max[1]);
+        public uint Recovery => (uint)Math.Min(RecoverMax, Max[1]);
 
         public float LevelScore => Max[1] / RecoverMax;
     }
@@ -178,7 +180,7 @@ namespace DeepHoh
         //593 - 607 are 51-200
         internal static uint[] DeepDungeonRawIds;
 
-        internal static uint[] Exits = {EntityNames.FloorExit, EntityNames.BossExit, EntityNames.LobbyExit};
+        internal static uint[] Exits = { EntityNames.FloorExit, EntityNames.BossExit, EntityNames.LobbyExit };
 
         //2002872 = some random thing that the bot tries to target in boss rooms. actual purpose unknown
         //7395 Trap ID
@@ -187,7 +189,7 @@ namespace DeepHoh
             7395, 5402, EntityNames.FloorExit, EntityNames.BeaconofReturn, EntityNames.LobbyEntrance, 2002872,
             EntityNames.RubyCarby, EntityNames.EmeraldCarby, EntityNames.TopazCarby, EntityNames.Garuda,
             EntityNames.Titan, EntityNames.Ifrit, EntityNames.Eos, EntityNames.Selene, EntityNames.Rook,
-            EntityNames.Bishop
+            EntityNames.Bishop, Mobs.CatThing
         };
 
         internal static uint MapVersion = 4;
@@ -239,7 +241,10 @@ namespace DeepHoh
             get
             {
                 if (!PartyManager.IsInParty)
+                {
                     return 20;
+                }
+
                 return Math.Max(8, RoutineManager.Current.PullRange + Settings.Instance.PullRange);
             }
         }
@@ -254,7 +259,7 @@ namespace DeepHoh
 
         public static void INIT()
         {
-            var field = (Language) typeof(DataManager).GetFields(BindingFlags.Static | BindingFlags.NonPublic)
+            Language field = (Language)typeof(DataManager).GetFields(BindingFlags.Static | BindingFlags.NonPublic)
                 .First(i => i.FieldType == typeof(Language)).GetValue(null);
 
             Lang = field;

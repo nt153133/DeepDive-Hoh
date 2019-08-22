@@ -7,33 +7,26 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Clio.Utilities;
-using ff14bot;
-using ff14bot.Enums;
-using ff14bot.Interfaces;
-using ff14bot.Managers;
-using NeoGaia.ConnectionHandler;
-using Newtonsoft.Json;
-using ff14bot.Pathing.Service_Navigation;
-using ff14bot.Pathing;
-using ff14bot.Navigation;
-using ff14bot.Objects;
-using ff14bot.Pathing.Avoidance;
-using ff14bot.Overlay3D;
-using System.Drawing;
-using ff14bot.Helpers;
-using ff14bot.ServiceClient;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
 using DeepHoh.Memory;
 using DeepHoh.Properties;
-using ff14bot.Directors;
+using ff14bot;
+using ff14bot.Enums;
+using ff14bot.Managers;
+using ff14bot.Navigation;
+using ff14bot.Objects;
+using ff14bot.Overlay3D;
+using ff14bot.Pathing;
+using ff14bot.Pathing.Service_Navigation;
+using ff14bot.ServiceClient;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Reflection;
 
 namespace DeepHoh.Providers
 {
@@ -62,13 +55,16 @@ namespace DeepHoh.Providers
         private void SetupDetour()
         {
             //if we are not on the lobby & we have already reloaded detour for this floor return
-            if (_floorId == DeepDungeonManager.Level) return;
+            if (_floorId == DeepDungeonManager.Level)
+            {
+                return;
+            }
 
             _floorId = DeepDungeonManager.Level;
 
-            
-            var map = Constants.Maps[WorldManager.RawZoneId];
-            if(_detourLevel != map)
+
+            uint map = Constants.Maps[WorldManager.RawZoneId];
+            if (_detourLevel != map)
             {
                 _detourLevel = map;
                 _walls = LoadWalls(map);
@@ -80,7 +76,7 @@ namespace DeepHoh.Providers
             _trapPos = new List<Vector3>();
             _map = new List<Vector3>();
 
-            
+
 
             Logger.Verbose("Updating navigation {0}", map);
             wallList.Clear();
@@ -90,30 +86,33 @@ namespace DeepHoh.Providers
             WallCheck();
 
             Logger.Debug("Game objects: unit \t NpcID \t ObjID");
-            var units = GameObjectManager.GameObjects;
-            foreach(var unit in units)
+            IEnumerable<GameObject> units = GameObjectManager.GameObjects;
+            foreach (GameObject unit in units)
             {
-                //Logger.Debug("Game object: {0}\t{1}\t{2}",unit,unit.NpcId,unit.ObjectId);
-                //{0,-10} - {1,-10}, {2, 10} - {3,5}
-                Logger.Debug("Game object: {0,-25} - {1,20} - {2, 15}",unit.Name,unit.NpcId,unit.ObjectId);
+                Logger.Debug("Game object: {0,-25} - {1,20} - {2, 15}", unit.Name, unit.NpcId, unit.ObjectId);
             }
 
-            foreach (var unit in activeWalls)
+            foreach (uint unit in activeWalls)
             {
-                //Logger.Debug("Game object: {0}\t{1}\t{2}",unit,unit.NpcId,unit.ObjectId);
-                //{0,-10} - {1,-10}, {2, 10} - {3,5}
                 Logger.Debug("WallHash: {0,-25}", unit);
             }
 
-//            foreach (var pom in Enum.GetValues(typeof(Pomander)))
-//                Logger.Info("[Fraility] Item {1} Count: {0}", DeepDungeonManager.GetInventoryItem(Pomander.Rage), pom);
-
+            Logger.Debug("Auras");
+            foreach (var a in Core.Me.Auras.ToList())
+            {
+                Logger.Debug("Name: {0} ID: {1}", a.LocalizedName, a.Id);
+                //Logger.Debug($"Name: {a.LocalizedName} ID: {a.Id}");
+            }
         }
 
         private static Dictionary<uint, List<Vector3>> LoadWalls(uint map)
         {
             string text;
-            if (map == 70) return new Dictionary<uint, List<Vector3>>();
+            if (map == 70)
+            {
+                return new Dictionary<uint, List<Vector3>>();
+            }
+
             switch (map)
             {
                 case 1:
@@ -184,21 +183,21 @@ namespace DeepHoh.Providers
         private bool WallCheck()
         {
 
-            var updated = false;
-            var me = Core.Me.Location;
+            bool updated = false;
+            Vector3 me = Core.Me.Location;
             if (_walls != null)
             {
-                foreach (var id in _walls.Where(i => i.Value[0].Distance2D(Core.Me.Location) < 50 && !_hit.ContainsKey(i.Key) && !activeWalls.Contains(i.Key)))
+                foreach (KeyValuePair<uint, List<Vector3>> id in _walls.Where(i => i.Value[0].Distance2D(Core.Me.Location) < 50 && !_hit.ContainsKey(i.Key) && !activeWalls.Contains(i.Key)))
                 {
 
-                    var wall1 = id.Value[1];
+                    Vector3 wall1 = id.Value[1];
                     wall1.Y -= 2;
 
                     wallList.Add(new BoundingBox3() { Min = wall1, Max = id.Value[2] });
                     _hit.Add(id.Key, true);
                     updated = true;
 
-                } 
+                }
             }
 
             //Logger.Info($"[walls] {string.Join(", ", _hit.Keys)}");
@@ -215,44 +214,48 @@ namespace DeepHoh.Providers
         {
             //if (floorCache == DeepDungeonManager.Level && _walls != null) return _wallcache;
             //floorCache = DeepDungeonManager.Level;
-            var director = DirectorManager.ActiveDirector.Pointer;
+            IntPtr director = DirectorManager.ActiveDirector.Pointer;
 
             if (director == IntPtr.Zero)
-                return new HashSet<uint>();
-
-            var v187A = Core.Memory.Read<byte>(director + Offsets.DDMapGroup);
-
-            var v3 = director + Offsets.Map5xStart + (v187A * Offsets.Map5xSize);
-            var v332 = Core.Memory.Read<ushort>(v3 + Offsets.WallStartingPoint);
-
-            var v29 = v3 + 0x10;
-            var v7_location = v29;
-
-
-            var v7 = Core.Memory.ReadArray<short>(v7_location, 5);
-            var wallset = new HashSet<uint>();
-
-            var v5 = 0;
-
-            var types = new uint[] { 1, 2, 4, 8 }; //taken from the client
-
-            for (var v30 = 5; v30 > 1; v30--)
             {
-                for (var v8 = 0; v8 < 5; v8++)
+                return new HashSet<uint>();
+            }
+
+            byte v187A = Core.Memory.Read<byte>(director + Offsets.DDMapGroup);
+
+            IntPtr v3 = director + Offsets.Map5xStart + (v187A * Offsets.Map5xSize);
+            ushort v332 = Core.Memory.Read<ushort>(v3 + Offsets.WallStartingPoint);
+
+            IntPtr v29 = v3 + 0x10;
+            IntPtr v7_location = v29;
+
+
+            short[] v7 = Core.Memory.ReadArray<short>(v7_location, 5);
+            HashSet<uint> wallset = new HashSet<uint>();
+
+            int v5 = 0;
+
+            uint[] types = new uint[] { 1, 2, 4, 8 }; //taken from the client
+
+            for (int v30 = 5; v30 > 1; v30--)
+            {
+                for (int v8 = 0; v8 < 5; v8++)
                 {
                     if (v7[v8] != 0)
                     {
-                        var v9 = v3 + 0x14 * (v7[v8] - v332);
+                        IntPtr v9 = v3 + 0x14 * (v7[v8] - v332);
 
                         // var wall = Core.Memory.Read<uint>(v9 + Offsets.UNK_StartingCircle);
                         //wallset.Add(wall);
 
                         byte @byte = Core.Memory.Read<byte>(director + v5 + Offsets.WallGroupEnabled);
                         uint[] walls = Core.Memory.ReadArray<uint>(v9 + Offsets.Starting, 4);
-                        for (var v16 = 0; v16 < 4; v16++)
+                        for (int v16 = 0; v16 < 4; v16++)
                         {
                             if (walls[v16] < 2)
+                            {
                                 continue;
+                            }
 
                             if ((@byte & types[v16]) != 0) //==0 is closed != 0 is "open"
                             {
@@ -277,11 +280,19 @@ namespace DeepHoh.Providers
 
         internal static void Render(object sender, DrawingEventArgs e)
         {
-            if (!Settings.Instance.DebugRender) return;
-            if (!Constants.InDeepDungeon) return;
+            if (!Settings.Instance.DebugRender)
+            {
+                return;
+            }
+
+            if (!Constants.InDeepDungeon)
+            {
+                return;
+            }
+
             try
             {
-                var drawer = e.Drawer;
+                I3DDrawer drawer = e.Drawer;
 
 
                 //if (_path != null)
@@ -295,7 +306,9 @@ namespace DeepHoh.Providers
                 //}
 
                 if (_hit == null)
+                {
                     return;
+                }
 
                 //List<uint> active = new List<uint>();
                 //active.AddRange(_hit.Keys);
@@ -309,15 +322,15 @@ namespace DeepHoh.Providers
                 List<BoundingBox3> service = new List<BoundingBox3>();
                 service.AddRange(wallList);
 
-                foreach (var x in service)
+                foreach (BoundingBox3 x in service)
                 {
-                    var extents = Bound(x.Min, x.Max);
+                    Vector3 extents = Bound(x.Min, x.Max);
                     drawer.DrawBox(Vector3.Lerp(x.Min, x.Max, 0.5f), extents, Color.FromArgb(100, Color.Turquoise));
                 }
 
                 List<BoundingCircle> tarp = new List<BoundingCircle>();
                 tarp.AddRange(trapList);
-                foreach(var t in tarp)
+                foreach (BoundingCircle t in tarp)
                 {
                     drawer.DrawCircleOutline(t.Center, t.Radius, Color.FromArgb(100, Color.Red));
                 }
@@ -344,10 +357,14 @@ namespace DeepHoh.Providers
         {
             //if we have added blackspots already OR there aren't any traps
             if (!GameObjectManager.GameObjects.Any(
-                i => i.Location != Vector3.Zero && Constants.TrapIds.Contains(i.NpcId) && !_traps.Contains(i.ObjectId))) return;
+                i => i.Location != Vector3.Zero && Constants.TrapIds.Contains(i.NpcId) && !_traps.Contains(i.ObjectId)))
+            {
+                return;
+            }
+
             {
                 Logger.Verbose("Adding Black spots {0}", GameObjectManager.GameObjects.Count(i => i.Location != Vector3.Zero && Constants.TrapIds.Contains(i.NpcId)));
-                foreach (var i in GameObjectManager.GameObjects.Where(i => i.Location != Vector3.Zero && Constants.TrapIds.Contains(i.NpcId) && !_traps.Contains(i.ObjectId) && i.IsVisible))
+                foreach (GameObject i in GameObjectManager.GameObjects.Where(i => i.Location != Vector3.Zero && Constants.TrapIds.Contains(i.NpcId) && !_traps.Contains(i.ObjectId) && i.IsVisible))
                 {
                     Logger.Verbose($"[{i.NpcId}] {i.ObjectId} - {i.Location}");
                     //_detour.AddBlackspot(i.Location, TrapSize);
@@ -357,17 +374,23 @@ namespace DeepHoh.Providers
                 }
             }
 
-            var units = GameObjectManager.GameObjects.Where(j => j.Location != Vector3.Zero);
-            foreach (var unit in units)
+            IEnumerable<GameObject> units = GameObjectManager.GameObjects.Where(j => j.Location != Vector3.Zero);
+            foreach (GameObject unit in units)
             {
                 if (unit == null)
+                {
                     Logger.Debug("TRAP NULL unit: {0}", unit.NpcId);
+                }
 
                 if (unit.Name == "" && !_traps.Contains(unit.ObjectId) && unit.NpcId != 2002872)
+                {
                     Logger.Debug("TRAP empty string name unit: {0}", unit.NpcId);
+                }
 
                 if (unit.Name == "" && !Constants.TrapIds.Contains(unit.NpcId) && unit.NpcId != 2002872)
+                {
                     Logger.Debug("TRAP? {0}-{1}-{2}-{3} NOT IN LIST", unit, unit.NpcId, unit.ObjectId, unit.IsVisible);
+                }
             }
         }
     }

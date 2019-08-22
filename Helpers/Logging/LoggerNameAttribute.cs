@@ -18,7 +18,9 @@ namespace DeepHoh.Logging
         public LoggerNameAttribute(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
+            {
                 throw new ArgumentException("Cannot be null or whitespace.", nameof(name));
+            }
 
             Name = name;
         }

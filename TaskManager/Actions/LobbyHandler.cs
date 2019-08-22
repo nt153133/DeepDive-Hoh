@@ -8,24 +8,16 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 using Buddy.Coroutines;
-using ff14bot;
-using ff14bot.Behavior;
-using ff14bot.Managers;
-using ff14bot.Navigation;
-using ff14bot.Objects;
-using ff14bot.Pathing;
-using ff14bot.RemoteWindows;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Clio.Utilities;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
-using DeepHoh.Providers;
-using ff14bot.Enums;
-using ff14bot.Helpers;
+using ff14bot;
+using ff14bot.Managers;
+using ff14bot.Navigation;
+using ff14bot.Objects;
+using ff14bot.RemoteWindows;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
@@ -37,12 +29,15 @@ namespace DeepHoh.TaskManager.Actions
 
         public async Task<bool> Run()
         {
-            if (!Constants.InExitLevel) return false;
+            if (!Constants.InExitLevel)
+            {
+                return false;
+            }
 
             await Coroutine.Sleep(5000);
 
             //_target = GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit);
-            _target = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.LobbyExit).OrderBy(r=>r.Distance()).FirstOrDefault();
+            _target = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.LobbyExit).OrderBy(r => r.Distance()).FirstOrDefault();
             Vector3 loc = new Vector3(-10.02527f, 0.01519775f, -150.0115f);
 
             Navigator.Stop();
@@ -56,11 +51,11 @@ namespace DeepHoh.TaskManager.Actions
                 return false;
             }
 
-            
+
             // move closer plz
             if (_target.Location.Distance2D(Core.Me.Location) >= 4.4)
             {
-               // await CommonTasks.MoveAndStop(new MoveToParameters(_target.Location, "Lobby Exit"), 1f, true);
+                // await CommonTasks.MoveAndStop(new MoveToParameters(_target.Location, "Lobby Exit"), 1f, true);
                 Logger.Verbose("target range" + _target.Location.Distance2D(Core.Me.Location));
 
                 Navigator.Stop();
@@ -79,35 +74,35 @@ namespace DeepHoh.TaskManager.Actions
             }
 
 
-           // await Coroutine.Sleep(5000);
+            // await Coroutine.Sleep(5000);
 
             //await Coroutine.Wait(-1, () => Core.Me.InCombat || !Constants.InExitLevel || CommonBehaviors.IsLoading || QuestLogManager.InCutscene);
             //Poi.Clear("Floor has changed or we have entered combat");
             //Navigator.Clear();
             //GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit)).Location
 
-/*            if (Core.Me.Location.Distance2D(loc) >= 2)
-            {
-                Navigator.Clear();
-                await CommonTasks.StopMoving();
+            /*            if (Core.Me.Location.Distance2D(loc) >= 2)
+                        {
+                            Navigator.Clear();
+                            await CommonTasks.StopMoving();
 
-                Navigator.Stop();
-                Vector3 exit = GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit).Location;
-                Navigator.PlayerMover.MoveTowards(exit);
-                await Buddy.Coroutines.Coroutine.Sleep(1500); // (again, probably better to just wait until distance to destination is < 2.0f or something)
-                Navigator.PlayerMover.MoveStop();
+                            Navigator.Stop();
+                            Vector3 exit = GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit).Location;
+                            Navigator.PlayerMover.MoveTowards(exit);
+                            await Buddy.Coroutines.Coroutine.Sleep(1500); // (again, probably better to just wait until distance to destination is < 2.0f or something)
+                            Navigator.PlayerMover.MoveStop();
 
-                //GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit).Location
-                //            if (!Navigator.InPosition(_target.Location, Core.Me.Location, 10))
-                //            {
-                //                if (!await CommonTasks.MoveAndStop(new MoveToParameters(_target.Location, "Moving to Lobby Exit"), 3))
-                //                {
-                //                    Logger.Warn("Failed to move toward the exit?");
-                //                }
-                //                return true;
-                //            }
-                Logger.Verbose("target2 range" + _target.Location.Distance2D(Core.Me.Location));
-            }*/
+                            //GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit).Location
+                            //            if (!Navigator.InPosition(_target.Location, Core.Me.Location, 10))
+                            //            {
+                            //                if (!await CommonTasks.MoveAndStop(new MoveToParameters(_target.Location, "Moving to Lobby Exit"), 3))
+                            //                {
+                            //                    Logger.Warn("Failed to move toward the exit?");
+                            //                }
+                            //                return true;
+                            //            }
+                            Logger.Verbose("target2 range" + _target.Location.Distance2D(Core.Me.Location));
+                        }*/
 
             _target.Interact();
             await Coroutine.Wait(500, () => SelectYesno.IsOpen);
@@ -119,11 +114,15 @@ namespace DeepHoh.TaskManager.Actions
 
         public void Tick()
         {
-            if(_target != null && !_target.IsValid)
+            if (_target != null && !_target.IsValid)
             {
                 _target = null;
             }
-            if (!Constants.InExitLevel) return;
+            if (!Constants.InExitLevel)
+            {
+                return;
+            }
+
             _target = GameObjectManager.GameObjects.Where(i => i.NpcId == EntityNames.LobbyExit)
                        .OrderBy(i => i.Distance2D(Core.Me.Location)).FirstOrDefault();
         }

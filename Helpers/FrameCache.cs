@@ -7,8 +7,8 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-using System;
 using ff14bot;
+using System;
 
 namespace DeepHoh.Helpers
 {
@@ -27,7 +27,7 @@ namespace DeepHoh.Helpers
         {
             get
             {
-                var frameCount = Core.Memory.Executor.FrameCount;
+                uint frameCount = Core.Memory.Executor.FrameCount;
                 if (_lastFrame != frameCount)
                 {
                     _cached = _producer();

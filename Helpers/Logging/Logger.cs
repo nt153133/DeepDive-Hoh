@@ -8,11 +8,11 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using System.Windows.Media;
 using Clio.Utilities;
 using DeepHoh.Properties;
 using ff14bot.Enums;
 using ff14bot.Helpers;
+using System.Windows.Media;
 using rLogging = ff14bot.Helpers.Logging;
 
 namespace DeepHoh.Logging
@@ -30,11 +30,15 @@ namespace DeepHoh.Logging
 
         private static void Log(Color c, string message, params object[] args)
         {
-            var str = Resources.ResourceManager.GetString(message);
+            string str = Resources.ResourceManager.GetString(message);
             if (string.IsNullOrEmpty(str))
+            {
                 rLogging.Write(c, Prefix + string.Format(message, args));
+            }
             else
+            {
                 rLogging.Write(c, Prefix + string.Format(str, args));
+            }
         }
 
         [StringFormatMethod("format")]
@@ -47,9 +51,13 @@ namespace DeepHoh.Logging
         internal static void Verbose(string format, params object[] args)
         {
             if (Settings.Instance.VerboseLogging)
+            {
                 Log(LogColors.Verbose, format, args);
+            }
             else
+            {
                 rLogging.WriteToFileSync(LogLevel.Verbose, format, args);
+            }
         }
 
 

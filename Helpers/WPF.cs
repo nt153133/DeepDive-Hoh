@@ -8,18 +8,15 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 using Clio.Utilities;
+using DeepHoh.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using DeepHoh.Logging;
 
 namespace DeepHoh.Helpers
 {
@@ -34,11 +31,13 @@ namespace DeepHoh.Helpers
         {
             try
             {
-                var resource = LoadAndTransformXamlFile<ResourceDictionary>(filename);
+                ResourceDictionary resource = LoadAndTransformXamlFile<ResourceDictionary>(filename);
                 foreach (System.Collections.DictionaryEntry res in resource)
                 {
                     if (!control.Resources.Contains(res.Key))
+                    {
                         control.Resources.Add(res.Key, res.Value);
+                    }
                 }
             }
             catch (Exception ex)
@@ -57,7 +56,7 @@ namespace DeepHoh.Helpers
 
             try
             {
-                var windowContent = LoadAndTransformXamlFile<UserControl>(xamlFilePath);
+                UserControl windowContent = LoadAndTransformXamlFile<UserControl>(xamlFilePath);
                 //if (File.Exists(Path.Combine(Path.GetDirectoryName(xamlFilePath), "Dictionary.xaml")))
                 //    LoadResourceForWindow(Path.Combine(Path.GetDirectoryName(xamlFilePath), "Dictionary.xaml"), windowContent);
                 return windowContent;

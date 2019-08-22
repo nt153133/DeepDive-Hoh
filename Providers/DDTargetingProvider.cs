@@ -8,10 +8,6 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using Clio.Utilities;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
@@ -20,6 +16,10 @@ using ff14bot.Enums;
 using ff14bot.Helpers;
 using ff14bot.Managers;
 using ff14bot.Objects;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace DeepHoh.Providers
 {
@@ -45,17 +45,23 @@ namespace DeepHoh.Providers
             get
             {
                 if (!DeepDungeonManager.PortalActive)
+                {
                     return false;
+                }
 
                 if (Settings.Instance.GoExit && PartyManager.IsInParty)
                 {
                     if (PartyManager.AllMembers.Any(i => i.CurrentHealth == 0))
+                    {
                         return false;
+                    }
 
                     if (Settings.Instance.GoForTheHoard)
+                    {
                         return !LastEntities.Any(i =>
                             (i.NpcId == EntityNames.Hidden || i.NpcId == EntityNames.BandedCoffer) &&
-                            !Blacklist.Contains(i.ObjectId, (BlacklistFlags) DeepDungeonManager.Level));
+                            !Blacklist.Contains(i.ObjectId, (BlacklistFlags)DeepDungeonManager.Level));
+                    }
 
                     //Logger.Instance.Verbose("Full Explore : {0} {1}", _levelComplete, !NotMobs().Any());
                     return true;
@@ -78,16 +84,20 @@ namespace DeepHoh.Providers
         internal void Pulse()
         {
             if (CommonBehaviors.IsLoading)
+            {
                 return;
+            }
 
             if (!Constants.InDeepDungeon)
+            {
                 return;
+            }
 
             if (_floor != DeepDungeonManager.Level)
             {
                 Logger.Info("Level has Changed. Clearing Targets");
                 _floor = DeepDungeonManager.Level;
-                Blacklist.Clear(i => i.Flags == (BlacklistFlags) DeepDungeonManager.Level);
+                Blacklist.Clear(i => i.Flags == (BlacklistFlags)DeepDungeonManager.Level);
             }
 
             //if (BeaconofReturn != null && !BeaconofReturn.IsValid)
@@ -105,11 +115,13 @@ namespace DeepHoh.Providers
                     Logger.Verbose($"Found {LastEntities.Count} Targets");
 
                     if (LastEntities.Count == 0)
+                    {
                         Reset();
+                    }
 
                     foreach (GameObject unit in LastEntities)
                     {
-                        Logger.Verbose("Name:{0}, Type:{3}, ID:{1}, Obj:{2}",unit,unit.NpcId,unit.ObjectId,unit.GetType());
+                        Logger.Verbose("Name:{0}, Type:{3}, ID:{1}, Obj:{2}", unit, unit.NpcId, unit.ObjectId, unit.GetType());
                     }
                     _lastPulse = DateTime.Now;
                 }
@@ -169,7 +181,7 @@ namespace DeepHoh.Providers
 
         internal void AddToBlackList(GameObject obj, TimeSpan time, string reason)
         {
-            Blacklist.Add(obj, (BlacklistFlags) _floor, time, reason);
+            Blacklist.Add(obj, (BlacklistFlags)_floor, time, reason);
             Poi.Clear(reason);
         }
 
@@ -183,20 +195,29 @@ namespace DeepHoh.Providers
 
         private float Sort(GameObject obj)
         {
-            var weight = 100f;
+            float weight = 100f;
 
             weight -= obj.Distance2D();
 
-            if (obj.Type == GameObjectType.BattleNpc) return weight / 2;
+            if (obj.Type == GameObjectType.BattleNpc)
+            {
+                return weight / 2;
+            }
 
             if (obj.NpcId == EntityNames.BandedCoffer)
+            {
                 weight += 500;
+            }
 
             if (DeepDungeonManager.PortalActive && Settings.Instance.GoForTheHoard && obj.NpcId == EntityNames.Hidden)
+            {
                 weight += 5;
+            }
             else if (DeepDungeonManager.PortalActive && Settings.Instance.GoExit &&
                      obj.NpcId != EntityNames.FloorExit && PartyManager.IsInParty)
+            {
                 weight -= 10;
+            }
 
             return weight;
         }
@@ -204,26 +225,34 @@ namespace DeepHoh.Providers
         private bool Filter(GameObject obj)
         {
             if (obj.NpcId == 5042) //script object
+            {
                 return false;
+            }
 
             if (obj.NpcId == 7396) //script object
+            {
                 return false;
+            }
 
             if (obj.Location == Vector3.Zero)
+            {
                 return false;
-
+            }
 
             if (Blacklist.Contains(obj) || Constants.TrapIds.Contains(obj.NpcId) ||
                 Constants.IgnoreEntity.Contains(obj.NpcId))
+            {
                 return false;
-
+            }
 
             if (obj.Type == GameObjectType.BattleNpc)
             {
                 if (DeepDungeonManager.PortalActive)
+                {
                     return false;
+                }
 
-                var battleCharacter = (BattleCharacter) obj;
+                BattleCharacter battleCharacter = (BattleCharacter)obj;
                 return !battleCharacter.IsDead;
             }
 

@@ -7,22 +7,13 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DeepHoh.Helpers;
-using DeepHoh.Logging;
-using ff14bot;
 using ff14bot.Enums;
-using ff14bot.Managers;
-using ff14bot.Objects;
 
 namespace DeepHoh.Helpers
 {
     internal static class Extensions
     {
-        
+
         /// <summary>
         /// Determines if a player is using a tank role job/class.
         /// </summary>
@@ -31,11 +22,20 @@ namespace DeepHoh.Helpers
         internal static bool IsTank(this ClassJobType type)
         {
             if (type == ClassJobType.DarkKnight)
+            {
                 return true;
+            }
+
             if (type == ClassJobType.Marauder || type == ClassJobType.Warrior)
+            {
                 return true;
+            }
+
             if (type == ClassJobType.Gladiator || type == ClassJobType.Paladin)
+            {
                 return true;
+            }
+
             return false;
         }
 
@@ -47,11 +47,19 @@ namespace DeepHoh.Helpers
         internal static bool IsHealer(this ClassJobType type)
         {
             if (type == ClassJobType.Astrologian)
+            {
                 return true;
+            }
+
             if (type == ClassJobType.Conjurer || type == ClassJobType.WhiteMage)
+            {
                 return true;
+            }
+
             if (type == ClassJobType.Scholar)
+            {
                 return true;
+            }
 
             return false;
         }
@@ -105,7 +113,7 @@ namespace DeepHoh.Helpers
         /// <returns></returns>
         internal static bool IsDow(this ClassJobType type)
         {
-            return type != ClassJobType.Adventurer && 
+            return type != ClassJobType.Adventurer &&
                    type != ClassJobType.Alchemist &&
                    type != ClassJobType.Armorer &&
                    type != ClassJobType.Blacksmith &&

@@ -9,7 +9,8 @@ Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 using Buddy.Coroutines;
 using Clio.Utilities;
-using DeepHoh.Memory;
+using DeepHoh.Helpers;
+using DeepHoh.Logging;
 using ff14bot;
 using ff14bot.Behavior;
 using ff14bot.Helpers;
@@ -17,12 +18,8 @@ using ff14bot.Managers;
 using ff14bot.Pathing;
 using ff14bot.RemoteWindows;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using DeepHoh.Helpers;
-using DeepHoh.Logging;
 
 namespace DeepHoh.TaskManager.Actions
 {
@@ -36,7 +33,9 @@ namespace DeepHoh.TaskManager.Actions
         public async Task<bool> Run()
         {
             if (Target.Type != (PoiType)PoiTypes.UseBeaconOfReturn)
+            {
                 return false;
+            }
 
             //let the navigation task handle moving toward the object if we are too far away.
             if (Target.Location.Distance2D(Core.Me.Location) > 3)
@@ -44,7 +43,7 @@ namespace DeepHoh.TaskManager.Actions
                 return false;
             }
 
-            var unit = GameObjectManager.GetObjectByNPCId(EntityNames.BeaconofReturn);
+            ff14bot.Objects.GameObject unit = GameObjectManager.GetObjectByNPCId(EntityNames.BeaconofReturn);
             if (unit == null)
             {
                 Logger.Warn("Beacon of return could not be found at this location");
@@ -66,7 +65,7 @@ namespace DeepHoh.TaskManager.Actions
                 await CommonTasks.StopMoving("Waiting on aura to end");
 
                 await Coroutine.Wait(TimeSpan.FromSeconds(30),
-                    () => !(Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) || Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust) ||  Core.Me.HasAura(Auras.Odder)) || Core.Me.InCombat || DeepDungeonHoH.StopPlz);
+                    () => !(Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) || Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust) || Core.Me.HasAura(Auras.Odder)) || Core.Me.InCombat || DeepDungeonHoH.StopPlz);
 
                 //incase we entered combat
                 return true;
@@ -100,16 +99,18 @@ namespace DeepHoh.TaskManager.Actions
         private int Level = 0;
         private Vector3 location = Vector3.Zero;
 
-        
+
         public void Tick()
         {
             if (!Constants.InDeepDungeon || CommonBehaviors.IsLoading || QuestLogManager.InCutscene)
-                return;
-
-            if(location == Vector3.Zero || Level != DeepDungeonManager.Level)
             {
-                var ret = GameObjectManager.GetObjectByNPCId(EntityNames.BeaconofReturn);
-                if(ret != null)
+                return;
+            }
+
+            if (location == Vector3.Zero || Level != DeepDungeonManager.Level)
+            {
+                ff14bot.Objects.GameObject ret = GameObjectManager.GetObjectByNPCId(EntityNames.BeaconofReturn);
+                if (ret != null)
                 {
                     Level = DeepDungeonManager.Level;
                     location = ret.Location;
@@ -118,7 +119,9 @@ namespace DeepHoh.TaskManager.Actions
 
             //if we are in combat don't move toward the Beacon of return
             if (Poi.Current != null && (Poi.Current.Type == PoiType.Kill || Poi.Current.Type == (PoiType)PoiTypes.UseBeaconOfReturn))
+            {
                 return;
+            }
 
 
             //party member is dead & we have the location of the cor

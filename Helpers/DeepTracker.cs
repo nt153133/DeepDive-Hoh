@@ -1,7 +1,7 @@
-﻿using System;
-using DeepHoh.Logging;
+﻿using DeepHoh.Logging;
 using ff14bot.Managers;
 using ff14bot.RemoteWindows;
+using System;
 
 namespace DeepHoh.Helpers
 {
@@ -42,8 +42,8 @@ namespace DeepHoh.Helpers
         public static void Reset()
         {
             _isMeasuring = false;
-//            GameStatsManager.uint_2 = Experience.CurrentExperience;
-//            GameStatsManager.uint_1 = Experience.ExperienceRequired;
+            //            GameStatsManager.uint_2 = Experience.CurrentExperience;
+            //            GameStatsManager.uint_1 = Experience.ExperienceRequired;
 
             _deaths = 0;
             _xpPerHour = 0.0f;
@@ -67,24 +67,32 @@ namespace DeepHoh.Helpers
             StartMeasuring();
 
             if (_startingLevel == 0)
+            {
                 _startingLevel = currentLevel;
+            }
 
             _currentLevel = currentLevel;
 
-             ChatManager.SendChat($"/echo Run Started: Current level - {currentLevel}");
+            ChatManager.SendChat($"/echo Run Started: Current level - {currentLevel}");
         }
 
         public static void EndRun(bool failed)
         {
             if (_isMeasuring == false)
+            {
                 return;
+            }
 
             StopMeasuring();
 
             if (failed)
+            {
                 _failedRuns++;
+            }
             else
+            {
                 _successfulRuns++;
+            }
 
             _lastRunTime = _currentRunEndTime.Subtract(_currentRunStarTime);
             _runEndXP = Experience.CurrentExperience;
@@ -103,7 +111,10 @@ namespace DeepHoh.Helpers
 
         private static void UpdateXP(int realLevel)
         {
-            if (realLevel > _currentLevel) _totalXPGain += _xpNeeded;
+            if (realLevel > _currentLevel)
+            {
+                _totalXPGain += _xpNeeded;
+            }
         }
 
         public static void RunReport()

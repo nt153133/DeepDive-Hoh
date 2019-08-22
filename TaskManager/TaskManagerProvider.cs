@@ -8,12 +8,10 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
+using DeepHoh.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using DeepHoh.Logging;
 
 namespace DeepHoh.TaskManager
 {
@@ -24,7 +22,7 @@ namespace DeepHoh.TaskManager
         void Tick();
         Task<bool> Run();
     }
-        
+
 
 
     class TaskManagerProvider : List<ITask>
@@ -33,7 +31,7 @@ namespace DeepHoh.TaskManager
 
         public void Tick()
         {
-            foreach(var x in this)
+            foreach (ITask x in this)
             {
                 try
                 {
@@ -48,12 +46,14 @@ namespace DeepHoh.TaskManager
 
         public async Task<bool> Run()
         {
-            foreach(var x in this)
+            foreach (ITask x in this)
             {
                 try
                 {
                     if (await x.Run())
+                    {
                         return true;
+                    }
                 }
                 catch (Exception ex)
                 {

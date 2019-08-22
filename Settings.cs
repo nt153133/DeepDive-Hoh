@@ -7,21 +7,18 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+using DeepHoh.Enums;
+using DeepHoh.Logging;
+using DeepHoh.Structure;
 using ff14bot;
 using ff14bot.Helpers;
 using ff14bot.Managers;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
-using DeepHoh.Enums;
-using DeepHoh.Logging;
-using DeepHoh.Structure;
+using System.IO;
+using System.Linq;
 
 namespace DeepHoh
 {
@@ -38,10 +35,15 @@ namespace DeepHoh
             get
             {
                 if (_settings != null)
+                {
                     return _settings;
-                _settings = new Settings();
-                //_settings.LoadFrom(Path.Combine(GetSettingsFilePath(Core.Me.Name, "DeepDive.json")));
-                _settings._initialized = true;
+                }
+
+                _settings = new Settings
+                {
+                    //_settings.LoadFrom(Path.Combine(GetSettingsFilePath(Core.Me.Name, "DeepDive.json")));
+                    _initialized = true
+                };
 
                 return _settings;
             }
@@ -78,10 +80,7 @@ namespace DeepHoh
         public bool DebugRender
         {
             get => _render;
-            set
-            {
-                _render = value;
-            }
+            set => _render = value;
         }
 
         private bool _GoExit;
@@ -188,7 +187,8 @@ namespace DeepHoh
         public bool OpenTraps
         {
             get => _openTraps;
-            set {
+            set
+            {
                 _openTraps = value;
                 Save();
             }
@@ -202,7 +202,7 @@ namespace DeepHoh
         [Category("Chests")]
         public bool OpenSilver
         {
-            get { return _openSilver; }
+            get => _openSilver;
             set
             {
                 _openSilver = value;
@@ -340,7 +340,7 @@ namespace DeepHoh
                     Logger.Verbose($"Stop state has changed to: {value}");
                 }
                 Save();
-            } 
+            }
         }
 
         private bool _stopsolo;
@@ -388,14 +388,14 @@ namespace DeepHoh
             Logger.Verbose("Exit Priority: {0}", _GoExit);
             Logger.Verbose("save slot: {0}", SaveSlot);
             Logger.Verbose("Use Sustain Pot: {0}", UseSustain);
-            
+
             Logger.Verbose("Combat Pull range: {0}", Constants.ModifiedCombatReach);
             Logger.Verbose("In Party: {0}", PartyManager.IsInParty);
 
             Logger.Verbose("StopSolo: {0}", SoloStop);
 
             EnsureFloorSettings();
-            foreach (var f in FloorSettings)
+            foreach (FloorSetting f in FloorSettings)
             {
                 Logger.Verbose(f.Display);
             }
@@ -403,13 +403,16 @@ namespace DeepHoh
 
         internal List<FloorSetting> EnsureFloorSettings()
         {
-            if (!_initialized) return _floorSettings;
+            if (!_initialized)
+            {
+                return _floorSettings;
+            }
 
             if (_floorSettings == null || !_floorSettings.Any())
             {
-                var llnext = new List<FloorSetting>();
+                List<FloorSetting> llnext = new List<FloorSetting>();
 
-                for (var i = 10; i <= 100; i += 10)
+                for (int i = 10; i <= 100; i += 10)
                 {
                     llnext.Add(new FloorSetting
                     {
@@ -420,7 +423,9 @@ namespace DeepHoh
                 _floorSettings = llnext;
             }
             if (SelectedLevel == null)
+            {
                 SelectedLevel = FloorSettings.First();
+            }
 
             return _floorSettings;
         }

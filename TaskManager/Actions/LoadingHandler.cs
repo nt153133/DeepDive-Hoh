@@ -13,10 +13,6 @@ using ff14bot.Behavior;
 using ff14bot.Managers;
 using ff14bot.RemoteAgents;
 using ff14bot.RemoteWindows;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
@@ -27,12 +23,12 @@ namespace DeepHoh.TaskManager.Actions
 
         public async Task<bool> Run()
         {
-            if(CommonBehaviors.IsLoading)
+            if (CommonBehaviors.IsLoading)
             {
                 await Coroutine.Wait(-1, () => !CommonBehaviors.IsLoading);
                 return true;
             }
-            if(QuestLogManager.InCutscene)
+            if (QuestLogManager.InCutscene)
             {
                 TreeRoot.StatusText = "InCutscene";
                 if (AgentCutScene.Instance != null)
@@ -40,11 +36,14 @@ namespace DeepHoh.TaskManager.Actions
                     AgentCutScene.Instance.PromptSkip();
                     await Coroutine.Wait(250, () => SelectString.IsOpen);
                     if (SelectString.IsOpen)
+                    {
                         SelectString.ClickSlot(0);
+                    }
+
                     return true;
                 }
             }
-            if(Talk.DialogOpen)
+            if (Talk.DialogOpen)
             {
                 Talk.Next();
                 return true;
@@ -54,7 +53,7 @@ namespace DeepHoh.TaskManager.Actions
 
         public void Tick()
         {
-            
+
         }
     }
 }
