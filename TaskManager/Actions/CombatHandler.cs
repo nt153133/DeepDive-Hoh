@@ -28,7 +28,7 @@ using TreeSharp;
 
 namespace DeepHoh.TaskManager.Actions
 {
-    class CombatHandler : ITask
+    internal class CombatHandler : ITask
     {
         internal Composite _preCombatLogic { get; private set; }
         internal Composite _preCombatBuff { get; private set; }
@@ -69,7 +69,7 @@ namespace DeepHoh.TaskManager.Actions
 
             if (!Core.Me.InRealCombat())
             {
-                if (await Rest())
+                if (!(Core.Me.HasAura(Auras.NoAutoHeal)) && await Rest())
                 {
                     await CommonTasks.StopMoving("Resting");
                     await Tasks.Coroutines.Common.UsePots();
@@ -79,8 +79,6 @@ namespace DeepHoh.TaskManager.Actions
                 {
                     return true;
                 }
-
-
 
                 // For floors with auto heal penalty or item penalty we will engage normally until we hit
                 // the magic sub-40% threshold. Statistically it is smarter to just try and finish the floor
@@ -102,7 +100,6 @@ namespace DeepHoh.TaskManager.Actions
                     await Heal();
                     return true;
                 }
-
             }
             if (Poi.Current == null || Poi.Current.Type != PoiType.Kill || Poi.Current.BattleCharacter == null)
             {
@@ -259,7 +256,6 @@ namespace DeepHoh.TaskManager.Actions
                 }
                 else if (Tasks.Coroutines.Common.PomanderState == ItemState.Rage)
                 {
-
                     await CastPomanderAbility(PummelSpell);
 
                     return true;
@@ -335,8 +331,8 @@ namespace DeepHoh.TaskManager.Actions
 
         #region Combat Routine
 
+        private object context = new object();
 
-        object context = new object();
         internal async Task<bool> Rest()
         {
             return await _rest.ExecuteCoroutine(context);
@@ -378,11 +374,13 @@ namespace DeepHoh.TaskManager.Actions
         {
             return await _combatBuff.ExecuteCoroutine(context);
         }
+
         private async Task<bool> Combat()
         {
             return await _combatBehavior.ExecuteCoroutine(context);
         }
-        #endregion
+
+        #endregion Combat Routine
 
         public void Tick()
         {
@@ -421,7 +419,6 @@ namespace DeepHoh.TaskManager.Actions
                 Poi.Current = new Poi(CombatTargeting.Instance.FirstUnit, PoiType.Kill);
                 return;
             }
-
         }
     }
 }

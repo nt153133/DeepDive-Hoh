@@ -45,7 +45,6 @@ namespace DeepHoh
         public override bool RequiresProfile => false;
         public override bool WantButton => true;
 
-
         public DeepDungeonHoH()
         {
             //Captain = new GetToCaptain();
@@ -59,7 +58,6 @@ namespace DeepHoh
             {
                 Constants.INIT();
                 Overlay3D.Drawing += DDNavigationProvider.Render;
-
 
                 _init = true;
                 Logger.Info("INIT DONE");
@@ -96,7 +94,7 @@ namespace DeepHoh
             }
         }
 
-        #endregion
+        #endregion BotBase Stuff
 
         /// <summary>
         ///     = true when we stop gets pushed
@@ -166,15 +164,12 @@ namespace DeepHoh
             _tasks.Add(new GetToKyusei());
             _tasks.Add(new POTDEntrance());
 
-
             //_tasks.Add(new BeaconOfReturn());
             _tasks.Add(new FloorExit());
             _tasks.Add(new Loot());
 
-
             _tasks.Add(new StuckDetection());
             _tasks.Add(new POTDNavigation());
-
 
             _tasks.Add(new BaseLogicHandler());
 
@@ -186,17 +181,15 @@ namespace DeepHoh
                 return;
             }
 
-
             //setup combat manager
             CombatTargeting.Instance.Provider = new DDCombatTargetingProvider();
 
             GameSettingsManager.FaceTargetOnAction = true;
 
-
             if (Constants.Lang == Language.Chn)
             {
                 //回避 - sidestep
-                //Zekken 
+                //Zekken
                 if (PluginManager.Plugins.Any(i =>
                     (i.Plugin.Name.Contains("Zekken") || i.Plugin.Name.Contains("技能躲避")) && i.Enabled))
                 {
@@ -214,7 +207,6 @@ namespace DeepHoh
                 return;
             }
 
-
             if (!ConditionParser.IsQuestCompleted(67092))
             {
                 Logger.Error("You must complete \"The House That Death Built\" to run this base.");
@@ -227,7 +219,6 @@ namespace DeepHoh
             StopPlz = false;
 
             SetupSettings();
-
 
             _root =
                 new ActionRunCoroutine(async x =>

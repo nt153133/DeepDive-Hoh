@@ -11,6 +11,7 @@ Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
 using Clio.Utilities;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
+using ff14bot;
 using ff14bot.Behavior;
 using ff14bot.Enums;
 using ff14bot.Helpers;
@@ -36,7 +37,6 @@ namespace DeepHoh.Providers
         }
 
         internal static DDTargetingProvider Instance => _instance ?? (_instance = new DDTargetingProvider());
-
 
         public ReadOnlyCollection<GameObject> LastEntities { get; set; }
 
@@ -119,30 +119,29 @@ namespace DeepHoh.Providers
                         Reset();
                     }
 
-            //        foreach (GameObject unit in LastEntities)
-            //        {
-             //           Logger.Verbose("Name:{0}, Type:{3}, ID:{1}, Obj:{2}", unit, unit.NpcId, unit.ObjectId, unit.GetType());
-             //       }
+                    //        foreach (GameObject unit in LastEntities)
+                    //        {
+                    //           Logger.Verbose("Name:{0}, Type:{3}, ID:{1}, Obj:{2}", unit, unit.NpcId, unit.ObjectId, unit.GetType());
+                    //       }
                     _lastPulse = DateTime.Now;
                 }
             }
         }
+
         //{
         //    get
         //    {
         //        var badGuys = (CombatTargeting.Instance.Provider as DDCombatTargetingProvider)?.GetObjectsByWeight();
 
-        //        var anyBadGuysAround = badGuys != null && badGuys.Any();
+        // var anyBadGuysAround = badGuys != null && badGuys.Any();
 
-        //        //if (Beta.Target != null && Beta.Target.IsValid && !Blacklist.Contains(Beta.Target.ObjectId, (BlacklistFlags)DeepDungeonManager.Level) && Beta.Target.Type != GameObjectType.GatheringPoint)
-        //        //    return null;
+        // //if (Beta.Target != null && Beta.Target.IsValid &&
+        // !Blacklist.Contains(Beta.Target.ObjectId, (BlacklistFlags)DeepDungeonManager.Level) &&
+        // Beta.Target.Type != GameObjectType.GatheringPoint) // return null;
 
-        //        // Party member is dead
-        //        if (PartyManager.AllMembers.Any(member => member.CurrentHealth == 0))
-        //        {
-        //            // Select Beacon of Return as highest priority if it is known and can be used.
-        //            if (BeaconofReturn != null && DeepDungeonManager.ReturnActive)
-        //                return BeaconofReturn;
+        // // Party member is dead if (PartyManager.AllMembers.Any(member => member.CurrentHealth ==
+        // 0)) { // Select Beacon of Return as highest priority if it is known and can be used. if
+        // (BeaconofReturn != null && DeepDungeonManager.ReturnActive) return BeaconofReturn;
 
         //            // If the Beacon of Return is not yet active and there are any mobs around: Kill the mobs.
         //            if (anyBadGuysAround)
@@ -169,7 +168,6 @@ namespace DeepHoh.Providers
         //            SafeSpots.OrderByDescending(i => i.Distance2D(Core.Me.Location)).First(),
         //            PoiType.Hotspot
         //        );
-
 
         //    }
         //}
@@ -209,6 +207,11 @@ namespace DeepHoh.Providers
                 weight += 500;
             }
 
+            if (DeepDungeonManager.PortalActive && obj.NpcId == EntityNames.FloorExit && Core.Me.HasAura(Auras.NoAutoHeal))
+            {
+                weight += 500;
+            }
+            
             if (DeepDungeonManager.PortalActive && Settings.Instance.GoForTheHoard && obj.NpcId == EntityNames.Hidden)
             {
                 weight += 5;
@@ -222,6 +225,11 @@ namespace DeepHoh.Providers
             return weight;
         }
 
+        /// <summary>
+        /// Used to filter the GameObject list
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         private bool Filter(GameObject obj)
         {
             if (obj.NpcId == 5042) //script object

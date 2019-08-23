@@ -7,6 +7,7 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
 using Clio.Utilities;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
@@ -30,10 +31,8 @@ using System.Reflection;
 
 namespace DeepHoh.Providers
 {
-
     internal class DDNavigationProvider : WrappingNavigationProvider
     {
-
         private uint _detourLevel = 0;
 
         private static Dictionary<uint, List<Vector3>> _walls;
@@ -51,7 +50,6 @@ namespace DeepHoh.Providers
         private int _floorId;
         private HashSet<uint> activeWalls;
 
-
         private void SetupDetour()
         {
             //if we are not on the lobby & we have already reloaded detour for this floor return
@@ -61,7 +59,6 @@ namespace DeepHoh.Providers
             }
 
             _floorId = DeepDungeonManager.Level;
-
 
             uint map = Constants.Maps[WorldManager.RawZoneId];
             if (_detourLevel != map)
@@ -75,8 +72,6 @@ namespace DeepHoh.Providers
             _traps = new List<uint>();
             _trapPos = new List<Vector3>();
             _map = new List<Vector3>();
-
-
 
             Logger.Verbose("Updating navigation {0}", map);
             wallList.Clear();
@@ -118,30 +113,39 @@ namespace DeepHoh.Providers
                 case 1:
                     text = Resources._1;
                     break;
+
                 case 2:
                     text = Resources._2;
                     break;
+
                 case 3:
                     text = Resources._3;
                     break;
+
                 case 4:
                     text = Resources._4;
                     break;
+
                 case 5:
                     text = Resources._5;
                     break;
+
                 case 6:
                     text = Resources._6;
                     break;
+
                 case 7:
                     text = Resources._7;
                     break;
+
                 case 8:
                     text = Resources._8;
                     break;
+
                 case 9:
                     text = Resources._9;
                     break;
+
                 default:
                     text = "";
                     break;
@@ -155,7 +159,6 @@ namespace DeepHoh.Providers
 
         public DDNavigationProvider(NavigationProvider original) : base(original)
         {
-
         }
 
         public override MoveResult MoveTo(MoveToParameters location)
@@ -176,39 +179,33 @@ namespace DeepHoh.Providers
 
             location.WorldState = new WorldState() { MapId = WorldManager.ZoneId, Walls = wallList, Avoids = trapList };
             return Original.MoveTo(location);
-
         }
 
         public bool WallCheck()
         {
-
             bool updated = false;
             Vector3 me = Core.Me.Location;
             wallList.Clear();
             if (_walls != null)
             {
-                foreach (KeyValuePair<uint, List<Vector3>> id in _walls.Where(i => i.Value[0].Distance2D(Core.Me.Location) < 25 && !_hit.ContainsKey(i.Key) && !activeWalls.Contains(i.Key)))
+                foreach (KeyValuePair<uint, List<Vector3>> id in _walls.Where(i => i.Value[0].Distance2D(Core.Me.Location) < 5 && !_hit.ContainsKey(i.Key) && !activeWalls.Contains(i.Key)))
                 {
-
                     Vector3 wall1 = id.Value[1];
                     wall1.Y -= 5;
 
                     Vector3 wall2 = id.Value[2];
-                    wall2.Y -= 5;
+                    wall2.Y -= 10;
 
                     wallList.Add(new BoundingBox3() { Min = wall1, Max = wall2 });
                     _hit.Add(id.Key, true);
                     updated = true;
-
                 }
             }
 
             Logger.Debug($"[walls] {string.Join(", ", _hit.Keys)}");
 
             return updated;
-
         }
-
 
         //private int floorCache;
         //private List<uint> _wallcache;
@@ -231,7 +228,6 @@ namespace DeepHoh.Providers
 
             IntPtr v29 = v3 + 0x10;
             IntPtr v7_location = v29;
-
 
             short[] v7 = Core.Memory.ReadArray<short>(v7_location, 5);
             HashSet<uint> wallset = new HashSet<uint>();
@@ -273,12 +269,10 @@ namespace DeepHoh.Providers
                 v7_location = v29 + 0xc;
                 v7 = Core.Memory.ReadArray<short>(v7_location, 5);
                 v29 = v29 + 0xc;
-
             }
 
             //_wallcache = wallset;
             return wallset;
-
         }
 
         internal static void Render(object sender, DrawingEventArgs e)
@@ -296,7 +290,6 @@ namespace DeepHoh.Providers
             try
             {
                 I3DDrawer drawer = e.Drawer;
-
 
                 //if (_path != null)
                 //{
@@ -337,11 +330,10 @@ namespace DeepHoh.Providers
                 {
                     drawer.DrawCircleOutline(t.Center, t.Radius, Color.FromArgb(100, Color.Red));
                 }
-
-
             }
             catch (Exception) { }
         }
+
         public static Vector3 Bound(Vector3 a, Vector3 b)
         {
             float minX = Math.Min(a.X, b.X);
@@ -354,7 +346,6 @@ namespace DeepHoh.Providers
 
             return new Vector3((maxX - minX), (maxY - minY), (maxZ - minZ)) / 2;
         }
-
 
         private void AddBlackspots()
         {
@@ -404,6 +395,7 @@ namespace DeepHoh.Providers
         {
             Method = typeof(NavigationProvider).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).FirstOrDefault(i => i.ReturnType == typeof(List<Vector3>));
         }
+
         private static MethodInfo Method;
 
         /// <summary>

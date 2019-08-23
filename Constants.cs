@@ -66,7 +66,6 @@ namespace DeepHoh
 
         internal static uint BeaconofReturn = 2009506;
 
-
         #region Pets
 
         internal static uint RubyCarby = 5478;
@@ -83,7 +82,7 @@ namespace DeepHoh
         internal static uint Rook = 3666;
         internal static uint Bishop = 3667;
 
-        #endregion
+        #endregion Pets
     }
 
     internal static class Items
@@ -114,7 +113,6 @@ namespace DeepHoh
         public static uint Pacification = 620;
         public static uint Silence = 7;
 
-
         public static uint[] Poisons =
         {
             18, 275, 559, 560, 686, 801
@@ -134,7 +132,7 @@ namespace DeepHoh
         internal static uint KnockbackPenalty = 1096;
         internal static uint NoAutoHeal = 1097;
 
-        #endregion
+        #endregion Floor Debuffs
     }
 
     internal static class Spells
@@ -167,7 +165,6 @@ namespace DeepHoh
 
         public float LevelScore => Max[1] / RecoverMax;
     }
-
 
     internal static class Constants
     {
@@ -214,7 +211,7 @@ namespace DeepHoh
                 {777, 0},
                 {778, 0},
                 {779, 0} //,
-                
+
                 //{599, 8},
                 //{600, 8},
                 //{601, 9},
@@ -306,6 +303,6 @@ namespace DeepHoh
             return JsonConvert.DeserializeObject<T>(text);
         }
 
-        #endregion
+        #endregion DataAsResource
     }
 }

@@ -98,7 +98,7 @@ namespace DeepHoh.Providers
                 weight *= 1.5;
             }
 
-            if (battleCharacter.Distance2D(_distance) > 25)
+            if (battleCharacter.Distance2D(_distance) > 20)
             {
                 weight /= 2;
             }
