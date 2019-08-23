@@ -38,6 +38,7 @@ namespace DeepHoh
         internal static uint PalaceSlime = 4990;
         internal static uint HeavenlyShark = 7272;
         internal static uint CatThing = 7398;
+        internal static uint Inugami = 7397;
     }
 
     /// <summary>
@@ -189,7 +190,7 @@ namespace DeepHoh
             7395, 5402, EntityNames.FloorExit, EntityNames.BeaconofReturn, EntityNames.LobbyEntrance, 2002872,
             EntityNames.RubyCarby, EntityNames.EmeraldCarby, EntityNames.TopazCarby, EntityNames.Garuda,
             EntityNames.Titan, EntityNames.Ifrit, EntityNames.Eos, EntityNames.Selene, EntityNames.Rook,
-            EntityNames.Bishop, Mobs.CatThing
+            EntityNames.Bishop, Mobs.CatThing, Mobs.Inugami
         };
 
         internal static uint MapVersion = 4;
