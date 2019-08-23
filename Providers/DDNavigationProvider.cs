@@ -186,11 +186,11 @@ namespace DeepHoh.Providers
             Vector3 me = Core.Me.Location;
             if (_walls != null)
             {
-                foreach (KeyValuePair<uint, List<Vector3>> id in _walls.Where(i => i.Value[0].Distance2D(Core.Me.Location) < 50 && !_hit.ContainsKey(i.Key) && !activeWalls.Contains(i.Key)))
+                foreach (KeyValuePair<uint, List<Vector3>> id in _walls.Where(i => i.Value[0].Distance2D(Core.Me.Location) < 25 && !_hit.ContainsKey(i.Key) && !activeWalls.Contains(i.Key)))
                 {
 
                     Vector3 wall1 = id.Value[1];
-                    wall1.Y -= 2;
+                    //wall1.Y -= 2;
 
                     wallList.Add(new BoundingBox3() { Min = wall1, Max = id.Value[2] });
                     _hit.Add(id.Key, true);
