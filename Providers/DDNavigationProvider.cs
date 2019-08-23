@@ -179,7 +179,7 @@ namespace DeepHoh.Providers
 
         }
 
-        private bool WallCheck()
+        public bool WallCheck()
         {
 
             bool updated = false;
@@ -191,9 +191,12 @@ namespace DeepHoh.Providers
                 {
 
                     Vector3 wall1 = id.Value[1];
-                    //wall1.Y -= 2;
+                    wall1.Y -= 5;
 
-                    wallList.Add(new BoundingBox3() { Min = wall1, Max = id.Value[2] });
+                    Vector3 wall2 = id.Value[2];
+                    wall2.Y -= 5;
+
+                    wallList.Add(new BoundingBox3() { Min = wall1, Max = wall2 });
                     _hit.Add(id.Key, true);
                     updated = true;
 

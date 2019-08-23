@@ -119,10 +119,10 @@ namespace DeepHoh.Providers
                         Reset();
                     }
 
-                    foreach (GameObject unit in LastEntities)
-                    {
-                        Logger.Verbose("Name:{0}, Type:{3}, ID:{1}, Obj:{2}", unit, unit.NpcId, unit.ObjectId, unit.GetType());
-                    }
+            //        foreach (GameObject unit in LastEntities)
+            //        {
+             //           Logger.Verbose("Name:{0}, Type:{3}, ID:{1}, Obj:{2}", unit, unit.NpcId, unit.ObjectId, unit.GetType());
+             //       }
                     _lastPulse = DateTime.Now;
                 }
             }

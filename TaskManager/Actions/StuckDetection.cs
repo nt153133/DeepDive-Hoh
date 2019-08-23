@@ -53,6 +53,11 @@ namespace DeepHoh.TaskManager.Actions
                     Poi.Clear("No activity detected");
                 }
 
+                if (Poi.Current.Type != PoiType.Wait)
+                {
+                    Poi.Clear("No activity detected");
+                }
+
                 _moveTimer.Reset();
                 return true;
             }
