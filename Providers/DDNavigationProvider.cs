@@ -147,7 +147,6 @@ namespace DeepHoh.Providers
                     break;
             }
 
-
             return JsonConvert.DeserializeObject<Dictionary<uint, List<Vector3>>>(text);
         }
 
@@ -200,7 +199,7 @@ namespace DeepHoh.Providers
                 }
             }
 
-            //Logger.Info($"[walls] {string.Join(", ", _hit.Keys)}");
+            Logger.Debug($"[walls] {string.Join(", ", _hit.Keys)}");
 
             return updated;
 

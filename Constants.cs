@@ -203,7 +203,7 @@ namespace DeepHoh
             Maps = new Dictionary<uint, uint>
             {
                 //mapid - wall file
-                {770, 0},
+                {770, 1},
                 {771, 0},
                 {772, 0},
                 {773, 0},
