@@ -184,6 +184,7 @@ namespace DeepHoh.Providers
 
             bool updated = false;
             Vector3 me = Core.Me.Location;
+            wallList.Clear();
             if (_walls != null)
             {
                 foreach (KeyValuePair<uint, List<Vector3>> id in _walls.Where(i => i.Value[0].Distance2D(Core.Me.Location) < 25 && !_hit.ContainsKey(i.Key) && !activeWalls.Contains(i.Key)))
