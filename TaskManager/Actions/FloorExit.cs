@@ -7,9 +7,11 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
 using Buddy.Coroutines;
 using Clio.Utilities;
 using DeepHoh.Helpers;
+using DeepHoh.Logging;
 using DeepHoh.Providers;
 using ff14bot;
 using ff14bot.Behavior;
@@ -17,11 +19,12 @@ using ff14bot.Helpers;
 using ff14bot.Managers;
 using ff14bot.Navigation;
 using ff14bot.Pathing;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
-    class FloorExit : ITask
+    internal class FloorExit : ITask
     {
         public string Name => "Floor Exit";
 
@@ -61,8 +64,6 @@ namespace DeepHoh.TaskManager.Actions
         private int Level = 0;
         private Vector3 location = Vector3.Zero;
 
-
-
         public void Tick()
         {
             if (!Constants.InDeepDungeon || CommonBehaviors.IsLoading || QuestLogManager.InCutscene)
@@ -72,19 +73,26 @@ namespace DeepHoh.TaskManager.Actions
 
             if (location == Vector3.Zero || Level != DeepDungeonManager.Level)
             {
-
-                ff14bot.Objects.GameObject ret = GameObjectManager.GetObjectByNPCId(EntityNames.FloorExit);
+                //GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit).OrderBy(r=>r.Distance());
+                ff14bot.Objects.GameObject ret = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit).OrderBy(r => r.Distance()).FirstOrDefault();
                 if (ret != null)
                 {
                     Level = DeepDungeonManager.Level;
                     location = ret.Location;
-
                 }
                 else if (Level != DeepDungeonManager.Level)
                 {
                     Level = DeepDungeonManager.Level;
                     location = Vector3.Zero;
                 }
+            }
+
+            if (location != Vector3.Zero)
+            {
+                ff14bot.Objects.GameObject ret = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit).OrderBy(r => r.Distance()).FirstOrDefault();
+                if (ret != null)
+                    if (Core.Me.Location.Distance2D(ret.Location) < location.Distance2D(ret.Location))
+                        location = ret.Location;
             }
 
             //if we are in combat don't move toward the Beacon of return
@@ -95,6 +103,7 @@ namespace DeepHoh.TaskManager.Actions
 
             if (DDTargetingProvider.Instance.LevelComplete && !DeepDungeonManager.BossFloor && location != Vector3.Zero)
             {
+                Logger.Debug("Going to exit {0}", location);
                 Poi.Current = new Poi(location, PoiType.Wait);
             }
         }

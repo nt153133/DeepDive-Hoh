@@ -125,10 +125,8 @@ namespace DeepHoh
         internal static uint HpDown = 1089;
         internal static uint DamageDown = 1090;
         internal static uint Amnesia = 1092;
-
         internal static uint ItemPenalty = 1094;
         internal static uint SprintPenalty = 1095;
-
         internal static uint KnockbackPenalty = 1096;
         internal static uint NoAutoHeal = 1097;
 

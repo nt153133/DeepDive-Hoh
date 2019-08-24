@@ -108,6 +108,12 @@ namespace DeepHoh.Providers
                 return weight * 100.0;
             }
 
+            if (battleCharacter.Distance2D(_distance) > 100)
+            {
+                weight -= 100;
+            }
+
+
             return weight;
         }
     }

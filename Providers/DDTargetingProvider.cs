@@ -207,7 +207,7 @@ namespace DeepHoh.Providers
                 weight += 500;
             }
 
-            if (DeepDungeonManager.PortalActive && obj.NpcId == EntityNames.FloorExit && Core.Me.HasAura(Auras.NoAutoHeal))
+            if (DeepDungeonManager.PortalActive && obj.NpcId == EntityNames.FloorExit && (Core.Me.HasAura(Auras.NoAutoHeal) || Core.Me.HasAura(Auras.Amnesia)))
             {
                 weight += 500;
             }
@@ -242,7 +242,17 @@ namespace DeepHoh.Providers
                 return false;
             }
 
+            if (obj.NpcId == 7395) //script object
+            {
+                return false;
+            }
+
             if (obj.Location == Vector3.Zero)
+            {
+                return false;
+            }
+
+            if (Core.Me.Location.Distance2D(obj.Location) > 100)
             {
                 return false;
             }
