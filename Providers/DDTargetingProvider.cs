@@ -211,7 +211,7 @@ namespace DeepHoh.Providers
             {
                 weight += 500;
             }
-            
+
             if (DeepDungeonManager.PortalActive && Settings.Instance.GoForTheHoard && obj.NpcId == EntityNames.Hidden)
             {
                 weight += 5;
@@ -261,6 +261,18 @@ namespace DeepHoh.Providers
                 Constants.IgnoreEntity.Contains(obj.NpcId))
             {
                 return false;
+            }
+
+            //Check for Party Chest setting
+            if (obj.NpcId == EntityNames.GoldCoffer && Settings.Instance.OpenNone && PartyManager.IsInParty)
+                return false;
+
+            if (obj.NpcId == EntityNames.GoldCoffer || obj.NpcId == EntityNames.SilverCoffer)
+            {
+                if (DeepDungeonManager.PortalActive && (Core.Me.HasAura(Auras.NoAutoHeal) || Core.Me.HasAura(Auras.Amnesia)))
+                {
+                    return false;
+                }
             }
 
             if (obj.Type == GameObjectType.BattleNpc)

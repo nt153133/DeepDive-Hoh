@@ -7,6 +7,7 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
 using DeepHoh.Enums;
 using DeepHoh.Logging;
 using DeepHoh.Structure;
@@ -22,13 +23,13 @@ using System.Linq;
 
 namespace DeepHoh
 {
-
-
     internal class Settings : JsonSettings
     {
-
         private static Settings _settings;
         private bool _initialized = false;
+
+
+
 
         public static Settings Instance
         {
@@ -49,10 +50,8 @@ namespace DeepHoh
             }
         }
 
-
         public Settings() : base(Path.Combine(GetSettingsFilePath(Core.Me.Name, "DeepDiveHoh.json")))
         { }
-
 
         private SaveSlot _useSaveSlots;
 
@@ -101,6 +100,7 @@ namespace DeepHoh
         }
 
         private bool _useSustain;
+
         [Setting]
         [Description("UseSustain")]
         [DefaultValue(true)]
@@ -131,6 +131,7 @@ namespace DeepHoh
         }
 
         private bool _verboseLogging;
+
         [Setting]
         [Description("enables verbose logging")]
         [DefaultValue(true)]
@@ -147,6 +148,7 @@ namespace DeepHoh
         }
 
         private bool _startAt51;
+
         [Setting]
         [Description("Start at floor 51 when we can.")]
         [JsonProperty("StartAt51")]
@@ -163,6 +165,7 @@ namespace DeepHoh
         }
 
         private bool _openMimics;
+
         [Setting]
         [Description("Interact with mimic chests?")]
         [JsonProperty("OpenMimics")]
@@ -179,6 +182,7 @@ namespace DeepHoh
         }
 
         private bool _openTraps;
+
         [Setting]
         [Description("open traps")]
         [JsonProperty("OpenTraps")]
@@ -195,6 +199,7 @@ namespace DeepHoh
         }
 
         private bool _openSilver;
+
         [Setting]
         [Description("open Silver Chests")]
         [DefaultValue(true)]
@@ -210,7 +215,43 @@ namespace DeepHoh
             }
         }
 
+
+        private bool _openGold;
+
+        [Setting]
+        [Description("True: open all Gold Chests, False: Not Implemented yet")]
+        [DefaultValue(true)]
+        [JsonProperty("OpenGold")]
+        [Category("Chests")]
+        public bool OpenGold
+        {
+            get => _openGold;
+            set
+            {
+                _openGold = value;
+                Save();
+            }
+        }
+
+        private bool _openNone;
+
+        [Setting]
+        [Description("True: Ignore all gold Chests (Only for use in party)")]
+        [DefaultValue(false)]
+        [JsonProperty("OpenNone")]
+        [Category("Chests")]
+        public bool OpenNone
+        {
+            get => _openNone;
+            set
+            {
+                _openNone = value;
+                Save();
+            }
+        }
+
         private float _pullRange;
+
         [Setting]
         [Description("Modifies the default pull range by this amount (Positive values decrease the default pull range)")]
         [DefaultValue(0)]
@@ -227,6 +268,7 @@ namespace DeepHoh
         }
 
         private bool _goFortheHoard;
+
         [Setting]
         [Description("go for the hoard when we are prioritizing the exit")]
         [JsonProperty("GoForTheHoard")]
@@ -238,6 +280,7 @@ namespace DeepHoh
         }
 
         private bool _savestr;
+
         [Setting]
         [Description("Save Pomander of Strength")]
         [JsonProperty("SaveStr")]
@@ -249,6 +292,7 @@ namespace DeepHoh
         }
 
         private bool _saveSteel;
+
         [Setting]
         [Description("Save Pomander of Steel")]
         [JsonProperty("SaveSteel")]
@@ -259,8 +303,8 @@ namespace DeepHoh
             set { _saveSteel = value; Save(); }
         }
 
-
         private bool _antidote;
+
         [Setting]
         [Description("Antidote usage")]
         [DefaultValue(false)]
@@ -277,6 +321,7 @@ namespace DeepHoh
         }
 
         private bool _echoDrop;
+
         [Setting]
         [Description("EchoDrop usage")]
         [DefaultValue(false)]
@@ -291,7 +336,9 @@ namespace DeepHoh
                 Save();
             }
         }
+
         private bool _usePomRage;
+
         [Setting]
         [Description("Pomander of Rage usage")]
         [DefaultValue(false)]
@@ -308,6 +355,7 @@ namespace DeepHoh
         }
 
         private bool _usePomAlt;
+
         [Setting]
         [Description("Pomander of Alteration usage")]
         [DefaultValue(false)]
@@ -324,6 +372,7 @@ namespace DeepHoh
         }
 
         private bool _stop;
+
         [Setting]
         [Description("Stop the bot after we finish the current dungeon")]
         [JsonProperty("Stop")]
@@ -344,6 +393,7 @@ namespace DeepHoh
         }
 
         private bool _stopsolo;
+
         [Browsable(false)]
         [JsonProperty("SoloStop")]
         [DefaultValue(false)]
@@ -358,6 +408,7 @@ namespace DeepHoh
         }
 
         private FloorSetting _selectedLevel;
+
         [Browsable(false)]
         [JsonProperty("SelectedLevel")]
         public FloorSetting SelectedLevel
@@ -370,11 +421,6 @@ namespace DeepHoh
             }
         }
 
-        #region Dump
-
-
-
-        #endregion
         internal void Dump()
         {
             Logger.Verbose("Save Steel: {0}", _saveSteel);

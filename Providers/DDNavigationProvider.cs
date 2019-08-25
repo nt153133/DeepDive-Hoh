@@ -41,8 +41,7 @@ namespace DeepHoh.Providers
 
         private List<uint> _traps;
 
-        private static List<Vector3> _trapPos;
-        internal static List<Vector3> Traps => _trapPos;
+        internal static List<Vector3> Traps { get; private set; }
 
         private static List<Vector3> _map;
         private const float TrapSize = 2.4f;
@@ -70,7 +69,7 @@ namespace DeepHoh.Providers
             //load the map
             _hit = new Dictionary<uint, bool>();
             _traps = new List<uint>();
-            _trapPos = new List<Vector3>();
+            Traps = new List<Vector3>();
             _map = new List<Vector3>();
 
             Logger.Verbose("Updating navigation {0}", map);
@@ -96,7 +95,6 @@ namespace DeepHoh.Providers
             foreach (var a in Core.Me.Auras.ToList())
             {
                 Logger.Debug("Aura Name: {0} ID: {1}", a.LocalizedName, a.Id);
-                //Logger.Debug($"Name: {a.LocalizedName} ID: {a.Id}");
             }
         }
 
@@ -163,9 +161,6 @@ namespace DeepHoh.Providers
 
         public override MoveResult MoveTo(MoveToParameters location)
         {
-            //if (AvoidanceManager.IsRunningOutOfAvoid)
-            //    return MoveResult.Moving;
-
             //if we aren't in POTD default to the original mover right away.
             if (!Constants.Maps.ContainsKey(WorldManager.RawZoneId))
             {
@@ -173,7 +168,6 @@ namespace DeepHoh.Providers
             }
 
             SetupDetour();
-
             AddBlackspots();
             WallCheck();
 
@@ -212,8 +206,6 @@ namespace DeepHoh.Providers
 
         private HashSet<uint> FindWalls()
         {
-            //if (floorCache == DeepDungeonManager.Level && _walls != null) return _wallcache;
-            //floorCache = DeepDungeonManager.Level;
             IntPtr director = DirectorManager.ActiveDirector.Pointer;
 
             if (director == IntPtr.Zero)
@@ -364,7 +356,7 @@ namespace DeepHoh.Providers
                     //_detour.AddBlackspot(i.Location, TrapSize);
                     trapList.Add(new BoundingCircle() { Center = i.Location, Radius = TrapSize });
                     _traps.Add(i.ObjectId);
-                    _trapPos.Add(i.Location);
+                    Traps.Add(i.Location);
                 }
             }
 

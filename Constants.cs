@@ -290,14 +290,6 @@ namespace DeepHoh
         /// <returns></returns>
         private static T loadResource<T>(string text)
         {
-            //string text;
-            //using (var manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(file))
-            //{
-            //    using (var streamReader = new StreamReader(manifestResourceStream))
-            //    {
-            //        text = streamReader.ReadToEnd();
-            //    }
-            //}
             return JsonConvert.DeserializeObject<T>(text);
         }
 
