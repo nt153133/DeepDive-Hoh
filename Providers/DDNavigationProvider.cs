@@ -95,7 +95,7 @@ namespace DeepHoh.Providers
             Logger.Debug("Auras");
             foreach (var a in Core.Me.Auras.ToList())
             {
-                Logger.Debug("Name: {0} ID: {1}", a.LocalizedName, a.Id);
+                Logger.Debug("Aura Name: {0} ID: {1}", a.LocalizedName, a.Id);
                 //Logger.Debug($"Name: {a.LocalizedName} ID: {a.Id}");
             }
         }

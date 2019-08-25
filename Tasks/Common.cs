@@ -155,7 +155,7 @@ namespace DeepHoh.Tasks.Coroutines
         }
 
         /// <summary>
-        ///     Recover hp.
+        ///     Use potions to recover health
         /// </summary>
         /// <param name="force"></param>
         /// <returns></returns>
