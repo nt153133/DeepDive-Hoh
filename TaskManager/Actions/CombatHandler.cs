@@ -83,7 +83,7 @@ namespace DeepHoh.TaskManager.Actions
                 // For floors with auto heal penalty or item penalty we will engage normally until we hit
                 // the magic sub-40% threshold. Statistically it is smarter to just try and finish the floor
                 // instead of waiting around while healing just to encounter additional mobs spawning in.
-                if (Core.Me.CurrentHealthPercent <= 40
+                if (Core.Me.CurrentHealthPercent <= 20
                     && (Core.Me.HasAura(Auras.ItemPenalty) || Core.Me.HasAura(Auras.NoAutoHeal))
                     && !DeepDungeonManager.BossFloor)
                 {

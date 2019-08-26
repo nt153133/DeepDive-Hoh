@@ -119,10 +119,6 @@ namespace DeepHoh.Providers
                         Reset();
                     }
 
-                    //        foreach (GameObject unit in LastEntities)
-                    //        {
-                    //           Logger.Verbose("Name:{0}, Type:{3}, ID:{1}, Obj:{2}", unit, unit.NpcId, unit.ObjectId, unit.GetType());
-                    //       }
                     _lastPulse = DateTime.Now;
                 }
             }
@@ -175,6 +171,7 @@ namespace DeepHoh.Providers
         internal void AddToBlackList(GameObject obj, string reason)
         {
             AddToBlackList(obj, TimeSpan.FromMinutes(1), reason);
+            Poi.Clear(reason);
         }
 
         internal void AddToBlackList(GameObject obj, TimeSpan time, string reason)
@@ -202,9 +199,9 @@ namespace DeepHoh.Providers
                 return weight / 2;
             }
 
-            if (obj.NpcId == EntityNames.BandedCoffer)
+            if (obj.NpcId == EntityNames.BandedCoffer && !Blacklist.Contains(obj.ObjectId))
             {
-                weight += 500;
+                weight += 200;
             }
 
             if (DeepDungeonManager.PortalActive && obj.NpcId == EntityNames.FloorExit && (Core.Me.HasAura(Auras.NoAutoHeal) || Core.Me.HasAura(Auras.Amnesia)))
@@ -252,20 +249,18 @@ namespace DeepHoh.Providers
                 return false;
             }
 
-            if (Core.Me.Location.Distance2D(obj.Location) > 100)
+            if (Blacklist.Contains(obj) || Constants.TrapIds.Contains(obj.NpcId) || Constants.IgnoreEntity.Contains(obj.NpcId))
             {
                 return false;
             }
 
-            if (Blacklist.Contains(obj) || Constants.TrapIds.Contains(obj.NpcId) ||
-                Constants.IgnoreEntity.Contains(obj.NpcId))
+            if (obj.NpcId == EntityNames.FloorExit)
+                return true;
+
+            if (Core.Me.Location.Distance2D(obj.Location) > 200)
             {
                 return false;
             }
-
-            //Check for Party Chest setting
-            if (obj.NpcId == EntityNames.GoldCoffer && Settings.Instance.OpenNone && PartyManager.IsInParty)
-                return false;
 
             if (obj.NpcId == EntityNames.GoldCoffer || obj.NpcId == EntityNames.SilverCoffer)
             {
@@ -286,8 +281,7 @@ namespace DeepHoh.Providers
                 return !battleCharacter.IsDead;
             }
 
-            return obj.Type == GameObjectType.EventObject || obj.Type == GameObjectType.Treasure ||
-                   obj.Type == GameObjectType.BattleNpc;
+            return obj.Type == GameObjectType.EventObject || obj.Type == GameObjectType.Treasure || obj.Type == GameObjectType.BattleNpc;
         }
     }
 }

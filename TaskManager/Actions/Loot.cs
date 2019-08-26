@@ -7,6 +7,7 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
 using Buddy.Coroutines;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
@@ -25,11 +26,11 @@ using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
-    class Loot : ITask
+    internal class Loot : ITask
     {
         public string Name => "Loot";
 
-        Poi Target => Poi.Current;
+        private Poi Target => Poi.Current;
 
         public async Task<bool> Run()
         {
@@ -59,7 +60,6 @@ namespace DeepHoh.TaskManager.Actions
 
             //treasure... or an "exit"...
             return await TreasureOrExit();
-
         }
 
         /// <summary>
@@ -89,7 +89,6 @@ namespace DeepHoh.TaskManager.Actions
                     return true;
                 }
 
-
                 await Coroutine.Yield();
 
                 if (Core.Me.HasAura(Auras.Lust))
@@ -118,7 +117,6 @@ namespace DeepHoh.TaskManager.Actions
                     break;
                 }
             }
-
 
             await Coroutine.Wait(500, () => SelectYesno.IsOpen);
 
@@ -164,7 +162,6 @@ namespace DeepHoh.TaskManager.Actions
 
             Logger.Info("Found a Cache of the Horde. Waiting for it to spawn... (Giving it a few seconds to spawn)");
 
-
             //target will change after the banded coffer is spawned
             GameObject org = Target.Unit;
 
@@ -180,7 +177,6 @@ namespace DeepHoh.TaskManager.Actions
                 Logger.Info("Entered Combat waiting on coffer to spawn.");
                 return true;
             }
-
 
             Blacklist.Add(org, BlacklistFlags.All | (BlacklistFlags)DeepDungeonManager.Level, TimeSpan.FromMinutes(3), "Spawned the Coffer or used all of our time...");
             Poi.Clear($"Hidden adden to blacklist");

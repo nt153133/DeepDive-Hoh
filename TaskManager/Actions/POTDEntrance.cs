@@ -82,6 +82,7 @@ namespace DeepHoh.TaskManager.Actions
 
             if (ContentsFinderConfirm.IsOpen)
             {
+                await Coroutine.Sleep(500);
                 Logger.Warn($"Entering HoH - Currently a Level {Core.Me.ClassLevel} {Core.Me.CurrentJob}");
                 DeepTracker.StartRun(Core.Me.ClassLevel);
                 ContentsFinderConfirm.Commence();
@@ -259,8 +260,8 @@ namespace DeepHoh.TaskManager.Actions
             Logger.Info(@"
 
 =======================================
-Aetherpool Arm: +{0}
-Aetherpool Armor: +{1}
+Empyrean Aetherpool Arm: +{0}
+Empyrean Aetherpool Armor: +{1}
 =======================================
 
 ", _aetherialLevels[0],
@@ -296,7 +297,7 @@ Aetherpool Armor: +{1}
                 }
 
                 Logger.Warn("Everyone is now in the zone");
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     Logger.Warn("Giving them {0} seconds to do what they need to at the NPC", 60 - i * 10);
                     await Coroutine.Sleep(TimeSpan.FromSeconds(10));
@@ -336,6 +337,8 @@ Aetherpool Armor: +{1}
 
                 await Coroutine.Wait(2000,
                     () => SelectString.IsOpen || ContentsFinderConfirm.IsOpen || SelectYesno.IsOpen);
+                
+                await Coroutine.Sleep(1000);
 
                 // if select yesno is open (new as of 4.36 hotfixes)
                 if (SelectYesno.IsOpen)
@@ -358,11 +361,11 @@ Aetherpool Armor: +{1}
 
                     //                    Logger.Verbose("Are you sure Fixed Party");
                     await Coroutine.Wait(1000, () => SelectYesno.IsOpen);
-                    await Coroutine.Sleep(150);
+                    await Coroutine.Sleep(500);
                     if (SelectYesno.IsOpen)
                     {
                         SelectYesno.ClickYes();
-                        await Coroutine.Sleep(150);
+                        await Coroutine.Sleep(300);
                     }
 
                     await Coroutine.Sleep(1000);
@@ -404,7 +407,7 @@ Aetherpool Armor: +{1}
                             SelectString.ClickSlot(0);
                         }
 
-                        await Coroutine.Sleep(1000);
+                        await Coroutine.Sleep(2000);
                     }
 
                     Logger.Verbose("Done with window interaction.");
