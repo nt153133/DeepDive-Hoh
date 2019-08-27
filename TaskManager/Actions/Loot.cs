@@ -53,11 +53,18 @@ namespace DeepHoh.TaskManager.Actions
 
             //let the user know we are trying to run a treasure task
             TreeRoot.StatusText = "Treasure";
-            if (Target.Unit?.NpcId == EntityNames.Hidden)
+            if (Target.Unit.IsValid)
             {
-                return await HandleCacheOfTheHoard();
-            }
+                if (Target.Unit?.NpcId == EntityNames.Hidden)
+                {
+                    return await HandleCacheOfTheHoard();
+                }
 
+            }
+            else
+            {
+                return true;
+            }
             //treasure... or an "exit"...
             return await TreasureOrExit();
         }
