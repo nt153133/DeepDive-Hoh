@@ -111,7 +111,7 @@ namespace DeepHoh.TaskManager.Actions
                 //                }
                 
                 Target.Unit.Target();
-                if (!Settings.Instance.NotLeader || (Settings.Instance.NotLeader && Target.Unit != null && (Target.Unit.NpcId == EntityNames.FloorExit || Target.Unit.NpcId == EntityNames.LobbyExit)))
+                if (!Settings.Instance.NotLeader || (Settings.Instance.NotLeader && Target.Unit != null && (Target.Unit.NpcId == EntityNames.FloorExit || Target.Unit.NpcId == EntityNames.LobbyExit || Target.Unit.NpcId == EntityNames.BossExit)))
                 {
                     Target.Unit.Interact(); 
                 }
