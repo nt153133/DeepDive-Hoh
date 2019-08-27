@@ -407,7 +407,7 @@ namespace DeepHoh.TaskManager.Actions
                 return;
             }
 
-            if (Poi.Current.Unit != null && Poi.Current.Type != PoiType.Kill)
+            if (Poi.Current.Unit != null && Poi.Current.Type != PoiType.Kill && Poi.Current.Unit.IsValid)
             {
                 if (!Core.Me.InRealCombat() && Poi.Current.Unit.Distance2D() < CombatTargeting.Instance.FirstUnit.Distance2D())
                 {
