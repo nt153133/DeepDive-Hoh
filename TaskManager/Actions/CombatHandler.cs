@@ -133,12 +133,12 @@ namespace DeepHoh.TaskManager.Actions
 
             //Logger.Info("======= OUT OF RANGE2");
             //we are outside of targeting range, walk to the mob
-            if (Core.Me.PrimaryTargetPtr == IntPtr.Zero || target.Location.Distance2D(Core.Me.Location) > 30)
+            if (Core.Me.PrimaryTargetPtr == IntPtr.Zero || target.Location.Distance2D(Core.Me.Location) > 20)
             {
                 float dist = Core.Player.CombatReach + RoutineManager.Current.PullRange + (target.Unit != null ? target.Unit.CombatReach : 0);
-                if (dist > 30)
+                if (dist > 20)
                 {
-                    dist = 29;
+                    dist = 20;
                 }
 
                 await CommonTasks.MoveAndStop(new MoveToParameters(target.Location, target.Name), dist, true);
