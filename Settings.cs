@@ -236,9 +236,9 @@ namespace DeepHoh
         private bool _openNone;
 
         [Setting]
-        [Description("True: Ignore all gold Chests (Only for use in party)")]
-        [DefaultValue(false)]
-        [JsonProperty("OpenNone")]
+        [Description("True: open all Gold Chests, False: Not Implemented yet")]
+        [DefaultValue(true)]
+        [JsonProperty("OpenGold")]
         [Category("Chests")]
         public bool OpenNone
         {
@@ -246,6 +246,23 @@ namespace DeepHoh
             set
             {
                 _openNone = value;
+                Save();
+            }
+        }
+
+        private bool _notLeader;
+
+        [Setting]
+        [Description("True: Set if you're not the leader of the party (Only for use in party)")]
+        [DefaultValue(false)]
+        [JsonProperty("NotLeader")]
+        [Category("Party")]
+        public bool NotLeader
+        {
+            get => _notLeader;
+            set
+            {
+                _notLeader = value;
                 Save();
             }
         }

@@ -102,8 +102,11 @@ namespace DeepHoh.TaskManager.Actions
                 //                    ff14bot.Managers.DutyManager.LeaveActiveDuty();
                 //                    await Coroutine.Sleep(10000);
                 //                }
-                Target.Unit.Target();
-                Target.Unit.Interact();
+                if (!Settings.Instance.NotLeader)
+                {
+                    Target.Unit.Target();
+                    Target.Unit.Interact(); 
+                }
                 await Coroutine.Sleep(500);
 
                 tries++;
