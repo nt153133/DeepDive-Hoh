@@ -103,7 +103,7 @@ namespace DeepHoh
 
         [Setting]
         [Description("UseSustain")]
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         [JsonProperty("Sustain")]
         [Category("Pots & Pomanders")]
         public bool UseSustain
@@ -186,7 +186,7 @@ namespace DeepHoh
         [Setting]
         [Description("open traps")]
         [JsonProperty("OpenTraps")]
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         [Category("Chests")]
         public bool OpenTraps
         {
@@ -217,7 +217,7 @@ namespace DeepHoh
 
 
         private bool _openGold;
-
+/*
         [Setting]
         [Description("True: open all Gold Chests, False: Not Implemented yet")]
         [DefaultValue(true)]
@@ -266,7 +266,7 @@ namespace DeepHoh
                 Save();
             }
         }
-
+*/
         private float _pullRange;
 
         [Setting]
@@ -289,6 +289,7 @@ namespace DeepHoh
         [Setting]
         [Description("go for the hoard when we are prioritizing the exit")]
         [JsonProperty("GoForTheHoard")]
+        [DefaultValue(false)]
         [Category("Chests")]
         public bool GoForTheHoard
         {
@@ -301,6 +302,7 @@ namespace DeepHoh
         [Setting]
         [Description("Save Pomander of Strength")]
         [JsonProperty("SaveStr")]
+        [DefaultValue(true)]
         [Category("Pots & Pomanders")]
         public bool SaveStr
         {
@@ -313,11 +315,25 @@ namespace DeepHoh
         [Setting]
         [Description("Save Pomander of Steel")]
         [JsonProperty("SaveSteel")]
+        [DefaultValue(true)]
         [Category("Pots & Pomanders")]
         public bool SaveSteel
         {
             get => _saveSteel;
             set { _saveSteel = value; Save(); }
+        }
+
+        private bool _saveFrailty;
+
+        [Setting]
+        [Description("Save Pomander of Frailty")]
+        [JsonProperty("SaveFrailty")]
+        [DefaultValue(true)]
+        [Category("Pots & Pomanders")]
+        public bool SaveFrailty 
+        {
+            get => _saveFrailty;
+            set { _saveFrailty = value; Save(); }
         }
 
         private bool _antidote;
@@ -442,6 +458,7 @@ namespace DeepHoh
         {
             Logger.Verbose("Save Steel: {0}", _saveSteel);
             Logger.Verbose("Save Strength: {0}", _savestr);
+            Logger.Verbose("Save Frailty: {0}", _saveFrailty);
             Logger.Verbose("Go For Cache: {0}", _goFortheHoard);
 
             Logger.Verbose("Open Silver: {0}", _openSilver);
@@ -449,7 +466,7 @@ namespace DeepHoh
             Logger.Verbose("Open Traps: {0}", _openTraps);
             Logger.Verbose("51: {0}", _startAt51);
             Logger.Verbose("Exit Priority: {0}", _GoExit);
-            Logger.Verbose("save slot: {0}", SaveSlot);
+            Logger.Verbose("Save Slot: {0}", SaveSlot);
             Logger.Verbose("Use Sustain Pot: {0}", UseSustain);
 
             Logger.Verbose("Combat Pull range: {0}", Constants.ModifiedCombatReach);

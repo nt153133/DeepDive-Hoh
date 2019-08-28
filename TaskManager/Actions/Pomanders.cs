@@ -7,8 +7,8 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
 using DeepHoh.Helpers;
-using DeepHoh.Logging;
 using ff14bot;
 using ff14bot.Directors;
 using ff14bot.Managers;
@@ -19,7 +19,7 @@ using static DeepHoh.Tasks.Coroutines.Common;
 
 namespace DeepHoh.TaskManager.Actions
 {
-    class Pomanders : ITask
+    internal class Pomanders : ITask
     {
         public string Name => "Pomanders";
 
@@ -50,10 +50,10 @@ namespace DeepHoh.TaskManager.Actions
 
         public void Tick()
         {
-
         }
 
         private bool _runbuf = false;
+
         /// <summary>
         /// buff the stuff
         /// </summary>
@@ -62,11 +62,6 @@ namespace DeepHoh.TaskManager.Actions
         {
             if (DeepDungeonManager.BossFloor && !Core.Me.InCombat)
             {
-                if (Core.Me.HasAura(Auras.Lust) || _runbuf)
-                {
-                    return false;
-                }
-
                 _runbuf = true;
                 if (Core.Me.HasAura(Auras.Enervation) || Core.Me.HasAura(Auras.Silence))
                 {
@@ -77,43 +72,7 @@ namespace DeepHoh.TaskManager.Actions
                 {
                     await UsePomander(Pomander.Strength, Auras.Strength);
                     await UsePomander(Pomander.Steel, Auras.Steel);
-
-                    bool lust = false;
-                    DDInventoryItem itm = DeepDungeonManager.GetInventoryItem(Pomander.Lust);
-                    Logger.Info("[LUST] Item Count: {0}", itm.Count);
-
-                    /*                    //we are inside the dungeon, should be ok to use InParty here.
-                                        if (PartyManager.IsInParty)
-                                        {
-                                            Logger.Info("In A Party. Doing Lust Logic...");
-                                            var lustFound = false;
-                                            foreach (var k in PartyManager.AllMembers)
-                                            {
-                                                if (!k.Class.IsHealer() && !k.Class.IsTank())
-                                                {
-                                                    lustFound = true;
-                                                    if (k.IsMe)
-                                                        lust = true;
-                                                    break;
-                                                }
-                                            }
-                                            Logger.Info("Party Lust status: {0} :: {1} :: {2}", !lust, !lustFound, PartyManager.IsPartyLeader);
-                                            if (!lust && !lustFound)
-                                            {
-                                                lust = PartyManager.IsPartyLeader;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Logger.Info("Solo Lust Logic");
-                                            lust = true;
-                                        }
-
-                                        if (lust)
-                                        {
-                                            Logger.Info("Use Pomander Debug: [HasAura: {0}]", itm.HasAura);
-                                            await UsePomander(Pomander.Lust, Auras.Lust);
-                                        }*/
+                    await UsePomander(Pomander.Frailty);
                 }
             }
             else
@@ -125,7 +84,6 @@ namespace DeepHoh.TaskManager.Actions
             return false;
         }
 
-
         /// <summary>
         /// Player pomander buffs
         /// </summary>
@@ -136,7 +94,6 @@ namespace DeepHoh.TaskManager.Actions
             {//
                 return await UsePomander(Pomander.Rage, Auras.Lust);
             }
-
 
             if (Core.Me.HasAura(Auras.ItemPenalty))
             {
@@ -192,8 +149,7 @@ namespace DeepHoh.TaskManager.Actions
                 return false;
             }
 
-            if (PartyManager.IsPartyLeader &&
-               (Core.Me.HasAura(Auras.Amnesia) || Core.Me.HasAura(Auras.ItemPenalty) || Core.Me.HasAura(Auras.NoAutoHeal)))
+            if (PartyManager.IsPartyLeader && (Core.Me.HasAura(Auras.Amnesia) || Core.Me.HasAura(Auras.ItemPenalty) || Core.Me.HasAura(Auras.NoAutoHeal)))
             {
                 await UsePomander(Pomander.Serenity);
             }
@@ -214,6 +170,16 @@ namespace DeepHoh.TaskManager.Actions
                 return true;
             }
 
+            //SaveFrailty
+            
+            if (!Settings.Instance.SaveFrailty || DeepDungeonManager.GetInventoryItem(Pomander.Frailty).Count > 1)
+            {
+                if (await UsePomander(Pomander.Frailty))
+                {
+                    return true;
+                }
+            }
+            
             if (await BuffNextFloor())
             {
                 return true;
@@ -257,7 +223,6 @@ namespace DeepHoh.TaskManager.Actions
             }
             return false;
         }
-
 
         /// <summary>
         /// buffs for the next floor

@@ -16,6 +16,7 @@ using ff14bot.Enums;
 using ff14bot.Managers;
 using ff14bot.Objects;
 using ff14bot.RemoteAgents;
+using ff14bot.Directors;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -204,7 +205,7 @@ namespace DeepHoh
         internal static Language Lang;
 
         internal static int LobbyMapID = 780;
-
+        
         static Constants()
         {
             Maps = new Dictionary<uint, uint>
@@ -219,17 +220,28 @@ namespace DeepHoh
                 {776, 0},
                 {777, 0},
                 {778, 0},
-                {779, 0} //,
+                {779, 0}
+            };
 
-                //{599, 8},
-                //{600, 8},
-                //{601, 9},
-                //{602, 9},
-                //{603, 7},
-                //{604, 7},
-                //{605, 7},
-                //{606, 7},
-                //{607, 7}
+            PomanderSlots = new Dictionary<Pomander, int>
+            {
+                //Pomander inventory slots
+                {Pomander.Safety, 0},
+                {Pomander.Sight, 1},
+                {Pomander.Strength, 2},
+                {Pomander.Steel, 3},
+                {Pomander.Affluence, 4},
+                {Pomander.Flight, 5},
+                {Pomander.Alteration, 6},
+                {Pomander.Purity, 7},
+                {Pomander.Fortune, 8},
+                {Pomander.Witching, 9},
+                {Pomander.Serenity, 10},
+                {Pomander.Frailty, 11},
+                {Pomander.Concealment, 12},
+                {Pomander.Intuition, 13},
+                {Pomander.Raising, 14},
+                {Pomander.Petrification, 15}
             };
 
             DeepDungeonRawIds = Maps.Keys.ToArray();
@@ -279,7 +291,7 @@ namespace DeepHoh
         #region DataAsResource
 
         internal static Dictionary<uint, uint> Maps;
-
+        private static readonly Dictionary<Pomander, int> PomanderSlots;
         internal static uint[] TrapIds =
         {
             2007182,
@@ -292,6 +304,8 @@ namespace DeepHoh
 
         private static Potion[] _pots;
         internal static Potion[] Pots => _pots ?? (_pots = loadResource<Potion[]>(Resources.pots));
+
+        public static int PomanderInventorySlot(Pomander p) => PomanderSlots[p];
 
         public static bool InExitLevel => WorldManager.ZoneId == Constants.LobbyMapID; //Maybe the Exit world?
 
