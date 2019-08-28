@@ -97,7 +97,7 @@ namespace DeepHoh.TaskManager.Actions
             if (!DungeonQueue.IsFinished)
             {
                 TreeRoot.StatusText = "Waiting on Queue";
-                await Coroutine.Wait(500, () => ContentsFinderConfirm.IsOpen);
+                await Coroutine.Wait(2000, () => ContentsFinderConfirm.IsOpen);
                 Logger.Info("Waiting on Queue");
                 return true;
             }

@@ -86,7 +86,7 @@ namespace DeepHoh.TaskManager.Actions
             while (!DeepDungeonHoH.StopPlz && tries < 3)
             {
                 //if we are a frog / lust we can't open a chest
-                if (Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) || Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust))
+                if (Constants.AuraTransformed)
                 {
                     Logger.Warn("Unable to open chest. Waiting for aura to end...");
                     await CommonTasks.StopMoving("Waiting on aura to end");
@@ -110,8 +110,11 @@ namespace DeepHoh.TaskManager.Actions
                 //                    await Coroutine.Sleep(10000);
                 //                }
                 
+                //IsExitObject(Target)
+                //if (!PartyManager.IsInParty || PartyManager.IsPartyLeader || (PartyManager.IsInParty && IsExitObject(Target)))
                 Target.Unit.Target();
-                if (!Settings.Instance.NotLeader || (Settings.Instance.NotLeader && Target.Unit != null && (Target.Unit.NpcId == EntityNames.FloorExit || Target.Unit.NpcId == EntityNames.LobbyExit || Target.Unit.NpcId == EntityNames.BossExit)))
+                //if (!Settings.Instance.NotLeader || (Settings.Instance.NotLeader && Target.Unit != null && (Target.Unit.NpcId == EntityNames.FloorExit || Target.Unit.NpcId == EntityNames.LobbyExit || Target.Unit.NpcId == EntityNames.BossExit)))
+                if (!PartyManager.IsInParty || PartyManager.IsPartyLeader || (PartyManager.IsInParty && Constants.IsExitObject(Target.Unit)))
                 {
                     Target.Unit.Interact(); 
                 }

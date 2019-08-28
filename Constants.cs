@@ -14,6 +14,7 @@ using DeepHoh.Properties;
 using ff14bot;
 using ff14bot.Enums;
 using ff14bot.Managers;
+using ff14bot.Objects;
 using ff14bot.RemoteAgents;
 using Newtonsoft.Json;
 using System;
@@ -178,6 +179,16 @@ namespace DeepHoh
 
         internal static uint[] Exits = { EntityNames.FloorExit, EntityNames.BossExit, EntityNames.LobbyExit };
 
+        public static bool IsExitObject(GameObject obj)
+        {
+            foreach (var exit in Exits)
+            {
+                if (obj.NpcId == exit)
+                    return true;
+            };
+            return false;
+        }
+
         //2002872 = some random thing that the bot tries to target in boss rooms. actual purpose unknown
         //7395 Trap ID
         internal static uint[] IgnoreEntity =
@@ -252,6 +263,8 @@ namespace DeepHoh
         {
             return AgentModule.GetAgentInterfaceByType<AgentDeepDungeonSaveData>();
         }
+
+        public static bool AuraTransformed => (Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) || Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust) || Core.Me.HasAura(Auras.Odder));
 
         public static void INIT()
         {
