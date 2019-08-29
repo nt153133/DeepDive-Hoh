@@ -125,6 +125,10 @@ namespace DeepHoh.TaskManager.Actions
                 await Coroutine.Sleep(500);
 
                 tries++;
+
+                if (!Target.Unit.IsValid)
+                    break;
+                
                 if (!Target.Unit.IsTargetable)
                 {
                     break;
