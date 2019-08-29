@@ -102,26 +102,33 @@
         </CodeChunk>
     </CodeChunks>
     <Order>
-        <While Condition="FreeItemSlots() &gt; 0">
-            <If Condition="not IsOnMap(613)">
-              <GetTo XYZ="-6.912354, 2.945007, -612.1157" ZoneId="613" />
-            </If>            
-            <MoveTo Name="Confederate Appraiser" XYZ="-7.761304, 2.928307, -610.1073" />
+      <If Condition="not IsOnMap(613)">
+        <GetTo XYZ="-6.912354, 2.945007, -612.1157" ZoneId="613" />
+      </If>            
+      <MoveTo Name="Confederate Appraiser" XYZ="-7.761304, 2.928307, -610.1073" />
+      
+      <WaitTimer WaitTime="3" />
+      
+      <While Condition="HasAtLeast(23223,1) and FreeItemSlots() &gt; 0">
 			      <If Condition="HasAtLeast(23223,1) and FreeItemSlots() &gt; 0">
                       <RunCode name="Interact" />
                       <WaitTimer WaitTime="3" />
                       <RunCode name="SilverHaloed" />
                       <WaitTimer WaitTime="3" />
             </If>
+      </While>
+      
+      <While Condition="HasAtLeast(23224,1) and FreeItemSlots() &gt; 0">
             <If Condition="HasAtLeast(23224,1) and FreeItemSlots() &gt; 0">
                       <RunCode name="Interact" />
                       <WaitTimer WaitTime="3" />
                       <RunCode name="GoldHaloed" />
                       <WaitTimer WaitTime="3" />
             </If>
-        </While>
-        <If Condition="FreeItemSlots() = 0">
-            <LogMessage Message="Inventory Full. || 背包已满，停止脚本" />
-        </If>
+      </While>
+        
+      <If Condition="FreeItemSlots() &lt; 1">
+          <LogMessage Message="Inventory Full. || 背包已满，停止脚本" />
+      </If>
     </Order>
 </Profile>
