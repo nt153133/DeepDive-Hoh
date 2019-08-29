@@ -97,7 +97,7 @@ namespace DeepHoh.TaskManager.Actions
                 }
 
                 await Coroutine.Yield();
-
+                
                 if (Core.Me.HasAura(Auras.Lust))
                 {
                     await Tasks.Coroutines.Common.CancelAura(Auras.Lust);

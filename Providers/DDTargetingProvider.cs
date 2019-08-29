@@ -193,6 +193,21 @@ namespace DeepHoh.Providers
             float weight = 100f;
 
             weight -= obj.Distance2D();
+            
+            if(PartyManager.IsInParty && !PartyManager.IsPartyLeader)
+            {
+                if (PartyManager.PartyLeader.IsInObjectManager)
+                {
+                    if (PartyManager.PartyLeader.BattleCharacter.HasTarget)
+                    {
+                        if (obj.ObjectId == PartyManager.PartyLeader.BattleCharacter.TargetGameObject.ObjectId)
+                        {
+                            Logger.Debug("Found Leaders target {0}", obj.Name);
+                            weight += 600;
+                        }
+                    }
+                }
+            }
 
             if (obj.Type == GameObjectType.BattleNpc)
             {
