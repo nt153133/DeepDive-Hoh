@@ -40,6 +40,11 @@ namespace DeepHoh.TaskManager.Actions
                 }
             }
 
+            if (PortalPercent > 5 && (Core.Me.HasAura(Auras.NoAutoHeal) || Core.Me.HasAura(Auras.Amnesia)))
+            {
+                return await UsePomander(Pomander.Petrification);
+            }
+
             if (await BuffBoss())
             {
                 return true;
@@ -90,14 +95,14 @@ namespace DeepHoh.TaskManager.Actions
         /// <returns></returns>
         private static async Task<bool> BuffMe()
         {
-            if (Settings.Instance.UsePomRage && CombatTargeting.Instance.LastEntities.Count() > 5 && !Core.Me.HasAura(Auras.Rage))
-            {//
-                return await UsePomander(Pomander.Rage, Auras.Lust);
-            }
-
             if (Core.Me.HasAura(Auras.ItemPenalty))
             {
                 return false;
+            }
+
+            if (CombatTargeting.Instance.LastEntities.Count() > 4)
+            {
+                return await UsePomander(Pomander.Petrification);
             }
 
             if (await UsePomander(Pomander.Raising))
@@ -171,7 +176,7 @@ namespace DeepHoh.TaskManager.Actions
             }
 
             //SaveFrailty
-            
+
             if (!Settings.Instance.SaveFrailty || DeepDungeonManager.GetInventoryItem(Pomander.Frailty).Count > 1)
             {
                 if (await UsePomander(Pomander.Frailty))
@@ -179,7 +184,7 @@ namespace DeepHoh.TaskManager.Actions
                     return true;
                 }
             }
-            
+
             if (await BuffNextFloor())
             {
                 return true;

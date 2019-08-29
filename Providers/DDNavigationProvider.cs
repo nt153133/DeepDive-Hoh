@@ -213,7 +213,7 @@ namespace DeepHoh.Providers
             {
                 return new HashSet<uint>();
             }
-
+            //Logger.Debug("Director offset: {0}", director);
             byte v187A = Core.Memory.Read<byte>(director + Offsets.DDMapGroup);
 
             IntPtr v3 = director + Offsets.Map5xStart + (v187A * Offsets.Map5xSize);
