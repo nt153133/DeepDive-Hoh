@@ -83,7 +83,7 @@ namespace DeepHoh.TaskManager.Actions
                 return true;
             }
 
-            while (!DeepDungeonHoH.StopPlz && tries < 3)
+            while (!DeepDungeonHoH.StopPlz && tries < 3 && Target.Unit.IsValid)
             {
                 //if we are a frog / lust we can't open a chest
                 if (Constants.AuraTransformed)
@@ -117,6 +117,10 @@ namespace DeepHoh.TaskManager.Actions
                 if (!PartyManager.IsInParty || PartyManager.IsPartyLeader || (PartyManager.IsInParty && Constants.IsExitObject(Target.Unit)))
                 {
                     Target.Unit.Interact(); 
+                }
+                else
+                {
+                    await CommonTasks.StopMoving("Waiting for leader to use chest");
                 }
                 await Coroutine.Sleep(500);
 
