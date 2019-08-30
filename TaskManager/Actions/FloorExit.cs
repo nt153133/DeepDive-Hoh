@@ -10,6 +10,7 @@ Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
 
 using Buddy.Coroutines;
 using Clio.Utilities;
+//using Clio.Utilities.Helpers;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
 using DeepHoh.Providers;
@@ -29,6 +30,8 @@ namespace DeepHoh.TaskManager.Actions
         public string Name => "Floor Exit";
 
         private Poi Target => Poi.Current;
+        
+        private Clio.Utilities.Helpers.WaitTimer _moveTimer = new Clio.Utilities.Helpers.WaitTimer(System.TimeSpan.FromMinutes(5));
 
         public async Task<bool> Run()
         {
@@ -55,7 +58,19 @@ namespace DeepHoh.TaskManager.Actions
             }
 
             int _level = DeepDungeonManager.Level;
-            await Coroutine.Wait(-1, () => Core.Me.InCombat || _level != DeepDungeonManager.Level || CommonBehaviors.IsLoading || QuestLogManager.InCutscene);
+
+            _moveTimer.Reset();
+            await Coroutine.Wait(-1, () => Core.Me.InCombat || _level != DeepDungeonManager.Level || CommonBehaviors.IsLoading || QuestLogManager.InCutscene || _moveTimer.IsFinished);
+            
+            if (_moveTimer.IsFinished)
+            {
+                Logger.Debug("Waited 5 minutes at exit: Blacklisting current exit for 5 min or 10min if not valid");
+                if (!Poi.Current.Unit.IsValid)
+                    DDTargetingProvider.Instance.AddToBlackList(Poi.Current.Unit, System.TimeSpan.FromMinutes(10), "Waited at exit(not valid) for 5 minutes");
+                else
+                    DDTargetingProvider.Instance.AddToBlackList(Poi.Current.Unit, System.TimeSpan.FromMinutes(5), "Waited at exit for 5 minutes");
+            }
+            
             Poi.Clear("Floor has changed or we have entered combat");
             Navigator.Clear();
             return true;

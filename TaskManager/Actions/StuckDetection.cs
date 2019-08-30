@@ -25,7 +25,7 @@ namespace DeepHoh.TaskManager.Actions
     {
         private const float Distance = 0.25f;
 
-        private readonly WaitTimer _moveTimer = new WaitTimer(TimeSpan.FromSeconds(8));
+        private readonly WaitTimer _moveTimer = new WaitTimer(TimeSpan.FromSeconds(15));
         private Vector3 _location = Vector3.Zero;
         public string Name => "Stuck Detection";
 
