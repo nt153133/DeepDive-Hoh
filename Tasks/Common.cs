@@ -161,7 +161,7 @@ namespace DeepHoh.Tasks.Coroutines
         /// <returns></returns>
         internal static async Task<bool> UsePots(bool force = false)
         {
-            if (Core.Me.CurrentHealthPercent > 99)
+            if (Core.Me.CurrentHealthPercent > 90)
             {
                 return false;
             }
