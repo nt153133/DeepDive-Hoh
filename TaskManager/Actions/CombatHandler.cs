@@ -92,7 +92,7 @@ namespace DeepHoh.TaskManager.Actions
                     return true;
                 }
 
-                if (Core.Me.CurrentHealthPercent <= 90
+                if (Core.Me.CurrentHealthPercent <= 85
                                    && !(Core.Me.HasAura(Auras.ItemPenalty) || Core.Me.HasAura(Auras.NoAutoHeal))
                                    && !DeepDungeonManager.BossFloor)
                 {
@@ -189,7 +189,18 @@ namespace DeepHoh.TaskManager.Actions
                     return true;
                 }
             }
-
+/*
+            //7268 Heavenly Uwabambi
+            if (
+                GameObjectManager.Attackers.Any(
+                    i =>
+                        i.IsCasting &&
+                        i.NpcId == 7268))
+            {
+                BattleCharacter npc = (GameObjectManager.Attackers.Where(i => i.IsCasting && i.NpcId == 7268)).FirstOrDefault();
+                Logger.Debug("{0} is casting {1} Omen Matrix: {2} omen ptr: {3}", npc.Name, npc.CastingSpellId, npc.OmenMatrix, npc.OmenProjectionPtr);
+            }
+*/
             if (Core.Me.InRealCombat())
             {
                 if (await Tasks.Coroutines.Common.UseSustain())

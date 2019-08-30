@@ -74,6 +74,21 @@ namespace DeepHoh.Providers
             weight += battleCharacter.ClassLevel / 1.25;
             weight += 100 - battleCharacter.CurrentHealthPercent;
 
+            if (PartyManager.IsInParty && !PartyManager.IsPartyLeader)
+            {
+                if (PartyManager.PartyLeader.IsInObjectManager)
+                {
+                    if (PartyManager.PartyLeader.BattleCharacter.HasTarget)
+                    {
+                        if (battleCharacter.ObjectId == PartyManager.PartyLeader.BattleCharacter.TargetGameObject.ObjectId)
+                        {
+                            //Logger.Debug("Found Leaders target {0}", obj.Name);
+                            weight += 600;
+                        }
+                    }
+                }
+            }
+            
             if (battleCharacter.HasTarget && battleCharacter.TargetCharacter == Core.Me)
             {
                 weight += 50;
