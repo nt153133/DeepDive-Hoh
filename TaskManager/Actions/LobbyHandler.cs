@@ -38,7 +38,7 @@ namespace DeepHoh.TaskManager.Actions
 
             //_target = GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit);
             _target = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.LobbyExit).OrderBy(r => r.Distance()).FirstOrDefault();
-            Vector3 loc = new Vector3(-10.02527f, 0.01519775f, -150.0115f);
+            //Vector3 loc = new Vector3(-10.02527f, 0.01519775f, -150.0115f);
 
             Navigator.Stop();
             Navigator.Clear();

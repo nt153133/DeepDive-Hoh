@@ -40,22 +40,22 @@ namespace DeepHoh.TaskManager.Actions
                     Logger.Info(x.ToString());
                 }
 
-                Logger.Warn("No activity was detected for {0} seconds. Adding target to the blacklist and trying again",
-                    _moveTimer.WaitTime.TotalSeconds);
+                Logger.Warn("No activity was detected for {0} seconds. Adding target {1} to the blacklist and trying again",
+                    _moveTimer.WaitTime.TotalSeconds, Poi.Current);
                 if (Poi.Current.Unit != null)
                 {
-                    DDTargetingProvider.Instance.AddToBlackList(Poi.Current.Unit, TimeSpan.FromSeconds(3),
+                    DDTargetingProvider.Instance.AddToBlackList(Poi.Current.Unit, TimeSpan.FromSeconds(30),
                         "Navigation Error");
                 }
 
                 if (Poi.Current.Type != PoiType.None)
                 {
-                    Poi.Clear("No activity detected");
+                    Poi.Clear("No activity detected (not none): PoiType: " + Poi.Current.Type);
                 }
 
                 if (Poi.Current.Type != PoiType.Wait)
                 {
-                    Poi.Clear("No activity detected");
+                    Poi.Clear("No activity detected (not wait): PoiType: " + Poi.Current.Type);
                 }
 
                 _moveTimer.Reset();

@@ -87,7 +87,8 @@ namespace DeepHoh.Windows
             //confirm that we want to delete this data.
             if (SelectYesno.IsOpen)
             {
-                SelectYesno.ClickYes();
+                AtkAddonControl window1 = RaptureAtkUnitManager.GetWindowByName("SelectYesno");
+                window1.SendAction(1, 0, 1);
             }
         }
 

@@ -202,7 +202,7 @@ namespace DeepHoh.Providers
                     {
                         if (obj.ObjectId == PartyManager.PartyLeader.BattleCharacter.TargetGameObject.ObjectId)
                         {
-                            Logger.Debug("Found Leaders target {0}", obj.Name);
+                            //Logger.Debug("Found Leaders target {0}", obj.Name);
                             weight += 600;
                         }
                     }
@@ -272,7 +272,7 @@ namespace DeepHoh.Providers
             if (obj.NpcId == EntityNames.FloorExit)
                 return true;
 
-            if (Core.Me.Location.Distance2D(obj.Location) > 200)
+            if (Core.Me.Location.Distance2D(obj.Location) > 300)
             {
                 return false;
             }

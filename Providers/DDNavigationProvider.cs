@@ -86,7 +86,7 @@ namespace DeepHoh.Providers
             {
                 Logger.Debug("Game object: {0,-25} - {1,20} - {2, 15}", unit.Name, unit.NpcId, unit.ObjectId);
             }
-
+            /*
             foreach (uint unit in activeWalls)
             {
                 Logger.Debug("WallHash: {0,-25}", unit);
@@ -96,7 +96,7 @@ namespace DeepHoh.Providers
             foreach (var a in DeepDungeonManager.GetInventoryItems())
             {
                 Logger.Debug("Items ID: {0} Count: {1}", a.Id, a.Count);
-            }
+            }*/
         }
 
         private static Dictionary<uint, List<Vector3>> LoadWalls(uint map)
@@ -360,7 +360,7 @@ namespace DeepHoh.Providers
                     Traps.Add(i.Location);
                 }
             }
-
+            /*
             IEnumerable<GameObject> units = GameObjectManager.GameObjects.Where(j => j.Location != Vector3.Zero);
             foreach (GameObject unit in units)
             {
@@ -378,7 +378,7 @@ namespace DeepHoh.Providers
                 {
                     Logger.Debug("TRAP? {0}-{1}-{2}-{3} NOT IN LIST", unit, unit.NpcId, unit.ObjectId, unit.IsVisible);
                 }
-            }
+            }*/
         }
     }
 

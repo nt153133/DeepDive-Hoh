@@ -184,6 +184,8 @@ namespace DeepHoh.TaskManager.Actions
                 _targetFloor = new FloorSetting { LevelMax = 10 };
             }
 
+
+            
             Logger.Verbose("Starting Level {0}", _targetFloor.LevelMax - 9);
 
             bool lm = _targetFloor.LevelMax < sdSaveStates[UseSaveSlot].Floor;
@@ -194,6 +196,10 @@ namespace DeepHoh.TaskManager.Actions
 
             bool partySize;
             bool partyClass = false;
+
+
+            if (_targetFloor.LevelMax == 10 && PartyManager.IsInParty)
+                return saved;
 
             //if (saved && partyData.Count == PartyManager.NumMembers)
             //{
