@@ -45,7 +45,7 @@ namespace DeepHoh.TaskManager.Actions
                 return false;
             }
 
-            if (Target.Unit == null)
+            if (Target.Unit == null || !Target.Unit.IsValid)
             {
                 Poi.Clear("Target not found at location");
                 return true;

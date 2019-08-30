@@ -277,20 +277,20 @@ namespace DeepHoh.Providers
                 return false;
             }
 
-            if (obj.NpcId == EntityNames.GoldCoffer || obj.NpcId == EntityNames.SilverCoffer)
-            {
-                if (DeepDungeonManager.PortalActive && (Core.Me.HasAura(Auras.NoAutoHeal) || Core.Me.HasAura(Auras.Amnesia)))
-                {
-                    return false;
-                }
-            }
+            //if (obj.NpcId == EntityNames.GoldCoffer || obj.NpcId == EntityNames.SilverCoffer)
+            //{
+                //if (DeepDungeonManager.PortalActive && (Core.Me.HasAura(Auras.NoAutoHeal) || Core.Me.HasAura(Auras.Amnesia)))
+                //{
+                    //return false;
+                //}
+            //}
 
             if (obj.Type == GameObjectType.BattleNpc)
             {
-                if (DeepDungeonManager.PortalActive)
-                {
-                    return false;
-                }
+                //if (DeepDungeonManager.PortalActive)
+               // {
+               //     return false;
+              //  }
 
                 BattleCharacter battleCharacter = (BattleCharacter)obj;
                 return !battleCharacter.IsDead;
