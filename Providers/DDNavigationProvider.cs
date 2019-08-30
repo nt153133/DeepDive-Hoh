@@ -197,7 +197,7 @@ namespace DeepHoh.Providers
                 }
             }
 
-            Logger.Debug($"[walls] {string.Join(", ", _hit.Keys)}");
+            //Logger.Debug($"[walls] {string.Join(", ", _hit.Keys)}");
 
             return updated;
         }
