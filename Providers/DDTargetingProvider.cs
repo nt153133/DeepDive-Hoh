@@ -224,6 +224,11 @@ namespace DeepHoh.Providers
                 weight += 500;
             }
 
+            if (DeepDungeonManager.PortalActive && Settings.Instance.GoExit)
+            {
+                weight += 500;
+            }
+
             if (DeepDungeonManager.PortalActive && Settings.Instance.GoForTheHoard && obj.NpcId == EntityNames.Hidden)
             {
                 weight += 5;
