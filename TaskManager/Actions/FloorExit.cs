@@ -64,11 +64,24 @@ namespace DeepHoh.TaskManager.Actions
             
             if (_moveTimer.IsFinished)
             {
-                Logger.Debug("Waited 5 minutes at exit: Blacklisting current exit for 5 min or 10min if not valid");
-                if (!Poi.Current.Unit.IsValid)
-                    DDTargetingProvider.Instance.AddToBlackList(Poi.Current.Unit, System.TimeSpan.FromMinutes(10), "Waited at exit(not valid) for 5 minutes");
+                
+                if ((Poi.Current.Unit != null))
+                {
+                    if (!Poi.Current.Unit.IsValid)
+                    {
+                        Logger.Debug("Waited 5 minutes at exit: Blacklisting current exit for 10min not valid");
+                        DDTargetingProvider.Instance.AddToBlackList(Poi.Current.Unit, System.TimeSpan.FromMinutes(10), "Waited at exit(not valid) for 5 minutes");
+                    }
+                    else
+                    {
+                        Logger.Debug("Waited 5 minutes at exit: Blacklisting current exit for 5 min");
+                        DDTargetingProvider.Instance.AddToBlackList(Poi.Current.Unit, System.TimeSpan.FromMinutes(5), "Waited at exit for 5 minutes");
+                    }
+                }
                 else
-                    DDTargetingProvider.Instance.AddToBlackList(Poi.Current.Unit, System.TimeSpan.FromMinutes(5), "Waited at exit for 5 minutes");
+                {
+                    Logger.Debug("Waited 5 minutes at exit but poi is null");
+                }
             }
             
             Poi.Clear("Floor has changed or we have entered combat");
