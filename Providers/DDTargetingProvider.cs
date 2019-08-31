@@ -192,22 +192,23 @@ namespace DeepHoh.Providers
         {
             float weight = 100f;
 
-            weight -= obj.Distance2D();
-            
-            if(PartyManager.IsInParty && !PartyManager.IsPartyLeader)
+            //weight -= obj.Distance2D();
+
+            if (PartyManager.IsInParty && !PartyManager.IsPartyLeader)
             {
-                if (PartyManager.PartyLeader.IsInObjectManager)
+                if (PartyManager.PartyLeader.IsInObjectManager && PartyManager.PartyLeader.CurrentHealth > 0)
                 {
                     if (PartyManager.PartyLeader.BattleCharacter.HasTarget)
                     {
                         if (obj.ObjectId == PartyManager.PartyLeader.BattleCharacter.TargetGameObject.ObjectId)
-                        {
-                            //Logger.Debug("Found Leaders target {0}", obj.Name);
-                            weight += 600;
-                        }
+                        { weight += 600; }
                     }
+                    weight -= obj.Distance2D(PartyManager.PartyLeader.GameObject);
                 }
+                else { weight -= obj.Distance2D(); }
             }
+            else
+            { weight -= obj.Distance2D(); }
 
             if (obj.Type == GameObjectType.BattleNpc)
             {
@@ -284,18 +285,18 @@ namespace DeepHoh.Providers
 
             //if (obj.NpcId == EntityNames.GoldCoffer || obj.NpcId == EntityNames.SilverCoffer)
             //{
-                //if (DeepDungeonManager.PortalActive && (Core.Me.HasAura(Auras.NoAutoHeal) || Core.Me.HasAura(Auras.Amnesia)))
-                //{
-                    //return false;
-                //}
+            //if (DeepDungeonManager.PortalActive && (Core.Me.HasAura(Auras.NoAutoHeal) || Core.Me.HasAura(Auras.Amnesia)))
+            //{
+            //return false;
+            //}
             //}
 
             if (obj.Type == GameObjectType.BattleNpc)
             {
                 //if (DeepDungeonManager.PortalActive)
-               // {
-               //     return false;
-              //  }
+                // {
+                //     return false;
+                //  }
 
                 BattleCharacter battleCharacter = (BattleCharacter)obj;
                 return !battleCharacter.IsDead;

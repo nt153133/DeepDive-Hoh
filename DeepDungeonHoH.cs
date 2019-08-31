@@ -164,7 +164,7 @@ namespace DeepHoh
             _tasks.Add(new GetToKyusei());
             _tasks.Add(new POTDEntrance());
 
-            //_tasks.Add(new BeaconOfReturn());
+            _tasks.Add(new BeaconOfReturn());
             _tasks.Add(new FloorExit());
             _tasks.Add(new Loot());
 
