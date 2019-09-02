@@ -8,10 +8,10 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using DeepHoh.Logging;
-using DeepHoh.Structure;
 using System;
 using System.Windows.Forms;
+using DeepHoh.Logging;
+using DeepHoh.Structure;
 
 namespace DeepHoh.Forms
 {
@@ -19,7 +19,6 @@ namespace DeepHoh.Forms
     {
         public SettingsForm()
         {
-
             InitializeComponent();
         }
 
@@ -33,25 +32,23 @@ namespace DeepHoh.Forms
             solostop.Checked = !Settings.Instance.SoloStop;
 
             solostop.CheckedChanged += solostop_CheckStateChanged;
-
         }
 
         private void changelevel(object sender, EventArgs e)
         {
-            Logger.Verbose($"Changing the selected floor to run");
-            Settings.Instance.SelectedLevel = (FloorSetting)Levels.SelectedItem;
+            Logger.Verbose("Changing the selected floor to run");
+            Settings.Instance.SelectedLevel = (FloorSetting) Levels.SelectedItem;
         }
 
         private void Levels_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Settings.Instance.SelectedLevel = (FloorSetting)Levels.SelectedItem;
+            Settings.Instance.SelectedLevel = (FloorSetting) Levels.SelectedItem;
         }
 
         private void solostop_CheckStateChanged(object sender, EventArgs e)
         {
-            Logger.Verbose($"Changing stop state");
+            Logger.Verbose("Changing stop state");
             Settings.Instance.SoloStop = !Settings.Instance.SoloStop;
         }
-
     }
 }

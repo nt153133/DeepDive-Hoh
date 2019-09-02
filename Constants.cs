@@ -5,23 +5,23 @@ Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
 You should have received a copy of the license along with this
 work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
-Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
+Original work done by zzi, contributions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using Clio.Utilities;
-using DeepHoh.Memory;
-using DeepHoh.Properties;
-using ff14bot;
-using ff14bot.Enums;
-using ff14bot.Managers;
-using ff14bot.Objects;
-using ff14bot.RemoteAgents;
-using ff14bot.Directors;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Clio.Utilities;
+using DeepHoh.Memory;
+using DeepHoh.Properties;
+using ff14bot;
+using ff14bot.Directors;
+using ff14bot.Enums;
+using ff14bot.Managers;
+using ff14bot.Objects;
+using ff14bot.RemoteAgents;
+using Newtonsoft.Json;
 
 namespace DeepHoh
 {
@@ -36,11 +36,11 @@ namespace DeepHoh
     /// </summary>
     internal static class Mobs
     {
-        internal static uint PalaceHornet = 4981;
-        internal static uint PalaceSlime = 4990;
-        internal static uint HeavenlyShark = 7272;
-        internal static uint CatThing = 7398;
-        internal static uint Inugami = 7397;
+        internal const uint PalaceHornet = 4981;
+        internal const uint PalaceSlime = 4990;
+        internal const uint HeavenlyShark = 7272;
+        internal const uint CatThing = 7398;
+        internal const uint Inugami = 7397;
     }
 
     /// <summary>
@@ -48,25 +48,21 @@ namespace DeepHoh
     /// </summary>
     internal static class EntityNames
     {
-        internal static uint TrapCoffer = 2005808;
+        internal const uint TrapCoffer = 2005808;
+        internal const uint GoldCoffer = 2007358;
+        internal const uint SilverCoffer = 2007357;
 
-        internal static uint GoldCoffer = 2007358;
-        internal static uint SilverCoffer = 2007357;
+        internal const uint Hidden = 2007542;
+        internal const uint BandedCoffer = 2007543;
 
-        //internal static uint BandedCoffer = 2007543;
+        internal const uint FloorExit = 2009507;
+        internal const uint BossExit = 2005809;
 
-        internal static uint[] MimicCoffer = { 2006020, 2006022 };
+        internal const uint LobbyExit = 2009523;
+        internal const uint LobbyEntrance = 2009524;
 
-        internal static uint Hidden = 2007542;
-        internal static uint BandedCoffer = 2007543;
-
-        internal static uint FloorExit = 2009507;
-        internal static uint BossExit = 2005809;
-
-        internal static uint LobbyExit = 2009523;
-        internal static uint LobbyEntrance = 2009524;
-
-        internal static uint BeaconofReturn = 2009506;
+        internal const uint BeaconOfReturn = 2009506;
+        internal static readonly uint[] MimicCoffer = {2006020, 2006022};
 
         #region Pets
 
@@ -89,65 +85,65 @@ namespace DeepHoh
 
     internal static class Items
     {
-        internal static int Antidote = 4564;
-        internal static int EchoDrops = 4566;
-        internal static int SustainingPotion = 20309;
+        internal const int Antidote = 4564;
+        internal const int EchoDrops = 4566;
+        internal const int SustainingPotion = 20309;
     }
 
     internal static class Auras
     {
-        internal static uint Frog = 1101;
-        internal static uint Toad = 439;
-        internal static uint Toad2 = 441;
-        internal static uint Chicken = 1102;
-        internal static uint Imp = 1103;
-        internal static uint Odder = 1546;
+        internal const uint Frog = 1101;
+        internal const uint Toad = 439;
+        internal const uint Toad2 = 441;
+        internal const uint Chicken = 1102;
+        internal const uint Imp = 1103;
+        internal const uint Odder = 1546;
 
-        internal static uint Lust = 565;
-        internal static uint Rage = 565;
+        internal const uint Lust = 565;
+        internal const uint Rage = 565;
 
-        internal static uint Steel = 1100;
-        internal static uint Strength = 687;
+        internal const uint Steel = 1100;
+        internal const uint Strength = 687;
 
-        internal static uint Sustain = 184;
+        internal const uint Sustain = 184;
 
-        public static uint Enervation = 546;
-        public static uint Pacification = 620;
-        public static uint Silence = 7;
+        public const uint Enervation = 546;
+        public const uint Pacification = 620;
+        public const uint Silence = 7;
 
-        public static uint[] Poisons =
+        public static readonly uint[] Poisons =
         {
             18, 275, 559, 560, 686, 801
         };
 
         #region Floor Debuffs
 
-        internal static uint Pox = 1087;
-        internal static uint Blind = 1088;
-        internal static uint HpDown = 1089;
-        internal static uint DamageDown = 1090;
-        internal static uint Amnesia = 1092;
-        internal static uint ItemPenalty = 1094;
-        internal static uint SprintPenalty = 1095;
-        internal static uint KnockbackPenalty = 1096;
-        internal static uint NoAutoHeal = 1097;
+        internal const uint Pox = 1087;
+        internal const uint Blind = 1088;
+        internal const uint HpDown = 1089;
+        internal const uint DamageDown = 1090;
+        internal const uint Amnesia = 1092;
+        internal const uint ItemPenalty = 1094;
+        internal const uint SprintPenalty = 1095;
+        internal const uint KnockbackPenalty = 1096;
+        internal const uint NoAutoHeal = 1097;
 
         #endregion Floor Debuffs
     }
 
     internal static class Spells
     {
-        internal static uint LustSpell = 6274;
-        internal static uint RageSpell = 6273;
-        internal static uint ResolutionSpell = 6871;
+        internal const uint LustSpell = 6274;
+        internal const uint RageSpell = 6273;
+        internal const uint ResolutionSpell = 6871;
     }
 
     internal static class WindowNames
     {
-        internal static string DDmenu = "DeepDungeonMenu";
-        internal static string DDsave = "DeepDungeonSaveData";
-        internal static string DDmap = "DeepDungeonMap";
-        internal static string DDStatus = "DeepDungeonStatus";
+        internal const string DDmenu = "DeepDungeonMenu";
+        internal const string DDsave = "DeepDungeonSaveData";
+        internal const string DDmap = "DeepDungeonMap";
+        internal const string DDStatus = "DeepDungeonStatus";
     }
 
     internal class Potion
@@ -161,40 +157,31 @@ namespace DeepHoh
         [JsonProperty("Rate")] public float[] Rate;
 
         public float RecoverMax => Core.Me.MaxHealth * Rate[1];
-        public uint Recovery => (uint)Math.Min(RecoverMax, Max[1]);
+        public uint Recovery => (uint) Math.Min(RecoverMax, Max[1]);
 
         public float LevelScore => Max[1] / RecoverMax;
     }
 
     internal static class Constants
     {
+        internal const uint RubySeaZoneID = 613; //Adapted to The Ruby Sea (Aetheryte ID is 106)
+
+        internal const int LobbyMapID = 780;
         internal static Vector3 KyuseiNpcPosition = new Vector3(-2.02948f, 3.005981f, -611.3528f);
         internal static uint KyuseiNpcId = 1025846;
-
-        internal static uint RubySeaZoneID = 613; //Adapted to The Ruby Sea (Aetheryte ID is 106)
 
         //570 is staging.
         //561 - 565 are 1-50
         //593 - 607 are 51-200
         internal static uint[] DeepDungeonRawIds;
 
-        internal static uint[] Exits = { EntityNames.FloorExit, EntityNames.BossExit, EntityNames.LobbyExit };
-
-        public static bool IsExitObject(GameObject obj)
-        {
-            foreach (var exit in Exits)
-            {
-                if (obj.NpcId == exit)
-                    return true;
-            };
-            return false;
-        }
+        internal static readonly uint[] Exits = {EntityNames.FloorExit, EntityNames.BossExit, EntityNames.LobbyExit};
 
         //2002872 = some random thing that the bot tries to target in boss rooms. actual purpose unknown
         //7395 Trap ID
         internal static uint[] IgnoreEntity =
         {
-            7395, 5402, EntityNames.FloorExit, EntityNames.BeaconofReturn, EntityNames.LobbyEntrance, 2002872,
+            7395, 5402, EntityNames.FloorExit, EntityNames.BeaconOfReturn, EntityNames.LobbyEntrance, 2002872,
             EntityNames.RubyCarby, EntityNames.EmeraldCarby, EntityNames.TopazCarby, EntityNames.Garuda,
             EntityNames.Titan, EntityNames.Ifrit, EntityNames.Eos, EntityNames.Selene, EntityNames.Rook,
             EntityNames.Bishop, Mobs.CatThing, Mobs.Inugami, 377
@@ -204,8 +191,6 @@ namespace DeepHoh
 
         internal static Language Lang;
 
-        internal static int LobbyMapID = 780;
-        
         static Constants()
         {
             Maps = new Dictionary<uint, uint>
@@ -259,13 +244,19 @@ namespace DeepHoh
         {
             get
             {
-                if (!PartyManager.IsInParty)
-                {
-                    return 20;
-                }
+                if (!PartyManager.IsInParty) return 20;
 
                 return Math.Max(8, RoutineManager.Current.PullRange + Settings.Instance.PullRange);
             }
+        }
+
+        public static bool AuraTransformed => Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) ||
+                                              Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust) ||
+                                              Core.Me.HasAura(Auras.Odder);
+
+        public static bool IsExitObject(GameObject obj)
+        {
+            return Exits.Any(exit => obj.NpcId == exit);
         }
 
         //cn = 3
@@ -276,11 +267,9 @@ namespace DeepHoh
             return AgentModule.GetAgentInterfaceByType<AgentDeepDungeonSaveData>();
         }
 
-        public static bool AuraTransformed => (Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) || Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust) || Core.Me.HasAura(Auras.Odder));
-
         public static void INIT()
         {
-            Language field = (Language)typeof(DataManager).GetFields(BindingFlags.Static | BindingFlags.NonPublic)
+            Language field = (Language) typeof(DataManager).GetFields(BindingFlags.Static | BindingFlags.NonPublic)
                 .First(i => i.FieldType == typeof(Language)).GetValue(null);
 
             Lang = field;
@@ -292,6 +281,7 @@ namespace DeepHoh
 
         internal static Dictionary<uint, uint> Maps;
         private static readonly Dictionary<Pomander, int> PomanderSlots;
+
         internal static uint[] TrapIds =
         {
             2007182,
@@ -305,9 +295,12 @@ namespace DeepHoh
         private static Potion[] _pots;
         internal static Potion[] Pots => _pots ?? (_pots = loadResource<Potion[]>(Resources.pots));
 
-        public static int PomanderInventorySlot(Pomander p) => PomanderSlots[p];
+        public static int PomanderInventorySlot(Pomander p)
+        {
+            return PomanderSlots[p];
+        }
 
-        public static bool InExitLevel => WorldManager.ZoneId == Constants.LobbyMapID; //Maybe the Exit world?
+        public static bool InExitLevel => WorldManager.ZoneId == LobbyMapID; //Maybe the Exit world?
 
         /// <summary>
         ///     loads a json resource file

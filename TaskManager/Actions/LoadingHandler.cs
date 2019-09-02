@@ -7,17 +7,18 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
+using System.Threading.Tasks;
 using Buddy.Coroutines;
 using ff14bot;
 using ff14bot.Behavior;
 using ff14bot.Managers;
 using ff14bot.RemoteAgents;
 using ff14bot.RemoteWindows;
-using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
-    class LoadingHandler : ITask
+    internal class LoadingHandler : ITask
     {
         public string Name => "LoadingHandler";
 
@@ -28,6 +29,7 @@ namespace DeepHoh.TaskManager.Actions
                 await Coroutine.Wait(-1, () => !CommonBehaviors.IsLoading);
                 return true;
             }
+
             if (QuestLogManager.InCutscene)
             {
                 TreeRoot.StatusText = "InCutscene";
@@ -35,25 +37,23 @@ namespace DeepHoh.TaskManager.Actions
                 {
                     AgentCutScene.Instance.PromptSkip();
                     await Coroutine.Wait(250, () => SelectString.IsOpen);
-                    if (SelectString.IsOpen)
-                    {
-                        SelectString.ClickSlot(0);
-                    }
+                    if (SelectString.IsOpen) SelectString.ClickSlot(0);
 
                     return true;
                 }
             }
+
             if (Talk.DialogOpen)
             {
                 Talk.Next();
                 return true;
             }
+
             return false;
         }
 
         public void Tick()
         {
-
         }
     }
 }

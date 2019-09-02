@@ -8,6 +8,11 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.IO;
+using System.Linq;
 using DeepHoh.Enums;
 using DeepHoh.Logging;
 using DeepHoh.Structure;
@@ -15,208 +20,33 @@ using ff14bot;
 using ff14bot.Helpers;
 using ff14bot.Managers;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.IO;
-using System.Linq;
 
 namespace DeepHoh
 {
     internal class Settings : JsonSettings
     {
         private static Settings _settings;
-        private bool _initialized = false;
 
+        private bool _antidote;
 
-
-
-        public static Settings Instance
-        {
-            get
-            {
-                if (_settings != null)
-                {
-                    return _settings;
-                }
-
-                _settings = new Settings
-                {
-                    //_settings.LoadFrom(Path.Combine(GetSettingsFilePath(Core.Me.Name, "DeepDive.json")));
-                    _initialized = true
-                };
-
-                return _settings;
-            }
-        }
-
-        public Settings() : base(Path.Combine(GetSettingsFilePath(Core.Me.Name, "DeepDiveHoh.json")))
-        { }
-
-        private SaveSlot _useSaveSlots;
-
-        [Setting]
-        [DefaultValue(SaveSlot.First)]
-        [JsonProperty("SaveSlot")]
-        [Category("General")]
-        public SaveSlot SaveSlot
-        {
-            get => _useSaveSlots;
-            set
-            {
-                _useSaveSlots = value;
-                Save();
-            }
-        }
-
-        private bool _render;
-
-        [Setting]
-        [Description("Enable the Debug Renderer")]
-        [DefaultValue(false)]
-        [JsonProperty("DebugRender")]
-        [Category("Debug")]
-        public bool DebugRender
-        {
-            get => _render;
-            set => _render = value;
-        }
-
-        private bool _GoExit;
-
-        [Setting]
-        [Description("Prioritize the exit - Party mode only")]
-        [DefaultValue(false)]
-        [JsonProperty("GoExit")]
-        [Category("Party")]
-        public bool GoExit
-        {
-            get => _GoExit;
-            set
-            {
-                _GoExit = value;
-                Save();
-            }
-        }
-
-        private bool _useSustain;
-
-        [Setting]
-        [Description("UseSustain")]
-        [DefaultValue(false)]
-        [JsonProperty("Sustain")]
-        [Category("Pots & Pomanders")]
-        public bool UseSustain
-        {
-            get => _useSustain;
-            set
-            {
-                _useSustain = value;
-                Save();
-            }
-        }
+        private bool _echoDrop;
 
         private List<FloorSetting> _floorSettings;
 
-        [Browsable(false)]
-        [JsonProperty("FloorSettings")]
-        public List<FloorSetting> FloorSettings
-        {
-            get => _floorSettings ?? (EnsureFloorSettings());
-            set
-            {
-                _floorSettings = value;
-                Save();
-            }
-        }
+        private bool _GoExit;
 
-        private bool _verboseLogging;
-
-        [Setting]
-        [Description("enables verbose logging")]
-        [DefaultValue(true)]
-        [JsonProperty("VerboseLogging")]
-        [Category("General")]
-        public bool VerboseLogging
-        {
-            get => _verboseLogging;
-            set
-            {
-                _verboseLogging = value;
-                Save();
-            }
-        }
-
-        private bool _startAt51;
-
-        [Setting]
-        [Description("Start at floor 51 when we can.")]
-        [JsonProperty("StartAt51")]
-        [DefaultValue(false)]
-        [Category("General")]
-        public bool StartAt51
-        {
-            get => _startAt51;
-            set
-            {
-                _startAt51 = value;
-                Save();
-            }
-        }
-
-        private bool _openMimics;
-
-        [Setting]
-        [Description("Interact with mimic chests?")]
-        [JsonProperty("OpenMimics")]
-        [DefaultValue(false)]
-        [Category("Chests")]
-        public bool OpenMimics
-        {
-            get => _openMimics;
-            set
-            {
-                _openMimics = value;
-                Save();
-            }
-        }
-
-        private bool _openTraps;
-
-        [Setting]
-        [Description("open traps")]
-        [JsonProperty("OpenTraps")]
-        [DefaultValue(false)]
-        [Category("Chests")]
-        public bool OpenTraps
-        {
-            get => _openTraps;
-            set
-            {
-                _openTraps = value;
-                Save();
-            }
-        }
-
-        private bool _openSilver;
-
-        [Setting]
-        [Description("open Silver Chests")]
-        [DefaultValue(true)]
-        [JsonProperty("OpenSilver")]
-        [Category("Chests")]
-        public bool OpenSilver
-        {
-            get => _openSilver;
-            set
-            {
-                _openSilver = value;
-                Save();
-            }
-        }
+        private bool _goFortheHoard;
+        private bool _initialized;
 
 
         private bool _openGold;
+
+        private bool _openMimics;
+
+        private bool _openSilver;
+
+        private bool _openTraps;
+
 /*
         [Setting]
         [Description("True: open all Gold Chests, False: Not Implemented yet")]
@@ -269,8 +99,192 @@ namespace DeepHoh
 */
         private float _pullRange;
 
+        private bool _saveFrailty;
+
+        private bool _saveSteel;
+
+        private bool _savestr;
+
+        private FloorSetting _selectedLevel;
+
+        private bool _startAt51;
+
+        private bool _stop;
+
+        private bool _stopsolo;
+
+        private bool _usePomAlt;
+
+        private bool _usePomRage;
+
+        private SaveSlot _useSaveSlots;
+
+        private bool _useSustain;
+
+        private bool _verboseLogging;
+
+        public Settings() : base(Path.Combine(GetSettingsFilePath(Core.Me.Name, "DeepDiveHoh.json")))
+        {
+        }
+
+
+        public static Settings Instance
+        {
+            get
+            {
+                if (_settings != null) return _settings;
+
+                _settings = new Settings
+                {
+                    //_settings.LoadFrom(Path.Combine(GetSettingsFilePath(Core.Me.Name, "DeepDive.json")));
+                    _initialized = true
+                };
+
+                return _settings;
+            }
+        }
+
         [Setting]
-        [Description("Modifies the default pull range by this amount (Positive values decrease the default pull range)")]
+        [DefaultValue(SaveSlot.First)]
+        [JsonProperty("SaveSlot")]
+        [Category("General")]
+        public SaveSlot SaveSlot
+        {
+            get => _useSaveSlots;
+            set
+            {
+                _useSaveSlots = value;
+                Save();
+            }
+        }
+
+        [Setting]
+        [Description("Enable the Debug Renderer")]
+        [DefaultValue(false)]
+        [JsonProperty("DebugRender")]
+        [Category("Debug")]
+        public bool DebugRender { get; set; }
+
+        [Setting]
+        [Description("Prioritize the exit - Party mode only")]
+        [DefaultValue(false)]
+        [JsonProperty("GoExit")]
+        [Category("Party")]
+        public bool GoExit
+        {
+            get => _GoExit;
+            set
+            {
+                _GoExit = value;
+                Save();
+            }
+        }
+
+        [Setting]
+        [Description("UseSustain")]
+        [DefaultValue(false)]
+        [JsonProperty("Sustain")]
+        [Category("Pots & Pomanders")]
+        public bool UseSustain
+        {
+            get => _useSustain;
+            set
+            {
+                _useSustain = value;
+                Save();
+            }
+        }
+
+        [Browsable(false)]
+        [JsonProperty("FloorSettings")]
+        public List<FloorSetting> FloorSettings
+        {
+            get => _floorSettings ?? EnsureFloorSettings();
+            set
+            {
+                _floorSettings = value;
+                Save();
+            }
+        }
+
+        [Setting]
+        [Description("enables verbose logging")]
+        [DefaultValue(true)]
+        [JsonProperty("VerboseLogging")]
+        [Category("General")]
+        public bool VerboseLogging
+        {
+            get => _verboseLogging;
+            set
+            {
+                _verboseLogging = value;
+                Save();
+            }
+        }
+
+        [Setting]
+        [Description("Start at floor 51 when we can.")]
+        [JsonProperty("StartAt51")]
+        [DefaultValue(false)]
+        [Category("General")]
+        public bool StartAt51
+        {
+            get => _startAt51;
+            set
+            {
+                _startAt51 = value;
+                Save();
+            }
+        }
+
+        [Setting]
+        [Description("Interact with mimic chests?")]
+        [JsonProperty("OpenMimics")]
+        [DefaultValue(false)]
+        [Category("Chests")]
+        public bool OpenMimics
+        {
+            get => _openMimics;
+            set
+            {
+                _openMimics = value;
+                Save();
+            }
+        }
+
+        [Setting]
+        [Description("open traps")]
+        [JsonProperty("OpenTraps")]
+        [DefaultValue(false)]
+        [Category("Chests")]
+        public bool OpenTraps
+        {
+            get => _openTraps;
+            set
+            {
+                _openTraps = value;
+                Save();
+            }
+        }
+
+        [Setting]
+        [Description("open Silver Chests")]
+        [DefaultValue(true)]
+        [JsonProperty("OpenSilver")]
+        [Category("Chests")]
+        public bool OpenSilver
+        {
+            get => _openSilver;
+            set
+            {
+                _openSilver = value;
+                Save();
+            }
+        }
+
+        [Setting]
+        [Description(
+            "Modifies the default pull range by this amount (Positive values decrease the default pull range)")]
         [DefaultValue(0)]
         [JsonProperty("PullRange")]
         [Category("Party")]
@@ -284,8 +298,6 @@ namespace DeepHoh
             }
         }
 
-        private bool _goFortheHoard;
-
         [Setting]
         [Description("go for the hoard when we are prioritizing the exit")]
         [JsonProperty("GoForTheHoard")]
@@ -294,10 +306,12 @@ namespace DeepHoh
         public bool GoForTheHoard
         {
             get => _goFortheHoard;
-            set { _goFortheHoard = value; Save(); }
+            set
+            {
+                _goFortheHoard = value;
+                Save();
+            }
         }
-
-        private bool _savestr;
 
         [Setting]
         [Description("Save Pomander of Strength")]
@@ -307,10 +321,12 @@ namespace DeepHoh
         public bool SaveStr
         {
             get => _savestr;
-            set { _savestr = value; Save(); }
+            set
+            {
+                _savestr = value;
+                Save();
+            }
         }
-
-        private bool _saveSteel;
 
         [Setting]
         [Description("Save Pomander of Steel")]
@@ -320,23 +336,27 @@ namespace DeepHoh
         public bool SaveSteel
         {
             get => _saveSteel;
-            set { _saveSteel = value; Save(); }
+            set
+            {
+                _saveSteel = value;
+                Save();
+            }
         }
-
-        private bool _saveFrailty;
 
         [Setting]
         [Description("Save Pomander of Frailty")]
         [JsonProperty("SaveFrailty")]
         [DefaultValue(true)]
         [Category("Pots & Pomanders")]
-        public bool SaveFrailty 
+        public bool SaveFrailty
         {
             get => _saveFrailty;
-            set { _saveFrailty = value; Save(); }
+            set
+            {
+                _saveFrailty = value;
+                Save();
+            }
         }
-
-        private bool _antidote;
 
         [Setting]
         [Description("Antidote usage")]
@@ -353,8 +373,6 @@ namespace DeepHoh
             }
         }
 
-        private bool _echoDrop;
-
         [Setting]
         [Description("EchoDrop usage")]
         [DefaultValue(false)]
@@ -369,8 +387,6 @@ namespace DeepHoh
                 Save();
             }
         }
-
-        private bool _usePomRage;
 
         [Setting]
         [Description("Pomander of Rage usage")]
@@ -387,8 +403,6 @@ namespace DeepHoh
             }
         }
 
-        private bool _usePomAlt;
-
         [Setting]
         [Description("Pomander of Alteration usage")]
         [DefaultValue(false)]
@@ -404,8 +418,6 @@ namespace DeepHoh
             }
         }
 
-        private bool _stop;
-
         [Setting]
         [Description("Stop the bot after we finish the current dungeon")]
         [JsonProperty("Stop")]
@@ -417,15 +429,10 @@ namespace DeepHoh
             set
             {
                 _stop = value;
-                if (_initialized)
-                {
-                    Logger.Verbose($"Stop state has changed to: {value}");
-                }
+                if (_initialized) Logger.Verbose($"Stop state has changed to: {value}");
                 Save();
             }
         }
-
-        private bool _stopsolo;
 
         [Browsable(false)]
         [JsonProperty("SoloStop")]
@@ -439,8 +446,6 @@ namespace DeepHoh
                 Save();
             }
         }
-
-        private FloorSetting _selectedLevel;
 
         [Browsable(false)]
         [JsonProperty("SelectedLevel")]
@@ -475,37 +480,27 @@ namespace DeepHoh
             Logger.Verbose("StopSolo: {0}", SoloStop);
 
             EnsureFloorSettings();
-            foreach (FloorSetting f in FloorSettings)
-            {
-                Logger.Verbose(f.Display);
-            }
+            foreach (FloorSetting f in FloorSettings) Logger.Verbose(f.Display);
         }
 
         internal List<FloorSetting> EnsureFloorSettings()
         {
-            if (!_initialized)
-            {
-                return _floorSettings;
-            }
+            if (!_initialized) return _floorSettings;
 
             if (_floorSettings == null || !_floorSettings.Any())
             {
                 List<FloorSetting> llnext = new List<FloorSetting>();
 
                 for (int i = 10; i <= 100; i += 10)
-                {
                     llnext.Add(new FloorSetting
                     {
-                        LevelMax = i,
+                        LevelMax = i
                     });
-                }
 
                 _floorSettings = llnext;
             }
-            if (SelectedLevel == null)
-            {
-                SelectedLevel = FloorSettings.First();
-            }
+
+            if (SelectedLevel == null) SelectedLevel = FloorSettings.First();
 
             return _floorSettings;
         }

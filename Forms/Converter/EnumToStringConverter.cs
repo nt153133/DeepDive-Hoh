@@ -7,11 +7,12 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-using DeepHoh.Properties;
+
 using System;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Data;
+using DeepHoh.Properties;
 
 namespace DeepHoh.Forms.Converter
 {
@@ -22,8 +23,7 @@ namespace DeepHoh.Forms.Converter
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-            { return null; }
+            if (value == null) return null;
 
             CheckSourceType(typeof(Enum), value);
             CheckTargetType(typeof(string), targetType, true);
@@ -31,39 +31,37 @@ namespace DeepHoh.Forms.Converter
             Type valueType = value.GetType();
             FieldInfo fieldInfo = valueType.GetField(value.ToString(), BindingFlags.Static | BindingFlags.Public);
 
-            if (fieldInfo == null)
-            { throw new ArgumentException(Resources.BitFieldsNotSupported, "value"); }
+            if (fieldInfo == null) throw new ArgumentException(Resources.BitFieldsNotSupported, "value");
 
-            LocalizedDescriptionAttribute[] attributes = (LocalizedDescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(LocalizedDescriptionAttribute), false);
+            LocalizedDescriptionAttribute[] attributes =
+                (LocalizedDescriptionAttribute[]) fieldInfo.GetCustomAttributes(typeof(LocalizedDescriptionAttribute),
+                    false);
 
             if (attributes.Length > 0)
-            { return attributes[0].Description; }
-            else
-            { return fieldInfo.Name; }
+                return attributes[0].Description;
+            return fieldInfo.Name;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-            { return null; }
+            if (value == null) return null;
 
             CheckSourceType(typeof(string), value);
             CheckTargetType(typeof(Enum), targetType, false);
 
-            string str = (string)value;
+            string str = (string) value;
 
             foreach (FieldInfo fieldInfo in targetType.GetFields(BindingFlags.Static | BindingFlags.Public))
             {
-                if (fieldInfo.Name == str)
-                { return fieldInfo.GetValue(null); }
+                if (fieldInfo.Name == str) return fieldInfo.GetValue(null);
 
-                LocalizedDescriptionAttribute[] attributes = (LocalizedDescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(LocalizedDescriptionAttribute), false);
+                LocalizedDescriptionAttribute[] attributes =
+                    (LocalizedDescriptionAttribute[]) fieldInfo.GetCustomAttributes(
+                        typeof(LocalizedDescriptionAttribute), false);
 
                 foreach (LocalizedDescriptionAttribute attribute in attributes)
-                {
                     if (attribute.Description == str)
-                    { return fieldInfo.GetValue(null); }
-                }
+                        return fieldInfo.GetValue(null);
             }
 
             throw new ArgumentException(string.Format(Resources.EnumValueNotFound, str), "value");
@@ -76,7 +74,9 @@ namespace DeepHoh.Forms.Converter
         private static void CheckSourceType(Type supportedSourceType, object value)
         {
             if (!supportedSourceType.IsInstanceOfType(value))
-            { throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.ValueNotOfType, supportedSourceType.Name), "value"); }
+                throw new ArgumentException(
+                    string.Format(CultureInfo.CurrentCulture, Resources.ValueNotOfType, supportedSourceType.Name),
+                    "value");
         }
 
         private static void CheckTargetType(Type supportedTargeType, Type requestedTargetType, bool covariance)
@@ -84,12 +84,16 @@ namespace DeepHoh.Forms.Converter
             if (covariance)
             {
                 if (!requestedTargetType.IsAssignableFrom(supportedTargeType))
-                { throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.TargetNotExtendingType, requestedTargetType.Name, supportedTargeType.Name), "targetType"); }
+                    throw new ArgumentException(
+                        string.Format(CultureInfo.CurrentCulture, Resources.TargetNotExtendingType,
+                            requestedTargetType.Name, supportedTargeType.Name), "targetType");
             }
             else
             {
                 if (!supportedTargeType.IsAssignableFrom(requestedTargetType))
-                { throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.TargetNotExtendingType, requestedTargetType.Name, supportedTargeType.Name), "targetType"); }
+                    throw new ArgumentException(
+                        string.Format(CultureInfo.CurrentCulture, Resources.TargetNotExtendingType,
+                            requestedTargetType.Name, supportedTargeType.Name), "targetType");
             }
         }
 

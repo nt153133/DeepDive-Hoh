@@ -8,6 +8,9 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Clio.Utilities;
 using Clio.Utilities.Helpers;
 using DeepHoh.Logging;
@@ -16,8 +19,6 @@ using ff14bot;
 using ff14bot.Behavior;
 using ff14bot.Helpers;
 using ff14bot.Navigation;
-using System;
-using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
@@ -33,30 +34,22 @@ namespace DeepHoh.TaskManager.Actions
         {
             if (_moveTimer.IsFinished && Poi.Current != null && Poi.Current.Type != PoiType.None)
             {
-                System.Collections.Generic.List<Vector3> path = StraightPathHelper.RealStraightPath();
+                List<Vector3> path = StraightPathHelper.RealStraightPath();
                 Logger.Info("Dump path:");
-                foreach (Vector3 x in path)
-                {
-                    Logger.Info(x.ToString());
-                }
+                foreach (Vector3 x in path) Logger.Info(x.ToString());
 
-                Logger.Warn("No activity was detected for {0} seconds. Adding target {1} to the blacklist and trying again",
+                Logger.Warn(
+                    "No activity was detected for {0} seconds. Adding target {1} to the blacklist and trying again",
                     _moveTimer.WaitTime.TotalSeconds, Poi.Current);
                 if (Poi.Current.Unit != null)
-                {
                     DDTargetingProvider.Instance.AddToBlackList(Poi.Current.Unit, TimeSpan.FromSeconds(30),
                         "Navigation Error");
-                }
 
                 if (Poi.Current.Type != PoiType.None)
-                {
                     Poi.Clear("No activity detected (not none): PoiType: " + Poi.Current.Type);
-                }
 
                 if (Poi.Current.Type != PoiType.Wait)
-                {
                     Poi.Clear("No activity detected (not wait): PoiType: " + Poi.Current.Type);
-                }
 
                 _moveTimer.Reset();
                 return true;

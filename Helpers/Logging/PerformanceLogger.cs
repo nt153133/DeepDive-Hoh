@@ -33,21 +33,14 @@ namespace DeepHoh.Logging
 
         public void Dispose()
         {
-            if (_isDisposed)
-            {
-                return;
-            }
+            if (_isDisposed) return;
 
             _isDisposed = true;
             _stopwatch.Stop();
             if (_stopwatch.Elapsed.TotalMilliseconds > 5 || _forceLog)
-            {
                 if (_stopwatch.Elapsed.TotalMilliseconds >= 500)
-                {
                     Logger.Error("[Performance] Execution of \"{0}\" took {1:00.00000}ms.", _blockName,
                         _stopwatch.Elapsed.TotalMilliseconds);
-                }
-            }
 
             _stopwatch.Reset();
         }

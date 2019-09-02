@@ -5,9 +5,12 @@ Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
 You should have received a copy of the license along with this
 work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
-Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
+Original work done by zzi, contributions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Buddy.Coroutines;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
@@ -20,30 +23,20 @@ using ff14bot.Managers;
 using ff14bot.Objects;
 using ff14bot.Pathing;
 using ff14bot.RemoteWindows;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
     internal class Loot : ITask
     {
-        public string Name => "Loot";
-
         private Poi Target => Poi.Current;
+        public string Name => "Loot";
 
         public async Task<bool> Run()
         {
-            if (Target.Type != PoiType.Collect)
-            {
-                return false;
-            }
+            if (Target.Type != PoiType.Collect) return false;
 
             //let the navigation task handle moving toward the object if we are too far away.
-            if (Target.Location.Distance2D(Core.Me.Location) > 3)
-            {
-                return false;
-            }
+            if (Target.Location.Distance2D(Core.Me.Location) > 3) return false;
 
             if (Target.Unit == null || !Target.Unit.IsValid)
             {
@@ -55,28 +48,41 @@ namespace DeepHoh.TaskManager.Actions
             TreeRoot.StatusText = "Treasure";
             if (Target.Unit.IsValid)
             {
-                if (Target.Unit?.NpcId == EntityNames.Hidden)
-                {
-                    return await HandleCacheOfTheHoard();
-                }
-
+                if (Target.Unit?.NpcId == EntityNames.Hidden) return await HandleCacheOfTheHoard();
             }
             else
             {
                 return true;
             }
+
             //treasure... or an "exit"...
             return await TreasureOrExit();
         }
 
+        public void Tick()
+        {
+            if (!Constants.InDeepDungeon || CommonBehaviors.IsLoading || QuestLogManager.InCutscene) return;
+
+            GameObject t = DDTargetingProvider.Instance.FirstEntity;
+
+            if (t == null || t.Type == GameObjectType.BattleNpc) return;
+
+            //only change if we don't have a poi or are currently performing a collect action.
+            if (Poi.Current != null && Poi.Current.Type != PoiType.None && Poi.Current.Type != PoiType.Collect &&
+                Poi.Current.Type != (PoiType) PoiTypes.ExplorePOI) return;
+
+            if (Poi.Current != null && Poi.Current.Unit != null && Poi.Current.Unit.Pointer == t.Pointer) return;
+
+            Poi.Current = new Poi(t, PoiType.Collect);
+        }
+
         /// <summary>
-        /// Handles opening treasure coffers or opening an exit portal
+        ///     Handles opening treasure coffers or opening an exit portal
         /// </summary>
         /// <returns></returns>
         internal async Task<bool> TreasureOrExit()
         {
             int tries = 0;
-            uint npcid = Target.Unit.NpcId;
 
             if (Target.Location.Distance2D(Core.Me.Location) >= 3)
             {
@@ -92,53 +98,32 @@ namespace DeepHoh.TaskManager.Actions
                     Logger.Warn("Unable to open chest. Waiting for aura to end...");
                     await CommonTasks.StopMoving("Waiting on aura to end");
                     await Coroutine.Wait(TimeSpan.FromSeconds(30),
-                        () => !(Core.Me.HasAura(Auras.Toad) || Core.Me.HasAura(Auras.Frog) || Core.Me.HasAura(Auras.Toad2) || Core.Me.HasAura(Auras.Lust)) ||
-                              Core.Me.InCombat || DeepDungeonHoH.StopPlz);
+                        () => !Constants.AuraTransformed || Core.Me.InCombat || DeepDungeonHoH.StopPlz);
                     return true;
                 }
 
                 await Coroutine.Yield();
-                
-                if (Core.Me.HasAura(Auras.Lust))
-                {
-                    await Tasks.Coroutines.Common.CancelAura(Auras.Lust);
-                }
+
                 Logger.Verbose("Attempting to interact with: {0} ({1} / 3)", Target.Name, tries + 1);
 
-                //                if (Target.Name == "Exit")
-                //                {
-                //                    ff14bot.Managers.DutyManager.LeaveActiveDuty();
-                //                    await Coroutine.Sleep(10000);
-                //                }
-                
-                //IsExitObject(Target)
-                //if (!PartyManager.IsInParty || PartyManager.IsPartyLeader || (PartyManager.IsInParty && IsExitObject(Target)))
                 Target.Unit.Target();
                 //if (!Settings.Instance.NotLeader || (Settings.Instance.NotLeader && Target.Unit != null && (Target.Unit.NpcId == EntityNames.FloorExit || Target.Unit.NpcId == EntityNames.LobbyExit || Target.Unit.NpcId == EntityNames.BossExit)))
-                if (!PartyManager.IsInParty || PartyManager.IsPartyLeader || (PartyManager.IsInParty && Constants.IsExitObject(Target.Unit)))
-                {
-                    Target.Unit.Interact(); 
-                }
+                if (!PartyManager.IsInParty || PartyManager.IsPartyLeader ||
+                    PartyManager.IsInParty && Constants.IsExitObject(Target.Unit))
+                    Target.Unit.Interact();
                 else
-                {
                     await CommonTasks.StopMoving("Waiting for leader to use chest");
-                }
+
                 await Coroutine.Sleep(500);
 
                 tries++;
 
                 if (!Target.Unit.IsValid)
                     break;
-                
-                if (!Target.Unit.IsTargetable)
-                {
-                    break;
-                }
 
-                if (SelectYesno.IsOpen)
-                {
-                    break;
-                }
+                if (!Target.Unit.IsTargetable) break;
+
+                if (SelectYesno.IsOpen) break;
             }
 
             await Coroutine.Wait(500, () => SelectYesno.IsOpen);
@@ -151,14 +136,16 @@ namespace DeepHoh.TaskManager.Actions
                     () => DeepDungeonHoH.StopPlz || QuestLogManager.InCutscene || NowLoading.IsVisible);
                 return true;
             }
-            Blacklist.Add(Target.Unit.ObjectId, TimeSpan.FromMinutes(1), $"Tried to Interact with the Target {tries} times");
+
+            Blacklist.Add(Target.Unit.ObjectId, TimeSpan.FromMinutes(1),
+                $"Tried to Interact with the Target {tries} times");
             Poi.Clear($"Tried to Interact with the Target {tries} times");
 
             return false;
         }
 
         /// <summary>
-        /// Handles Cache of the Hoard
+        ///     Handles Cache of the Hoard
         /// </summary>
         /// <returns></returns>
         private async Task<bool> HandleCacheOfTheHoard()
@@ -169,7 +156,8 @@ namespace DeepHoh.TaskManager.Actions
                 GameObjectManager.GameObjects.Any(
                     i => Constants.TrapIds.Contains(i.NpcId) && i.Distance2D(Target.Location) < 2))
             {
-                Blacklist.Add(Target.Unit, BlacklistFlags.All, TimeSpan.FromMinutes(3), "A trap is close to the Hoard Spawn location. Skipping.");
+                Blacklist.Add(Target.Unit, BlacklistFlags.All, TimeSpan.FromMinutes(3),
+                    "A trap is close to the Hoard Spawn location. Skipping.");
                 Poi.Clear("A trap is close to the Hoard Spawn location. Skipping.");
                 await Coroutine.Sleep(250);
                 return true;
@@ -177,10 +165,11 @@ namespace DeepHoh.TaskManager.Actions
 
             if (Target.Location.Distance2D(Core.Me.Location) >= 2)
             {
-                Logger.Info($"Banded Coffer is >= 3");
+                Logger.Info("Banded Coffer is >= 3");
                 await CommonTasks.MoveAndStop(new MoveToParameters(Target.Location, "Banded Coffer"), 0.5f, true);
                 return true;
             }
+
             await CommonTasks.StopMoving("Spawning Coffer");
 
             Logger.Info("Found a Cache of the Horde. Waiting for it to spawn... (Giving it a few seconds to spawn)");
@@ -201,36 +190,10 @@ namespace DeepHoh.TaskManager.Actions
                 return true;
             }
 
-            Blacklist.Add(org, BlacklistFlags.All | (BlacklistFlags)DeepDungeonManager.Level, TimeSpan.FromMinutes(3), "Spawned the Coffer or used all of our time...");
-            Poi.Clear($"Hidden adden to blacklist");
+            Blacklist.Add(org, BlacklistFlags.All | (BlacklistFlags) DeepDungeonManager.Level, TimeSpan.FromMinutes(3),
+                "Spawned the Coffer or used all of our time...");
+            Poi.Clear("Hidden added to blacklist");
             return true;
-        }
-
-        public void Tick()
-        {
-            if (!Constants.InDeepDungeon || CommonBehaviors.IsLoading || QuestLogManager.InCutscene)
-            {
-                return;
-            }
-
-            GameObject t = DDTargetingProvider.Instance.FirstEntity;
-
-            if (t == null || t.Type == GameObjectType.BattleNpc)
-            {
-                return;
-            }
-
-            //only change if we don't have a poi or are currently performing a collect action.
-            if (Poi.Current == null || Poi.Current.Type == PoiType.None || Poi.Current.Type == PoiType.Collect || Poi.Current.Type == (PoiType)PoiTypes.ExplorePOI)
-            {
-                if (Poi.Current.Unit != null && Poi.Current.Unit.Pointer == t.Pointer)
-                {
-                    return;
-                }
-
-                Poi.Current = new Poi(t, PoiType.Collect);
-                return;
-            }
         }
     }
 }

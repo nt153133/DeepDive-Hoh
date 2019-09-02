@@ -8,15 +8,14 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
-using DeepHoh.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DeepHoh.Logging;
 
 namespace DeepHoh.TaskManager
 {
-
-    interface ITask
+    internal interface ITask
     {
         string Name { get; }
         void Tick();
@@ -24,15 +23,11 @@ namespace DeepHoh.TaskManager
     }
 
 
-
-    class TaskManagerProvider : List<ITask>
+    internal class TaskManagerProvider : List<ITask>
     {
-        public TaskManagerProvider() { }
-
         public void Tick()
         {
             foreach (ITask x in this)
-            {
                 try
                 {
                     x.Tick();
@@ -41,26 +36,21 @@ namespace DeepHoh.TaskManager
                 {
                     Logger.Warn($"[TaskManager][Tick] {x.Name} threw an Exception {ex}");
                 }
-            }
         }
 
         public async Task<bool> Run()
         {
             foreach (ITask x in this)
-            {
                 try
                 {
-                    if (await x.Run())
-                    {
-                        return true;
-                    }
+                    if (await x.Run()) return true;
                 }
                 catch (Exception ex)
                 {
                     Logger.Warn($"[TaskManager][Run] {x.Name} threw an Exception {ex}");
                     return false;
                 }
-            }
+
             return false;
         }
     }

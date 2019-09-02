@@ -7,45 +7,44 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
+using System.Collections.Generic;
+using System.Linq;
 using ff14bot;
 using ff14bot.Objects;
-using System.Linq;
 
 namespace DeepHoh.Helpers
 {
     internal static class GameObjectExtensions
     {
-        internal static bool WaitForAura(this GameObject obj, uint auraId, bool castbyme = false, double timeLeft = 0.0, bool checkTime = true)
+        internal static bool WaitForAura(this GameObject obj, uint auraId, bool castbyme = false, double timeLeft = 0.0,
+            bool checkTime = true)
         {
             Character character = obj as Character;
             if (character != null && character.IsValid)
             {
-                System.Collections.Generic.IEnumerable<Aura> source = castbyme ? (from r in character.CharacterAuras
-                                                                                  where r.CasterId == Core.Me.ObjectId && r.Id == auraId
-                                                                                  select r) : character.CharacterAuras.Where((Aura r) => r.Id == auraId);
+                IEnumerable<Aura> source = castbyme
+                    ? from r in character.CharacterAuras
+                    where r.CasterId == Core.Me.ObjectId && r.Id == auraId
+                    select r
+                    : character.CharacterAuras.Where(r => r.Id == auraId);
                 if (!checkTime)
-                {
                     if (source.Any(aura => aura.TimespanLeft.TotalMilliseconds < 0.0))
-                    {
                         return false;
-                    }
-                }
                 return source.Any(aura => aura.TimespanLeft.TotalMilliseconds >= timeLeft);
             }
+
             return false;
         }
 
         internal static bool HasAnyAura(this Character c, params uint[] auras)
         {
             foreach (uint id in auras)
-            {
                 if (c.HasAura(id))
-                {
                     return true;
-                }
-            }
             return false;
         }
+
         internal static uint MissingHealth(this GameObject player)
         {
             return player.MaxHealth - player.CurrentHealth;

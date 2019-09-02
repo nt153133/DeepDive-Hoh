@@ -7,8 +7,10 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
+using System.Linq;
+using System.Threading.Tasks;
 using Buddy.Coroutines;
-using Clio.Utilities;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
 using ff14bot;
@@ -16,12 +18,10 @@ using ff14bot.Managers;
 using ff14bot.Navigation;
 using ff14bot.Objects;
 using ff14bot.RemoteWindows;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
-    class LobbyHandler : ITask
+    internal class LobbyHandler : ITask
     {
         private GameObject _target;
 
@@ -29,15 +29,13 @@ namespace DeepHoh.TaskManager.Actions
 
         public async Task<bool> Run()
         {
-            if (!Constants.InExitLevel)
-            {
-                return false;
-            }
+            if (!Constants.InExitLevel) return false;
 
             await Coroutine.Sleep(5000);
 
             //_target = GameObjectManager.GetObjectByNPCId(EntityNames.LobbyExit);
-            _target = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.LobbyExit).OrderBy(r => r.Distance()).FirstOrDefault();
+            _target = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.LobbyExit)
+                .OrderBy(r => r.Distance()).FirstOrDefault();
             //Vector3 loc = new Vector3(-10.02527f, 0.01519775f, -150.0115f);
 
             Navigator.Stop();
@@ -47,7 +45,7 @@ namespace DeepHoh.TaskManager.Actions
 
             if (_target == null || !_target.IsValid)
             {
-                Logger.Warn($"Unable to find Lobby Target");
+                Logger.Warn("Unable to find Lobby Target");
                 return false;
             }
 
@@ -65,7 +63,7 @@ namespace DeepHoh.TaskManager.Actions
                 while (_target.Location.Distance2D(Core.Me.Location) >= 4.4)
                 {
                     Navigator.PlayerMover.MoveTowards(_target.Location);
-                    await Buddy.Coroutines.Coroutine.Sleep(100);
+                    await Coroutine.Sleep(100);
                 }
 
                 //await Buddy.Coroutines.Coroutine.Sleep(1500); // (again, probably better to just wait until distance to destination is < 2.0f or something)
@@ -114,17 +112,11 @@ namespace DeepHoh.TaskManager.Actions
 
         public void Tick()
         {
-            if (_target != null && !_target.IsValid)
-            {
-                _target = null;
-            }
-            if (!Constants.InExitLevel)
-            {
-                return;
-            }
+            if (_target != null && !_target.IsValid) _target = null;
+            if (!Constants.InExitLevel) return;
 
             _target = GameObjectManager.GameObjects.Where(i => i.NpcId == EntityNames.LobbyExit)
-                       .OrderBy(i => i.Distance2D(Core.Me.Location)).FirstOrDefault();
+                .OrderBy(i => i.Distance2D(Core.Me.Location)).FirstOrDefault();
         }
     }
 }

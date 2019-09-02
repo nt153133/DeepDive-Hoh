@@ -17,17 +17,24 @@ using ff14bot.RemoteAgents;
 namespace DeepHoh.Helpers
 {
     /// <summary>
-    /// helper class for wrapping director calls
+    ///     helper class for wrapping director calls
     /// </summary>
     public static class DeepDungeonManager
     {
         public static InstanceContentDirector Director => DirectorManager.ActiveDirector as InstanceContentDirector;
 
-        public static bool BossFloor => Director != null ? (Director.DeepDungeonLevel % 10 == 0) : false;
+        public static bool BossFloor => Director != null ? Director.DeepDungeonLevel % 10 == 0 : false;
+
+        public static bool IsCasting => Core.Me.IsCasting;
+
+        public static int PortalStatus => Director.DeepDungeonPortalStatus;
+        public static int Level => Director.DeepDungeonLevel;
+        public static bool PortalActive => Director.DeepDungeonPortalStatus == 11;
+        public static bool ReturnActive => Director.DeepDungeonReturnStatus == 11;
 
         public static DDInventoryItem GetInventoryItem(Pomander pom)
         {
-            return Director.DeepDungeonInventory[(byte)Constants.PomanderInventorySlot(pom)];
+            return Director.DeepDungeonInventory[(byte) Constants.PomanderInventorySlot(pom)];
         }
 
         public static DDInventoryItem[] GetInventoryItems()
@@ -35,17 +42,10 @@ namespace DeepHoh.Helpers
             return Director.DeepDungeonInventory;
         }
 
-        public static bool IsCasting => Core.Me.IsCasting;
-
         public static void UsePomander(Pomander pom)
         {
             AgentModule.GetAgentInterfaceByType<AgentDeepDungeonInformation>().UsePomander(pom);
             Navigator.NavigationProvider.ClearStuckInfo(); // don't trigger antistuck
         }
-
-        public static int PortalStatus => Director.DeepDungeonPortalStatus;
-        public static int Level => Director.DeepDungeonLevel;
-        public static bool PortalActive => Director.DeepDungeonPortalStatus == 11;
-        public static bool ReturnActive => Director.DeepDungeonReturnStatus == 11;
     }
 }

@@ -7,13 +7,14 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
+using System.Threading.Tasks;
 using Buddy.Coroutines;
 using DeepHoh.Logging;
-using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
-    class BaseLogicHandler : ITask
+    internal class BaseLogicHandler : ITask
     {
         public string Name => "BaseLogicHandler";
 
@@ -26,7 +27,6 @@ namespace DeepHoh.TaskManager.Actions
 
         public void Tick()
         {
-
         }
     }
 }

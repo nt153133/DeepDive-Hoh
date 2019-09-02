@@ -7,16 +7,17 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-using ff14bot;
+
 using System;
+using ff14bot;
 
 namespace DeepHoh.Helpers
 {
     internal class FrameCache<T>
     {
-        private Func<T> _producer;
-        private uint _lastFrame = uint.MaxValue;
         private T _cached;
+        private uint _lastFrame = uint.MaxValue;
+        private readonly Func<T> _producer;
 
         public FrameCache(Func<T> producer)
         {
@@ -33,6 +34,7 @@ namespace DeepHoh.Helpers
                     _cached = _producer();
                     _lastFrame = frameCount;
                 }
+
                 return _cached;
             }
         }
@@ -43,6 +45,5 @@ namespace DeepHoh.Helpers
         {
             return pfcv.Value;
         }
-
     }
 }

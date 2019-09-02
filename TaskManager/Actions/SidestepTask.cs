@@ -8,13 +8,13 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using Clio.Utilities;
 using ff14bot;
 using ff14bot.Helpers;
 using ff14bot.Managers;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
@@ -41,10 +41,7 @@ namespace DeepHoh.TaskManager.Actions
                 return true;
             }
 
-            if (AvoidanceManager.IsRunningOutOfAvoid && !supportsCapabilities)
-            {
-                return true;
-            }
+            if (AvoidanceManager.IsRunningOutOfAvoid && !supportsCapabilities) return true;
 
             PoiType poiType = Poi.Current.Type;
 

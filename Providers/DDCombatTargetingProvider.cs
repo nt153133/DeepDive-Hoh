@@ -7,6 +7,9 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
+using System.Collections.Generic;
+using System.Linq;
 using Clio.Utilities;
 using DeepHoh.Helpers;
 using ff14bot;
@@ -15,8 +18,6 @@ using ff14bot.Helpers;
 using ff14bot.Managers;
 using ff14bot.NeoProfiles;
 using ff14bot.Objects;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DeepHoh.Providers
 {
@@ -26,6 +27,7 @@ namespace DeepHoh.Providers
         private Vector3 _distance;
 
         internal IEnumerable<BattleCharacter> Targets { get; private set; }
+
         public List<BattleCharacter> GetObjectsByWeight()
         {
             _distance = Core.Me.Location;
@@ -33,20 +35,12 @@ namespace DeepHoh.Providers
             Targets = GameObjectManager.GetObjectsOfType<BattleCharacter>()
                 .Where(target =>
                 {
-                    if (target.NpcId == 5042)
-                    {
-                        return false;
-                    }
+                    if (target.NpcId == 5042) return false;
 
-                    if (Constants.InDeepDungeon && (Blacklist.Contains(target) && !target.InCombat))
-                    {
-                        return false;
-                    }
+                    if (Constants.InDeepDungeon && Blacklist.Contains(target) && !target.InCombat) return false;
 
                     if (Constants.TrapIds.Contains(target.NpcId) || Constants.IgnoreEntity.Contains(target.NpcId))
-                    {
                         return false;
-                    }
 
                     return !target.IsDead;
                 })
@@ -55,14 +49,11 @@ namespace DeepHoh.Providers
                 );
 
             return Targets.Where(target =>
-            {
-                if (DeepDungeonManager.BossFloor)
                 {
-                    return true;
-                }
+                    if (DeepDungeonManager.BossFloor) return true;
 
-                return target.Distance2D() < Constants.ModifiedCombatReach;
-            })
+                    return target.Distance2D() < Constants.ModifiedCombatReach;
+                })
                 .OrderByDescending(Priority)
                 .ToList();
         }
@@ -75,58 +66,29 @@ namespace DeepHoh.Providers
             weight += 100 - battleCharacter.CurrentHealthPercent;
 
             if (PartyManager.IsInParty && !PartyManager.IsPartyLeader)
-            {
                 if (PartyManager.PartyLeader.IsInObjectManager)
-                {
                     if (PartyManager.PartyLeader.BattleCharacter.HasTarget)
-                    {
-                        if (battleCharacter.ObjectId == PartyManager.PartyLeader.BattleCharacter.TargetGameObject.ObjectId)
-                        {
-                            //Logger.Debug("Found Leaders target {0}", obj.Name);
+                        if (battleCharacter.ObjectId ==
+                            PartyManager.PartyLeader.BattleCharacter.TargetGameObject.ObjectId)
                             weight += 600;
-                        }
-                    }
-                }
-            }
-            
-            if (battleCharacter.HasTarget && battleCharacter.TargetCharacter == Core.Me)
-            {
-                weight += 50;
-            }
+
+            if (battleCharacter.HasTarget && battleCharacter.TargetCharacter == Core.Me) weight += 50;
 
             if (!battleCharacter.InCombat)
-            {
                 weight -= 5;
-            }
             else
-            {
                 weight += 50;
-            }
 
-            if (Core.Target != null && Core.Target.ObjectId == battleCharacter.ObjectId)
-            {
-                weight += 10;
-            }
+            if (Core.Target != null && Core.Target.ObjectId == battleCharacter.ObjectId) weight += 10;
 
-            if (battleCharacter.InCombat && battleCharacter.Location.Distance2D(Core.Me.Location) < 5)
-            {
-                weight *= 1.5;
-            }
+            if (battleCharacter.InCombat && battleCharacter.Location.Distance2D(Core.Me.Location) < 5) weight *= 1.5;
 
-            if (battleCharacter.Distance2D(_distance) > 20)
-            {
-                weight /= 2;
-            }
+            if (battleCharacter.Distance2D(_distance) > 20) weight /= 2;
 
-            if ((battleCharacter.NpcId == Mobs.PalaceHornet || battleCharacter.NpcId == Mobs.PalaceSlime) && battleCharacter.InCombat)
-            {
-                return weight * 100.0;
-            }
+            if ((battleCharacter.NpcId == Mobs.PalaceHornet || battleCharacter.NpcId == Mobs.PalaceSlime) &&
+                battleCharacter.InCombat) return weight * 100.0;
 
-            if (battleCharacter.Distance2D(_distance) > 100)
-            {
-                weight -= 100;
-            }
+            if (battleCharacter.Distance2D(_distance) > 100) weight -= 100;
 
 
             return weight;

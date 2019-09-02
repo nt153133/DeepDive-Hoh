@@ -7,6 +7,8 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
+
+using System.Threading.Tasks;
 using Buddy.Coroutines;
 using DeepHoh.Helpers;
 using DeepHoh.Logging;
@@ -14,11 +16,10 @@ using ff14bot;
 using ff14bot.Enums;
 using ff14bot.Managers;
 using ff14bot.RemoteWindows;
-using System.Threading.Tasks;
 
 namespace DeepHoh.TaskManager.Actions
 {
-    class DeathWindowHandler : ITask
+    internal class DeathWindowHandler : ITask
     {
         public string Name => "Death Window";
 
@@ -26,7 +27,7 @@ namespace DeepHoh.TaskManager.Actions
         {
             if (RaptureAtkUnitManager.GetWindowByName("DeepDungeonResult") != null)
             {
-                Logger.Warn($"We have died...");
+                Logger.Warn("We have died...");
                 Logger.Debug("Died");
                 DeepTracker.Died();
                 DeepTracker.EndRun(true);
@@ -35,6 +36,7 @@ namespace DeepHoh.TaskManager.Actions
                 await Coroutine.Sleep(250);
                 return true;
             }
+
             if (NotificationRevive.IsOpen)
             {
                 NotificationRevive.Click();
@@ -42,24 +44,25 @@ namespace DeepHoh.TaskManager.Actions
                 SelectYesno.ClickYes();
                 return true;
             }
+
             if (ClientGameUiRevive.ReviveState == ReviveState.Dead && SelectYesno.IsOpen)
             {
                 SelectYesno.ClickYes();
                 return true;
             }
+
             if (Core.Me.IsDead)
             {
                 TreeRoot.StatusText = "I am dead. No window to use...";
                 await Coroutine.Sleep(250);
                 return true;
             }
-            return false;
 
+            return false;
         }
 
         public void Tick()
         {
-
         }
     }
 }

@@ -7,17 +7,14 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-using DeepHoh.Properties;
+
 using System.ComponentModel;
+using DeepHoh.Properties;
 
 namespace DeepHoh.Forms.Converter
 {
     public class LocalizedDescriptionAttribute : DescriptionAttribute
     {
-        #region Fields
-
-        #endregion
-
         #region Constructors
 
         public LocalizedDescriptionAttribute(string resourceName)
@@ -36,6 +33,10 @@ namespace DeepHoh.Forms.Converter
         #region Properties
 
         public string ResourceName { get; }
+
+        #endregion
+
+        #region Fields
 
         #endregion
     }
