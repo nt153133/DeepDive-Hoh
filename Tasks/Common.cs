@@ -79,7 +79,7 @@ namespace DeepHoh.Tasks.Coroutines
                 data = DeepDungeonManager.GetInventoryItem(number);
             }
 
-            //TODO this is probabbly stored somewhere in the client...
+            //TODO this is probably stored somewhere in the client...
             switch (number)
             {
                 case Pomander.Rage:

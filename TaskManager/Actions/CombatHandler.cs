@@ -169,7 +169,7 @@ namespace DeepHoh.TaskManager.Actions
                     return true;
 
 
-/*            if (GameObjectManager.Attackers.Any(
+            if (GameObjectManager.Attackers.Any(
                 i =>
                     i.IsCasting &&
                     i.CastingSpellId == 6351 &&
@@ -183,7 +183,7 @@ namespace DeepHoh.TaskManager.Actions
                     MovementManager.SetFacing(npc.Heading);
                     await Coroutine.Sleep(100);
                 }
-            }*/
+            }
 
             if (!Core.Me.InRealCombat()) return true;
 
