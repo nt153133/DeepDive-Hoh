@@ -88,8 +88,8 @@ namespace DeepHoh.Helpers
             }
             catch (Exception exception)
             {
-                Logger.Error("Error loading/transforming XAML\n{0}", exception);
-                result = default;
+                Logger.Error("Error loading/transforming XAML {0}", exception);
+                result = default(T);
             }
 
             return result;
