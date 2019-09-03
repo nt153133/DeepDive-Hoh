@@ -87,7 +87,7 @@ namespace DeepHoh
     {
         internal const int Antidote = 4564;
         internal const int EchoDrops = 4566;
-        internal const int SustainingPotion = 20309;
+        internal const int SustainingPotion = 23163;
     }
 
     internal static class Auras
