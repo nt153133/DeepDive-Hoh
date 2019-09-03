@@ -32,6 +32,7 @@ namespace DeepHoh.TaskManager.Actions
     {
         private readonly SpellData LustSpell = DataManager.GetSpellData(Spells.LustSpell);
         private readonly SpellData PummelSpell = DataManager.GetSpellData(Spells.RageSpell);
+        private const int PullRange = 20;
 
         public CombatHandler()
         {
@@ -64,6 +65,7 @@ namespace DeepHoh.TaskManager.Actions
 
             if (AvoidanceManager.IsRunningOutOfAvoid) return true;
 
+            
             if (!Core.Me.InRealCombat())
             {
                 if (!Core.Me.HasAura(Auras.NoAutoHeal) && await Rest())
@@ -114,7 +116,7 @@ namespace DeepHoh.TaskManager.Actions
             //target if we are in range
             //Logger.Info("======= OUT OF RANGE");
             if (target.BattleCharacter.Pointer != Core.Me.PrimaryTargetPtr && target.BattleCharacter.IsTargetable &&
-                target.Location.Distance2D(Core.Me.Location) <= 30)
+                target.Location.Distance2D(Core.Me.Location) <= PullRange)
             {
                 Logger.Warn("Combat target has changed");
                 target.BattleCharacter.Target();
@@ -126,11 +128,11 @@ namespace DeepHoh.TaskManager.Actions
 
             //Logger.Info("======= OUT OF RANGE2");
             //we are outside of targeting range, walk to the mob
-            if (Core.Me.PrimaryTargetPtr == IntPtr.Zero || target.Location.Distance2D(Core.Me.Location) > 20)
+            if (Core.Me.PrimaryTargetPtr == IntPtr.Zero || target.Location.Distance2D(Core.Me.Location) > PullRange)
             {
                 float dist = Core.Player.CombatReach + RoutineManager.Current.PullRange +
                              (target.Unit != null ? target.Unit.CombatReach : 0);
-                if (dist > 20) dist = 20;
+                if (dist > PullRange) dist = PullRange;
 
                 await CommonTasks.MoveAndStop(new MoveToParameters(target.Location, target.Name), dist, true);
                 return true;
