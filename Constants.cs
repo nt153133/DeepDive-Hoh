@@ -190,6 +190,8 @@ namespace DeepHoh
         internal static uint MapVersion = 4;
 
         internal static Language Lang;
+        
+        internal const int PullRange = 20;
 
         static Constants()
         {
