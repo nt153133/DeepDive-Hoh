@@ -27,6 +27,7 @@ namespace DeepHoh.TaskManager.Actions
         ///     stores the floor # for the level we last removed traps from
         /// </summary>
         private int _trapPomanderUsageCheck;
+        private int _intuitPomanderUsageCheck;
 
         private int PortalPercent => (int) Math.Ceiling(DeepDungeonManager.PortalStatus / 11 * 100f);
         public string Name => "Pomanders";
@@ -125,7 +126,9 @@ namespace DeepHoh.TaskManager.Actions
             if (await UsePomander(Pomander.Fortune)) return true;
             //            if (await UsePomander(Pomander.Rage))
             //                return true;
-            if (await UsePomander(Pomander.Intuition)) return true;
+            if (await Inuit()) return true;
+            
+            //if (await UsePomander(Pomander.Intuition)) return true;
 
             //SaveFrailty
 
@@ -157,6 +160,21 @@ namespace DeepHoh.TaskManager.Actions
             if (await UsePomander(Pomander.Sight))
             {
                 _trapPomanderUsageCheck = DeepDungeonManager.Level;
+                return true;
+            }
+
+            return false;
+        }
+        
+        private async Task<bool> Inuit()
+        {
+            if (Core.Me.HasAura(Auras.ItemPenalty)) return false;
+
+            if (_intuitPomanderUsageCheck == DeepDungeonManager.Level) return false;
+
+            if (await UsePomander(Pomander.Intuition))
+            {
+                _intuitPomanderUsageCheck = DeepDungeonManager.Level;
                 return true;
             }
 

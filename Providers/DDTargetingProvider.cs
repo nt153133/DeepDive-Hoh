@@ -248,19 +248,17 @@ namespace DeepHoh.Providers
             //}
             //}
 
-            if (obj.Type == GameObjectType.BattleNpc)
-            {
-                //if (DeepDungeonManager.PortalActive)
-                // {
-                //     return false;
-                //  }
+            if (obj.Type != GameObjectType.BattleNpc)
+                return obj.Type == GameObjectType.EventObject || obj.Type == GameObjectType.Treasure ||
+                       obj.Type == GameObjectType.BattleNpc;
+            //if (DeepDungeonManager.PortalActive)
+            // {
+            //     return false;
+            //  }
 
-                BattleCharacter battleCharacter = (BattleCharacter) obj;
-                return !battleCharacter.IsDead;
-            }
+            BattleCharacter battleCharacter = (BattleCharacter) obj;
+            return !battleCharacter.IsDead;
 
-            return obj.Type == GameObjectType.EventObject || obj.Type == GameObjectType.Treasure ||
-                   obj.Type == GameObjectType.BattleNpc;
         }
     }
 }

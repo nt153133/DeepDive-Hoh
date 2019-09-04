@@ -84,6 +84,11 @@ namespace DeepHoh.TaskManager.Actions
         {
             int tries = 0;
 
+/*            if (Target.Unit.IsValid && Target.Unit.NpcId == EntityNames.BossExit)
+            {
+                
+            }*/
+
             if (Target.Location.Distance2D(Core.Me.Location) >= 3)
             {
                 await CommonTasks.MoveAndStop(new MoveToParameters(Target.Location, Target.Name), 2.5f, true);
