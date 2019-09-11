@@ -44,7 +44,10 @@ namespace DeepHoh.TaskManager.Actions
             if (AvoidanceManager.IsRunningOutOfAvoid && !supportsCapabilities) return true;
 
             PoiType poiType = Poi.Current.Type;
-
+            
+           /* if (!Core.Me.InCombat)
+                Poi.Clear("Clearing in SIDESTEP: " + poiType);
+*/
             // taken from HB
             // Special case: Bot will do a lot of fast stop n go when avoiding a mob that moves slowly and trying to
             // do something near the mob. To fix, a delay is added to slow down the 'Stop n go' behavior

@@ -191,7 +191,7 @@ namespace DeepHoh
 
         internal static Language Lang;
         
-        internal const int PullRange = 20;
+        internal const int PullRange = 15;
 
         static Constants()
         {

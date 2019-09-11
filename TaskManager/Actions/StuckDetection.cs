@@ -50,6 +50,9 @@ namespace DeepHoh.TaskManager.Actions
 
                 if (Poi.Current.Type != PoiType.Wait)
                     Poi.Clear("No activity detected (not wait): PoiType: " + Poi.Current.Type);
+                
+                if (Poi.Current.Type == PoiType.Quest)
+                    Poi.Clear("No activity detected (not wait): PoiType: " + Poi.Current.Type);
 
                 _moveTimer.Reset();
                 return true;
