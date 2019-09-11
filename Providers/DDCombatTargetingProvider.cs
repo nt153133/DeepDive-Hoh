@@ -50,7 +50,9 @@ namespace DeepHoh.Providers
 
             return Targets.Where(target =>
                 {
-                    if (DeepDungeonManager.BossFloor) return true;
+                    if (DeepDungeonManager.BossFloor && target.IsValid && target.IsVisible && target.IsAlive) return true;
+                    
+                    if (DeepDungeonManager.BossFloor && (!target.IsValid || !target.IsVisible || !target.IsAlive)) return false;
 
                     return target.Distance2D() < Constants.ModifiedCombatReach;
                 })

@@ -175,6 +175,7 @@ namespace DeepHoh.Providers
         {
             float weight = 100f;
 
+
             //weight -= obj.Distance2D();
 
             if (PartyManager.IsInParty && !PartyManager.IsPartyLeader)
@@ -196,7 +197,15 @@ namespace DeepHoh.Providers
                 weight -= obj.Distance2D();
             }
 
-            if (obj.Type == GameObjectType.BattleNpc) return weight / 2;
+            switch (obj.Type)
+            {
+                case GameObjectType.BattleNpc when !DeepDungeonManager.PortalActive && !PartyManager.IsInParty:
+                    return weight / 2;
+                case GameObjectType.BattleNpc:
+                    weight = weight / 2;
+                    break;
+            }
+            
 
             if (obj.NpcId == EntityNames.BandedCoffer && !Blacklist.Contains(obj.ObjectId)) weight += 200;
 
@@ -239,6 +248,8 @@ namespace DeepHoh.Providers
                 return true;
 
             if (Core.Me.Location.Distance2D(obj.Location) > 300) return false;
+            
+            if (Core.Me.Location.Distance2D(obj.Location) > 100 && DeepDungeonManager.BossFloor) return false;
 
             //if (obj.NpcId == EntityNames.GoldCoffer || obj.NpcId == EntityNames.SilverCoffer)
             //{
