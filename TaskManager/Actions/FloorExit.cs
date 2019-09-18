@@ -83,7 +83,9 @@ namespace DeepHoh.TaskManager.Actions
                     Logger.Debug("Waited 5 minutes at exit but poi is null");
                 }
             }
-
+            
+            GameObjectManager.Update();
+            location = Vector3.Zero;
             Poi.Clear("Floor has changed or we have entered combat");
             Navigator.Clear();
             return true;
@@ -96,7 +98,7 @@ namespace DeepHoh.TaskManager.Actions
             if (location == Vector3.Zero || Level != DeepDungeonManager.Level)
             {
                 //GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit).OrderBy(r=>r.Distance());
-                GameObject ret = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit)
+                GameObject ret = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit && !Blacklist.Contains(r.ObjectId))
                     .OrderBy(r => r.Distance()).FirstOrDefault();
                 if (ret != null)
                 {
@@ -123,7 +125,7 @@ namespace DeepHoh.TaskManager.Actions
             if (Poi.Current != null && (Poi.Current.Type == PoiType.Kill || Poi.Current.Type == PoiType.Wait ||
                                         Poi.Current.Type == PoiType.Collect)) return;
 
-            if (DDTargetingProvider.Instance.LevelComplete && !DeepDungeonManager.BossFloor && location != Vector3.Zero)
+            if (DDTargetingProvider.Instance.LevelComplete && !DeepDungeonManager.BossFloor && location != Vector3.Zero )
             {
                 Logger.Debug("Going to exit {0}", location);
                 Poi.Current = new Poi(location, PoiType.Wait);

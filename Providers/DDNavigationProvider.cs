@@ -84,8 +84,9 @@ namespace DeepHoh.Providers
             WallCheck();
 
             Logger.Debug("Game objects: unit \t NpcID \t ObjID");
-            IEnumerable<GameObject> units = GameObjectManager.GameObjects;
-            foreach (GameObject unit in units)
+            GameObjectManager.Update();
+            //IEnumerable<GameObject> units = GameObjectManager.GameObjects;
+            foreach (GameObject unit in GameObjectManager.GameObjects)
                 Logger.Debug("Game object: {0,-25} - {1,20} - {2, 15}", unit.Name, unit.NpcId, unit.ObjectId);
             /*
             foreach (uint unit in activeWalls)

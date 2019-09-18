@@ -40,9 +40,13 @@ namespace DeepHoh.TaskManager.Actions
             if (!Constants.InDeepDungeon) return false;
 
             if (Target == null) return false;
-            
+
             if (!Core.Me.InCombat && Target.Type == PoiType.Quest && DeepDungeonManager.BossFloor)
+            {
                 Poi.Clear("QUEST_POI");
+                GameObjectManager.Update();
+                Navigator.Clear();
+            }
 
             if (Navigator.InPosition(Core.Me.Location, Target.Location, 3f) &&
                 Target.Type == (PoiType) PoiTypes.ExplorePOI)

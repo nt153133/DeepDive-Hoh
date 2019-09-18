@@ -18,6 +18,7 @@ using DeepHoh.Providers;
 using ff14bot;
 using ff14bot.Behavior;
 using ff14bot.Helpers;
+using ff14bot.Managers;
 using ff14bot.Navigation;
 
 namespace DeepHoh.TaskManager.Actions
@@ -54,6 +55,8 @@ namespace DeepHoh.TaskManager.Actions
                 if (Poi.Current.Type == PoiType.Quest)
                     Poi.Clear("No activity detected (not wait): PoiType: " + Poi.Current.Type);
 
+                GameObjectManager.Update();
+                Navigator.Clear();
                 _moveTimer.Reset();
                 return true;
             }
