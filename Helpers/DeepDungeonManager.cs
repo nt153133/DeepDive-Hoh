@@ -8,6 +8,7 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
+using System;
 using ff14bot;
 using ff14bot.Directors;
 using ff14bot.Managers;
@@ -23,7 +24,7 @@ namespace DeepHoh.Helpers
     {
         public static InstanceContentDirector Director => DirectorManager.ActiveDirector as InstanceContentDirector;
 
-        public static bool BossFloor => Director != null ? Director.DeepDungeonLevel % 10 == 0 : false;
+        public static bool BossFloor => Director != null && Director.DeepDungeonLevel % 10 == 0;
 
         public static bool IsCasting => Core.Me.IsCasting;
 
@@ -40,6 +41,30 @@ namespace DeepHoh.Helpers
         public static DDInventoryItem[] GetInventoryItems()
         {
             return Director.DeepDungeonInventory;
+            //return Core.Memory.ReadArray<byte>(Director.Pointer + 5160, 8);
+        }
+
+        public static string GetInventoryItems2()
+        {
+            byte[] list = Core.Memory.ReadArray<byte>(Director.Pointer + 5160, 8);
+
+            string result = "Magicites: [ ";
+            for (var i = 0; i < list.Length; i++)
+            {
+                var b = list[i];
+                result += b;
+                if (i < list.Length - 1) result += ", ";
+            }
+
+            result += " ]";
+
+            return result;
+        }
+
+        public static void UsePomander2(Pomander number)
+        {
+            Core.Memory.CallInjected64<IntPtr>(Core.Memory.ImageBase + 10031088,
+                AgentModule.GetAgentInterfaceByType<AgentDeepDungeonInformation>().Pointer, (int) number);
         }
 
         public static void UsePomander(Pomander pom)

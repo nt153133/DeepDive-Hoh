@@ -86,8 +86,9 @@ namespace DeepHoh.Providers
             Logger.Debug("Game objects: unit \t NpcID \t ObjID");
             GameObjectManager.Update();
             //IEnumerable<GameObject> units = GameObjectManager.GameObjects;
-            foreach (GameObject unit in GameObjectManager.GameObjects)
-                Logger.Debug("Game object: {0,-25} - {1,20} - {2, 15}", unit.Name, unit.NpcId, unit.ObjectId);
+            //foreach (GameObject unit in GameObjectManager.GameObjects)
+            //    Logger.Debug("Game object: {0,-25} - {1,20} - {2, 15}", unit.Name, unit.NpcId, unit.ObjectId);
+            Logger.Debug($"{DeepDungeonManager.GetInventoryItems2()}");
             /*
             foreach (uint unit in activeWalls)
             {

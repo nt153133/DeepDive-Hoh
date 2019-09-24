@@ -187,7 +187,7 @@ namespace DeepHoh.TaskManager.Actions
 
 
             if (_targetFloor.LevelMax == 10 && PartyManager.IsInParty)
-                return saved;
+                return true;
 
             //if (saved && partyData.Count == PartyManager.NumMembers)
             //{

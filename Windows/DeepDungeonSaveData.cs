@@ -68,6 +68,7 @@ namespace DeepHoh.Windows
             AtkAddonControl window = RaptureAtkUnitManager.GetWindowByName(WindowNames.DDsave);
             window.SendAction(2, 3, number, 3, 2);
             await Coroutine.Wait(500, () => SelectYesno.IsOpen);
+            await Coroutine.Sleep(500);
             //confirm that we want to delete this data.
             if (SelectYesno.IsOpen)
             {
