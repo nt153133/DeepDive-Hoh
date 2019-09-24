@@ -223,7 +223,7 @@ namespace DeepHoh
         }
 
         [Setting]
-        [Description("Start at floor 51 when we can.")]
+        [Description("Start at floor 21 when we can.")]
         [JsonProperty("StartAt51")]
         [DefaultValue(false)]
         [Category("General")]

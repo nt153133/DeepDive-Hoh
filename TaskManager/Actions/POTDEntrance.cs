@@ -156,7 +156,7 @@ namespace DeepHoh.TaskManager.Actions
 
             try
             {
-                if (!PartyManager.IsInParty && !Settings.Instance.SoloStop)
+                if (!Settings.Instance.SoloStop)
                 {
                     Logger.Warn("You are solo, Setting the bot to do 1-10.");
                     stop = Settings.Instance.FloorSettings[0];
@@ -227,9 +227,14 @@ namespace DeepHoh.TaskManager.Actions
                     partyData.Count);
 
             if (saved && _error)
+            {
                 Logger.Verbose("Resetting save data: there was a warning waiting for the duty finder.");
+            }
 
-            return saved && (lm || notfixed || cjChanged || partySize || partyClass || _error);
+            if (_error)
+                return true;
+
+            return saved && (lm || notfixed || cjChanged || partySize || partyClass);
         }
 
         private async Task ReadStartingLevel()
@@ -357,16 +362,16 @@ Empyrean Aetherpool Armor: +{1}
                         await Coroutine.Sleep(1000);
                     }
 
-                    //                    Logger.Verbose("Floor 51 wait");
-                    //--floor 51 logic
+                    Logger.Verbose("Floor 21 wait");
+                    //--floor 21 logic
                     await Coroutine.Wait(1000, () => SelectString.IsOpen || ContentsFinderConfirm.IsOpen);
                     if (SelectString.IsOpen)
                     {
                         await Coroutine.Sleep(1000);
 
-                        if (Settings.Instance.StartAt51) Logger.Verbose("Start at 51: {0}", _targetFloor.LevelMax > 50);
+                        if (Settings.Instance.StartAt51) Logger.Verbose("Start at 21: {0}", _targetFloor.LevelMax > 20);
 
-                        if (Settings.Instance.StartAt51 && _targetFloor.LevelMax > 50)
+                        if (Settings.Instance.StartAt51 && _targetFloor.LevelMax > 20)
                             SelectString.ClickSlot(1);
                         else
                             SelectString.ClickSlot(0);
