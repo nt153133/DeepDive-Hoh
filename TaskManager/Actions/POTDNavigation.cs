@@ -21,6 +21,7 @@ using ff14bot.Helpers;
 using ff14bot.Managers;
 using ff14bot.Navigation;
 using ff14bot.Pathing;
+using ff14bot.Pathing.Avoidance;
 
 namespace DeepHoh.TaskManager.Actions
 {
@@ -44,8 +45,13 @@ namespace DeepHoh.TaskManager.Actions
             if (!Core.Me.InCombat && Target.Type == PoiType.Quest && DeepDungeonManager.BossFloor)
             {
                 Poi.Clear("QUEST_POI");
-                GameObjectManager.Update();
                 Navigator.Clear();
+                foreach (Avoid a in AvoidanceManager.Avoids)
+                    AvoidanceManager.RemoveAvoid(a.AvoidInfo);
+
+                AvoidanceManager.ResetNavigation();
+                GameObjectManager.Update();
+                
             }
 
             if (Navigator.InPosition(Core.Me.Location, Target.Location, 3f) &&
