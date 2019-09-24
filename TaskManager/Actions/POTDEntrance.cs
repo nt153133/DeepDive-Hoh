@@ -156,7 +156,7 @@ namespace DeepHoh.TaskManager.Actions
 
             try
             {
-                if (!Settings.Instance.SoloStop)
+                if (!Settings.Instance.SoloStop && !PartyManager.IsInParty)
                 {
                     Logger.Warn("You are solo, Setting the bot to do 1-10.");
                     stop = Settings.Instance.FloorSettings[0];
@@ -280,7 +280,7 @@ Empyrean Aetherpool Armor: +{1}
                 Logger.Warn("Everyone is now in the zone");
                 for (int i = 0; i < 4; i++)
                 {
-                    Logger.Warn("Giving them {0} seconds to do what they need to at the NPC", 60 - i * 10);
+                    Logger.Warn("Giving them {0} seconds to do what they need to at the NPC", 40 - i * 10);
                     await Coroutine.Sleep(TimeSpan.FromSeconds(10));
                     if (DeepDungeonHoH.StopPlz) return;
                 }

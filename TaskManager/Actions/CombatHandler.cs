@@ -180,11 +180,18 @@ namespace DeepHoh.TaskManager.Actions
                 BattleCharacter npc =
                     GameObjectManager.Attackers
                         .FirstOrDefault(i => i.IsCasting && i.NpcId == 7268 && i.CastingSpellId == 6351);
-                while (npc.IsCasting)
+                while (npc != null && npc.IsCasting)
                 {
                     MovementManager.SetFacing(npc.Heading);
                     await Coroutine.Sleep(100);
                 }
+            }
+            //DeepDungeonManager.BossFloor
+            if (DeepDungeonManager.BossFloor && GameObjectManager.Attackers.Any(i =>i.IsCasting))
+            {
+                BattleCharacter npc = GameObjectManager.Attackers.FirstOrDefault(i => i.IsCasting);
+                string log = $"Boss {npc.NpcId} Cast {npc.CastingSpellId}";
+                Logger.Debug(log);
             }
 
             if (!Core.Me.InRealCombat()) return true;
