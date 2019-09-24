@@ -107,7 +107,7 @@ namespace DeepHoh
 
         private FloorSetting _selectedLevel;
 
-        private bool _startAt51;
+        private bool _startAt21;
 
         private bool _stop;
 
@@ -224,15 +224,15 @@ namespace DeepHoh
 
         [Setting]
         [Description("Start at floor 21 when we can.")]
-        [JsonProperty("StartAt51")]
+        [JsonProperty("StartAt21")]
         [DefaultValue(false)]
         [Category("General")]
-        public bool StartAt51
+        public bool StartAt21
         {
-            get => _startAt51;
+            get => _startAt21;
             set
             {
-                _startAt51 = value;
+                _startAt21 = value;
                 Save();
             }
         }
@@ -469,7 +469,7 @@ namespace DeepHoh
             Logger.Verbose("Open Silver: {0}", _openSilver);
             Logger.Verbose("Open Mimics: {0}", _openMimics);
             Logger.Verbose("Open Traps: {0}", _openTraps);
-            Logger.Verbose("51: {0}", _startAt51);
+            Logger.Verbose("51: {0}", _startAt21);
             Logger.Verbose("Exit Priority: {0}", _GoExit);
             Logger.Verbose("Save Slot: {0}", SaveSlot);
             Logger.Verbose("Use Sustain Pot: {0}", UseSustain);

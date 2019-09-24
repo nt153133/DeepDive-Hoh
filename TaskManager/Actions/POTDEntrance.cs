@@ -156,12 +156,13 @@ namespace DeepHoh.TaskManager.Actions
 
             try
             {
+                /*
                 if (!Settings.Instance.SoloStop && !PartyManager.IsInParty)
                 {
                     Logger.Warn("You are solo, Setting the bot to do 1-10.");
                     stop = Settings.Instance.FloorSettings[0];
                 }
-
+                */
                 _targetFloor = stop;
 
                 Logger.Verbose("Going to floor: {0}", _targetFloor.LevelMax);
@@ -369,9 +370,9 @@ Empyrean Aetherpool Armor: +{1}
                     {
                         await Coroutine.Sleep(1000);
 
-                        if (Settings.Instance.StartAt51) Logger.Verbose("Start at 21: {0}", _targetFloor.LevelMax > 20);
+                        if (Settings.Instance.StartAt21) Logger.Verbose("Start at 21: {0}", _targetFloor.LevelMax > 20);
 
-                        if (Settings.Instance.StartAt51 && _targetFloor.LevelMax > 20)
+                        if (Settings.Instance.StartAt21 && _targetFloor.LevelMax > 20)
                             SelectString.ClickSlot(1);
                         else
                             SelectString.ClickSlot(0);
