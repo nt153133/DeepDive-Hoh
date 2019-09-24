@@ -178,7 +178,7 @@ namespace DeepHoh.Providers
 
             //weight -= obj.Distance2D();
 
-            if (PartyManager.IsInParty && !PartyManager.IsPartyLeader)
+            if (PartyManager.IsInParty && !PartyManager.IsPartyLeader && !DeepDungeonManager.BossFloor)
             {
                 if (PartyManager.PartyLeader.IsInObjectManager && PartyManager.PartyLeader.CurrentHealth > 0)
                 {
