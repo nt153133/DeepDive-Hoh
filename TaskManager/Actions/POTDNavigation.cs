@@ -50,6 +50,7 @@ namespace DeepHoh.TaskManager.Actions
                     AvoidanceManager.RemoveAvoid(a.AvoidInfo);
 
                 AvoidanceManager.ResetNavigation();
+                Navigator.NavigationProvider.ClearStuckInfo();
                 GameObjectManager.Update();
                 
             }
