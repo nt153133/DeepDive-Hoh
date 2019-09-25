@@ -115,7 +115,18 @@ namespace DeepHoh.TaskManager.Actions
                 //if (!Settings.Instance.NotLeader || (Settings.Instance.NotLeader && Target.Unit != null && (Target.Unit.NpcId == EntityNames.FloorExit || Target.Unit.NpcId == EntityNames.LobbyExit || Target.Unit.NpcId == EntityNames.BossExit)))
                 if (!PartyManager.IsInParty || PartyManager.IsPartyLeader ||
                     PartyManager.IsInParty && Constants.IsExitObject(Target.Unit))
+                {
+                    if (Constants.IsExitObject(Target.Unit))
+                    {
+                        if (RaptureAtkUnitManager.GetWindowByName("DeepDungeonResult") != null)
+                        {
+                            await Coroutine.Sleep(5000);
+                            RaptureAtkUnitManager.GetWindowByName("DeepDungeonResult").SendAction(1, 3, uint.MaxValue);
+                        }
+                    }
+
                     Target.Unit.Interact();
+                }
                 else
                     await CommonTasks.StopMoving("Waiting for leader to use chest");
 

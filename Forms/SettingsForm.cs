@@ -25,12 +25,11 @@ namespace DeepHoh.Forms
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             settings.SelectedObject = Settings.Instance;
-            Settings.Instance.EnsureFloorSettings();
             Levels.DataSource = Settings.Instance.FloorSettings;
-            Levels.SelectedItem = Settings.Instance.SelectedLevel;
             Levels.SelectedIndexChanged += changelevel;
+            Levels.SelectedItem = Settings.Instance.SelectedLevel;
+			Settings.Instance.EnsureFloorSettings();
             solostop.Checked = !Settings.Instance.SoloStop;
-
             solostop.CheckedChanged += solostop_CheckStateChanged;
         }
 

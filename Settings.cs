@@ -477,14 +477,16 @@ namespace DeepHoh
             Logger.Verbose("Combat Pull range: {0}", Constants.ModifiedCombatReach);
             Logger.Verbose("In Party: {0}", PartyManager.IsInParty);
 
-            Logger.Verbose("StopSolo: {0}", SoloStop);
+            //Logger.Verbose("Going to floor: {0}", SoloStop);
 
             EnsureFloorSettings();
             foreach (FloorSetting f in FloorSettings) Logger.Verbose(f.Display);
+            Logger.Verbose("Going to floor: {0}", SelectedLevel);
         }
 
         internal List<FloorSetting> EnsureFloorSettings()
         {
+            //if (SelectedLevel == null && _floorSettings != null) SelectedLevel = FloorSettings.First();
             if (!_initialized) return _floorSettings;
 
             if (_floorSettings == null || !_floorSettings.Any())
