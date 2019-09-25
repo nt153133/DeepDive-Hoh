@@ -118,13 +118,12 @@ namespace DeepHoh.TaskManager.Actions
                 {
                     if (Constants.IsExitObject(Target.Unit))
                     {
-                        if (RaptureAtkUnitManager.GetWindowByName("DeepDungeonResult") != null)
-                        {
-                            await Coroutine.Sleep(5000);
-                            RaptureAtkUnitManager.GetWindowByName("DeepDungeonResult").SendAction(1, 3, uint.MaxValue);
-                        }
+                        Logger.Debug("At Exit");
+                        await Coroutine.Sleep(500);
                     }
+                
 
+                await CommonTasks.StopMoving("Leader Interacting");
                     Target.Unit.Interact();
                 }
                 else
@@ -142,12 +141,20 @@ namespace DeepHoh.TaskManager.Actions
                 if (SelectYesno.IsOpen) break;
             }
 
-            await Coroutine.Wait(500, () => SelectYesno.IsOpen);
+            await Coroutine.Wait(1000, () => SelectYesno.IsOpen);
 
             //if this is an exit
             if (SelectYesno.IsOpen)
             {
                 SelectYesno.ClickYes();
+                await Coroutine.Sleep(1000);
+                Logger.Debug("Is window open : {0}", RaptureAtkUnitManager.GetWindowByName("DeepDungeonResult") );
+                if (RaptureAtkUnitManager.GetWindowByName("DeepDungeonResult") != null)
+                {
+                    Logger.Debug("Calling Close");
+                    await Coroutine.Sleep(2000);
+                    RaptureAtkUnitManager.GetWindowByName("DeepDungeonResult").SendAction(1, 3, uint.MaxValue);
+                }
                 await Coroutine.Wait(TimeSpan.MaxValue,
                     () => DeepDungeonHoH.StopPlz || QuestLogManager.InCutscene || NowLoading.IsVisible);
                 return true;

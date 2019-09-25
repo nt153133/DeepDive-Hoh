@@ -48,7 +48,7 @@ namespace DeepHoh.Helpers
         {
             byte[] list = Core.Memory.ReadArray<byte>(Director.Pointer + 5160, 8);
 
-            string result = "Magicites: [ ";
+            string result = $"Magicites {Director.Pointer + 5160}: [ ";
             for (var i = 0; i < list.Length; i++)
             {
                 var b = list[i];
