@@ -22,6 +22,7 @@ using ff14bot.Directors;
 using ff14bot.Enums;
 using ff14bot.Helpers;
 using ff14bot.Managers;
+using ff14bot.Navigation;
 using ff14bot.Objects;
 using ff14bot.Pathing;
 using TreeSharp;
@@ -65,7 +66,7 @@ namespace DeepHoh.TaskManager.Actions
 
             if (AvoidanceManager.IsRunningOutOfAvoid) return true;
 
-            
+
             if (!Core.Me.InRealCombat())
             {
                 if (!Core.Me.HasAura(Auras.NoAutoHeal) && await Rest())
@@ -186,8 +187,34 @@ namespace DeepHoh.TaskManager.Actions
                     await Coroutine.Sleep(100);
                 }
             }
+
+            if (GameObjectManager.Attackers.Any(
+                i =>
+                    i.IsCasting &&
+                    i.CastingSpellId == 11290 &&
+                    i.NpcId == 7478))
+            {
+                BattleCharacter npc =
+                   GameObjectManager.Attackers
+                       .FirstOrDefault(i => i.IsCasting && i.NpcId == 7478 && i.CastingSpellId == 11290);
+
+
+                while (npc != null && npc.IsCasting)
+                {
+                    Clio.Utilities.Vector3 vector3 = new Clio.Utilities.Vector3(-299.9771f, -0.01531982f, -320.4548f);
+                    float dist = Core.Player.Location.Distance(vector3);
+                    Navigator.PlayerMover.MoveTowards(vector3);
+                    while (vector3.Distance2D(Core.Me.Location) >= 4.4)
+                    {
+                        Navigator.PlayerMover.MoveTowards(vector3);
+                        await Coroutine.Sleep(100);
+                    }
+                    Navigator.PlayerMover.MoveStop();
+                    await Coroutine.Sleep(10000);
+                }
+            }
             //DeepDungeonManager.BossFloor
-            if (DeepDungeonManager.BossFloor && GameObjectManager.Attackers.Any(i =>i.IsCasting))
+            if (DeepDungeonManager.BossFloor && GameObjectManager.Attackers.Any(i => i.IsCasting))
             {
                 BattleCharacter npc = GameObjectManager.Attackers.FirstOrDefault(i => i.IsCasting);
                 string log = $"Boss {npc.NpcId} Cast {npc.CastingSpellId}";
@@ -227,8 +254,6 @@ namespace DeepHoh.TaskManager.Actions
                 if (t.Type != GameObjectType.BattleNpc || Poi.Current.Type == PoiType.Kill) return;
                 Logger.Warn($"trying to get into combat with: {t.NpcId}");
                 Poi.Current = new Poi(t, PoiType.Kill);
-                return;
-
                 return;
             }
 
@@ -297,11 +322,11 @@ namespace DeepHoh.TaskManager.Actions
             {
                 if (!ActionManager.CanCast(spell, Poi.Current.BattleCharacter) ||
                     Poi.Current.BattleCharacter.Distance2D() >
-                    (float) spell.Range + Poi.Current.BattleCharacter.CombatReach)
+                    (float)spell.Range + Poi.Current.BattleCharacter.CombatReach)
                     await CommonTasks.MoveAndStop(
                         new MoveToParameters(Core.Target.Location,
                             $"Moving to {Poi.Current.Name} to cast {spell.Name}"),
-                        (float) spell.Range + Poi.Current.BattleCharacter.CombatReach, true);
+                        (float)spell.Range + Poi.Current.BattleCharacter.CombatReach, true);
 
                 Poi.Current.BattleCharacter.Face2D();
             }

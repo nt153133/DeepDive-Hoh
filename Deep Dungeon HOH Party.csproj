@@ -74,16 +74,15 @@
   <!-- RB 64 & rb32 -->
   <!-- Condition="'$(Configuration)|$(Platform)' == 'Release|x64' Or '$(Configuration)|$(Platform)' == 'Debug|x64'"-->
   <ItemGroup>
-    <Reference Include="RebornBuddy, Version=1.0.201.0, Culture=neutral, PublicKeyToken=48d7174f8a943034, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\reborn_new\RebornBuddy.exe</HintPath>
-    </Reference>
     <Reference Include="GreyMagic, Version=1.0.41.0, Culture=neutral, PublicKeyToken=260525fa2b0e778a, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\reborn_new\GreyMagic.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RebornBuddy">
+      <HintPath>..\..\..\Downloads\Rebornbuddy64 1.0.242.0\RebornBuddy.exe</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
