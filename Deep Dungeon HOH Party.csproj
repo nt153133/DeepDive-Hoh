@@ -81,7 +81,10 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RebornBuddy">
-      <HintPath>..\..\..\Downloads\Rebornbuddy64 1.0.242.0\RebornBuddy.exe</HintPath>
+      <HintPath>..\..\RebornBuddy.exe</HintPath>
+    </Reference>
+    <Reference Include="RebornBuddy, Version=1.0.301.0, Culture=neutral, PublicKeyToken=48d7174f8a943034">
+      <HintPath>..\..\RebornBuddy.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

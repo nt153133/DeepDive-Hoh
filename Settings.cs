@@ -132,7 +132,11 @@ namespace DeepHoh
         {
             get
             {
-                if (_settings != null) return _settings;
+                if (_settings != null)
+                {
+                    //_initialized = true;
+                    return _settings;
+                }
 
                 _settings = new Settings
                 {

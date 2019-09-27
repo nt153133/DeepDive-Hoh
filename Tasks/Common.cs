@@ -27,6 +27,15 @@ namespace DeepHoh.Tasks.Coroutines
     {
         internal static ItemState PomanderState = ItemState.None;
 
+        static Common()
+        {
+            foreach (var item in Enum.GetValues(typeof(Pomander)).Cast<Pomander>())
+            {
+                PomanderLockoutTimers.Add(item, new WaitTimer(TimeSpan.FromSeconds(3)));
+            }
+        }
+        private static readonly Dictionary<Pomander, WaitTimer> PomanderLockoutTimers = new Dictionary<Pomander, WaitTimer>();
+
         private static List<uint> PotIDs => Constants.Pots.Select(i => i.Id).ToList();
 
         /// <summary>
@@ -63,6 +72,10 @@ namespace DeepHoh.Tasks.Coroutines
                 Core.Me.GetAuraById(auraId).TimespanLeft > TimeSpan.FromMinutes(1))
                 return false;
 
+            var lockoutTimer = PomanderLockoutTimers[number];
+            if (!lockoutTimer.IsFinished)
+                return false;
+
             await Coroutine.Wait(5000, () => !DeepDungeonManager.IsCasting);
 
             byte cnt = data.Count;
@@ -94,6 +107,8 @@ namespace DeepHoh.Tasks.Coroutines
                     PomanderState = ItemState.Resolution;
                     break;
             }
+
+            lockoutTimer.Reset();
 
             return true;
         }

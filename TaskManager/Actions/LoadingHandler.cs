@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Buddy.Coroutines;
 using ff14bot;
 using ff14bot.Behavior;
+using ff14bot.Directors;
 using ff14bot.Managers;
 using ff14bot.RemoteAgents;
 using ff14bot.RemoteWindows;
@@ -47,6 +48,14 @@ namespace DeepHoh.TaskManager.Actions
             {
                 Talk.Next();
                 return true;
+            }
+
+            if (DirectorManager.ActiveDirector is InstanceContentDirector activeAsInstance)
+            {
+                if (activeAsInstance.TimeLeftInDungeon == System.TimeSpan.Zero)
+                {
+                    return true;
+                }
             }
 
             return false;

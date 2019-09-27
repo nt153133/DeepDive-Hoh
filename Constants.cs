@@ -41,6 +41,7 @@ namespace DeepHoh
         internal const uint HeavenlyShark = 7272;
         internal const uint CatThing = 7398;
         internal const uint Inugami = 7397;
+        internal const uint Raiun = 7479;
     }
 
     /// <summary>
@@ -184,7 +185,7 @@ namespace DeepHoh
             7395, 5402, EntityNames.FloorExit, EntityNames.BeaconOfReturn, EntityNames.LobbyEntrance, 2002872,
             EntityNames.RubyCarby, EntityNames.EmeraldCarby, EntityNames.TopazCarby, EntityNames.Garuda,
             EntityNames.Titan, EntityNames.Ifrit, EntityNames.Eos, EntityNames.Selene, EntityNames.Rook,
-            EntityNames.Bishop, Mobs.CatThing, Mobs.Inugami, 377
+            EntityNames.Bishop, Mobs.CatThing, Mobs.Inugami, Mobs.Raiun, 377
         };
 
         internal static uint MapVersion = 4;
