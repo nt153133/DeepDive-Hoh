@@ -50,14 +50,6 @@ namespace DeepHoh.TaskManager.Actions
                 return true;
             }
 
-            if (DirectorManager.ActiveDirector is InstanceContentDirector activeAsInstance)
-            {
-                if (activeAsInstance.TimeLeftInDungeon == System.TimeSpan.Zero)
-                {
-                    return true;
-                }
-            }
-
             return false;
         }
 

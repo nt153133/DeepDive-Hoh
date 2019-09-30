@@ -9,6 +9,7 @@ Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Buddy.Coroutines;
@@ -34,6 +35,7 @@ namespace DeepHoh.TaskManager.Actions
 
         private int Level;
         private Vector3 location = Vector3.Zero;
+        private List<Vector3> blackList = new List<Vector3>();
 
         private Poi Target => Poi.Current;
         public string Name => "Floor Exit";
@@ -82,6 +84,7 @@ namespace DeepHoh.TaskManager.Actions
                 {
                     Logger.Debug("Waited 5 minutes at exit but poi is null");
                 }
+                blackList.Add(location);
             }
             
             GameObjectManager.Update();
@@ -98,7 +101,7 @@ namespace DeepHoh.TaskManager.Actions
             if (location == Vector3.Zero || Level != DeepDungeonManager.Level)
             {
                 //GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit).OrderBy(r=>r.Distance());
-                GameObject ret = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit && !Blacklist.Contains(r.ObjectId))
+                GameObject ret = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit && !Blacklist.Contains(r.ObjectId) && !blackList.Contains(r.Location))
                     .OrderBy(r => r.Distance()).FirstOrDefault();
                 if (ret != null)
                 {
@@ -109,12 +112,13 @@ namespace DeepHoh.TaskManager.Actions
                 {
                     Level = DeepDungeonManager.Level;
                     location = Vector3.Zero;
+                    blackList.Clear();
                 }
             }
 
             if (location != Vector3.Zero)
             {
-                GameObject ret = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit)
+                GameObject ret = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.FloorExit && !Blacklist.Contains(r.ObjectId) && !blackList.Contains(r.Location))
                     .OrderBy(r => r.Distance()).FirstOrDefault();
                 if (ret != null)
                     if (Core.Me.Location.Distance2D(ret.Location) < location.Distance2D(ret.Location))
