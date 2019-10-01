@@ -162,6 +162,18 @@ namespace DeepHoh.Providers
             AddBlackspots();
             WallCheck();
 
+            if (AvoidanceManager.Avoids.Where(r => r.IsPointInAvoid(location.Location)).Any())
+            {
+                Logger.Warn("Location is in sidestep avoidance - ##AVOID##");
+                if (!AvoidanceManager.Avoids.Where(r => r.IsPointInAvoid(Core.Me.Location)).Any())
+                {
+                    Logger.Error("Forcing stop");
+                    MovementManager.MoveStop();
+                }
+
+                // CommonTasks.StopMoving("Wait for avoidance");
+                return MoveResult.PathGenerationFailed;
+            }
             location.WorldState = new WorldState {MapId = WorldManager.ZoneId, Walls = wallList, Avoids = trapList};
             return Original.MoveTo(location);
         }
