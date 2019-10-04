@@ -112,7 +112,7 @@ namespace DeepHoh.TaskManager.Actions
 
             //party member is dead & we have the location of the cor
             if (PartyManager.AllMembers.Any(member => member.CurrentHealth == 0) && location != Vector3.Zero &&
-                Level == DeepDungeonManager.Level)
+                Level == DeepDungeonManager.Level && DeepDungeonManager.ReturnActive)
                 Poi.Current = new Poi(location, (PoiType) PoiTypes.UseBeaconOfReturn);
         }
     }

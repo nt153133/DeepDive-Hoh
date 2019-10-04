@@ -41,7 +41,7 @@ namespace DeepHoh.TaskManager.Actions
             if (!Constants.InDeepDungeon) return false;
 
             if (Target == null) return false;
-
+            /*
             if (!Core.Me.InCombat && Target.Type == PoiType.Quest && DeepDungeonManager.BossFloor)
             {
                 Poi.Clear("QUEST_POI");
@@ -54,7 +54,7 @@ namespace DeepHoh.TaskManager.Actions
                 GameObjectManager.Update();
                 
             }
-
+*/
             if (Navigator.InPosition(Core.Me.Location, Target.Location, 3f) &&
                 Target.Type == (PoiType) PoiTypes.ExplorePOI)
             {
@@ -96,13 +96,13 @@ namespace DeepHoh.TaskManager.Actions
             {
                 level = DeepDungeonManager.Level;
                 SafeSpots = new List<Vector3>();
-                SafeSpots.AddRange(GameObjectManager.GameObjects.Where(i => i.Location != Vector3.Zero)
+                SafeSpots.AddRange(GameObjectManager.GameObjects.Where(DDTargetingProvider.FilterKnown)
                     .Select(i => i.Location));
             }
 
             if (!SafeSpots.Any(i => i.Distance2D(Core.Me.Location) < 5)) SafeSpots.Add(Core.Me.Location);
 
-            if (Poi.Current == null || Poi.Current.Type == PoiType.None)
+            if ((Poi.Current == null || Poi.Current.Type == PoiType.None) && !DeepDungeonManager.BossFloor)
                 Poi.Current = new Poi(SafeSpots.OrderByDescending(i => i.Distance2D(Core.Me.Location)).First(),
                     (PoiType) PoiTypes.ExplorePOI);
         }

@@ -202,10 +202,10 @@ namespace DeepHoh.Providers
                 case GameObjectType.BattleNpc when !DeepDungeonManager.PortalActive && !PartyManager.IsInParty:
                     return weight / 2;
                 case GameObjectType.BattleNpc:
-                    weight = weight / 2;
+                    weight /= 2;
                     break;
             }
-            
+
 
             if (obj.NpcId == EntityNames.BandedCoffer && !Blacklist.Contains(obj.ObjectId)) weight += 200;
 
@@ -248,7 +248,7 @@ namespace DeepHoh.Providers
                 return true;
 
             if (Core.Me.Location.Distance2D(obj.Location) > 300) return false;
-            
+
             if (Core.Me.Location.Distance2D(obj.Location) > 100 && DeepDungeonManager.BossFloor) return false;
 
             //if (obj.NpcId == EntityNames.GoldCoffer || obj.NpcId == EntityNames.SilverCoffer)
@@ -269,7 +269,46 @@ namespace DeepHoh.Providers
 
             BattleCharacter battleCharacter = (BattleCharacter) obj;
             return !battleCharacter.IsDead;
+        }
+        
+        public static bool FilterKnown(GameObject obj)
+        {
+            if (obj.Location == Vector3.Zero)
+                return false;
+            //Blacklists
+            if (Blacklist.Contains(obj) || Constants.TrapIds.Contains(obj.NpcId) ||
+                Constants.IgnoreEntity.Contains(obj.NpcId))
+                return false;
 
+            
+
+            //If there is more than 1 of Str,Lust,Steel then skip gold chest
+            /*           
+            if (DeepDungeonManager.HaveMainPomander && obj.NpcId == EntityNames.GoldCoffer &&
+                (!Settings.Instance.OpenGold && DeepDungeonManager.PortalActive && FloorExit.location != Vector3.Zero))
+                return false;
+            */
+            
+            switch (obj.Type)
+            {
+                case GameObjectType.Treasure:
+                    return true;
+                case GameObjectType.EventObject:
+                    return true;
+                case GameObjectType.BattleNpc:
+                    return true;
+                default:
+                    return false;
+            }
+
+            /*
+            if (obj.Type != GameObjectType.BattleNpc)
+                return obj.Type == GameObjectType.EventObject || obj.Type == GameObjectType.Treasure ||
+                       obj.Type == GameObjectType.BattleNpc;
+
+            BattleCharacter battleCharacter = (BattleCharacter) obj;
+            return !battleCharacter.IsDead;
+            */
         }
     }
 }
