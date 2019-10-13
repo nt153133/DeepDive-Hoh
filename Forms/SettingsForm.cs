@@ -29,7 +29,7 @@ namespace DeepHoh.Forms
             Levels.DataSource = Settings.Instance.FloorSettings;
             Levels.SelectedIndexChanged += changelevel;
             Levels.SelectedItem = Settings.Instance.SelectedLevel;
-            Levels.Refresh();
+            
             solostop.Checked = !Settings.Instance.SoloStop;
             solostop.CheckedChanged += solostop_CheckStateChanged;
         }
@@ -39,12 +39,14 @@ namespace DeepHoh.Forms
             Logger.Verbose("Changing the selected floor to run");
             Settings.Instance.SelectedLevel = (FloorSetting) Levels.SelectedItem;
         }
-
-        private void Levels_SelectedIndexChanged(object sender, EventArgs e)
+        
+        private void SettingsForm_Closed(object sender, FormClosedEventArgs e)
         {
-            Settings.Instance.SelectedLevel = (FloorSetting) Levels.SelectedItem;
-           
+            
+            Levels.SelectedIndexChanged -= changelevel;
+            solostop.CheckedChanged -= solostop_CheckStateChanged;
         }
+
 
         private void solostop_CheckStateChanged(object sender, EventArgs e)
         {
