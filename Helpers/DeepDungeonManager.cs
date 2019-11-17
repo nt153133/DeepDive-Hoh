@@ -46,8 +46,8 @@ namespace DeepHoh.Helpers
 
         public static string GetInventoryItems2()
         {
-            byte[] list = Core.Memory.ReadArray<byte>(Director.Pointer + 5160, 8);
-
+            byte[] list = Core.Memory.ReadArray<byte>(Director.Pointer + 5160, 4);
+            
             string result = $"Magicites {Director.Pointer + 5160}: [ ";
             for (var i = 0; i < list.Length; i++)
             {

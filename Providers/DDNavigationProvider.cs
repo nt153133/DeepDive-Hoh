@@ -162,10 +162,10 @@ namespace DeepHoh.Providers
             AddBlackspots();
             WallCheck();
 
-            if (AvoidanceManager.Avoids.Where(r => r.IsPointInAvoid(location.Location)).Any())
+            if (AvoidanceManager.Avoids.Any(r => r.IsPointInAvoid(location.Location)))
             {
                 Logger.Warn("Location is in sidestep avoidance - ##AVOID##");
-                if (!AvoidanceManager.Avoids.Where(r => r.IsPointInAvoid(Core.Me.Location)).Any())
+                if (!AvoidanceManager.Avoids.Any(r => r.IsPointInAvoid(Core.Me.Location)))
                 {
                     Logger.Error("Forcing stop");
                     MovementManager.MoveStop();

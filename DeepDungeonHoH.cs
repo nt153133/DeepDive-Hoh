@@ -36,7 +36,7 @@ namespace DeepHoh
     {
         public override string EnglishName => "Deep Dungeon HOH Party";
 #if RB_CN
-        public override string Name => "深层迷宫";
+        public override string Name => "天宫";
 #else
         public override string Name => "Deep Dungeon HOH Party";
 #endif
